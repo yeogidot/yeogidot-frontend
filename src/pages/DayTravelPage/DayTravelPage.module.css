@@ -1,0 +1,36 @@
+.container {
+  position: relative;
+  width: 393px;
+  height: 852px;
+  overflow: hidden;
+  font-family: sans-serif;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 아래 패널 */
+.panel {
+  position: absolute;
+  top: 400px;
+  width: 393px;
+  height: 452px;
+  background-color: #fff8e7; /* 아이보리 */
+  border-radius: 5px 5px 0 0;
+  border-top: 1px solid #ccc;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* 패널 제목 */
+.panelHeader {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
