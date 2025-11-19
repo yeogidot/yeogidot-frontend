@@ -6,31 +6,36 @@
   font-family: sans-serif;
 }
 
-.map {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* 아래 패널 */
-.panel {
-  position: absolute;
-  top: 400px;
-  width: 393px;
-  height: 452px;
-  background-color: #fff8e7; /* 아이보리 */
-  border-radius: 5px 5px 0 0;
-  border-top: 1px solid #ccc;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-  padding: 16px;
+/* 제목 + 버튼 일렬 배치 */
+.headerRow {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  justify-content: space-between; /* 좌: 제목 / 우: 버튼 */
+  align-items: center;
+  width: 100%;
+  height: 39px;
 }
 
-/* 패널 제목 */
-.panelHeader {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 16px;
+/* 버튼 3개를 가로로 나란히 */
+.buttonGroup {
+  display: flex;
+  gap: 1.5px; /* 버튼 사이 간격 */
+}
+.travelInformation {
+  font-size:16px;
+  color:#5B5B5B;
+}
+h1, h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+h3 {
+  height: 24px;
+}
+.dayTravelRow {
+}
+
+.dayTravelLocation {
+  font-size: 16px;
+  height: 19px;
+  color:#5B5B5B;
 }
