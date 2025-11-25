@@ -4,7 +4,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 import MyTravelPage from './pages/MyTravelPage/MyTravelPage';
-import DayTravelPage from './pages/DayTravelPage/DayTravelPage';
+import TravelPage from './pages/TravelPage/TravelPage';
 
 const router = createBrowserRouter([
   {
@@ -16,8 +16,8 @@ const router = createBrowserRouter([
     Component: () => <Navigate to="mytravel" replace={true} />,
   },
   {
-    path: '/daytravel',
-    Component: DayTravelPage,
+    path: '/travel',
+    Component: TravelPage,
   },
 ]);
 

@@ -1,5 +1,5 @@
 import classes from './Buttons.module.css';
-import editIcon from '../assets/icons/edit.svg';
+import editIcon from '../../assets/icons/edit.svg';
 
 export default function EditButton() {
   return (

@@ -34,6 +34,21 @@ h3 {
 .dayTravelRow {
 }
 
+.dayTravelPhoto {
+  padding-top: 10px;
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.dayTravelPhoto img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border-radius: 5px;
+}
 .dayTravelLocation {
   font-size: 16px;
   height: 19px;

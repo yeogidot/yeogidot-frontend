@@ -1,0 +1,61 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.deleteModal {
+  width: 315px;
+  height: 165px;
+  border-radius: 5px;
+  background: #ffffff;
+  padding: 24px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  font-family: 'Inter', sans-serif;
+}
+
+.modalMessage {
+  margin: 0;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.modalButtonGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.cancelButton,
+.confirmDeleteButton {
+  width: 59px;
+  height: 32px;
+  border-radius: 5px;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0;
+  color: #fff;
+  cursor: pointer;
+}
+
+.cancelButton {
+  background: #757575;
+}
+
+.confirmDeleteButton {
+  background: #F62424;
+}
+

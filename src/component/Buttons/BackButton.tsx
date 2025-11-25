@@ -1,5 +1,5 @@
 import classes from './Buttons.module.css';
-import backIcon from '../assets/icons/back-white.svg';
+import backIcon from '../../assets/icons/back-white.svg';
 
 export default function BackButton() {
   return (
