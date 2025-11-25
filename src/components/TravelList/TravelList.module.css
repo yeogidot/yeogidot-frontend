@@ -1,0 +1,23 @@
+.noTravelWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  row-gap: 25px;
+  text-align: center;
+}
+.noTravelText {
+  font-weight: bold;
+}
+.newTravelLink {
+  color: #029aff;
+}
+.container {
+  padding-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5vh;
+}
