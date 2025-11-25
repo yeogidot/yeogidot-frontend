@@ -1,15 +1,9 @@
 import classes from './TravelItem.module.css';
 import { Link } from 'react-router-dom';
 import EditIcon from '@assets/icons/edit.svg?react';
+import type { TravelInfo } from '@types/travel.type';
 interface Props {
-  travel: {
-    title: string;
-    id: number;
-    thumbnail: string | undefined;
-    startDate: string;
-    endDate: string;
-    location: string;
-  };
+  travel: TravelInfo;
 }
 
 export default function TravelItem({ travel }: Props) {
