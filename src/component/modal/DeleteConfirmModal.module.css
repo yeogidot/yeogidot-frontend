@@ -25,9 +25,19 @@
   margin: 0;
   font-weight: 700;
   font-size: 16px;
-  line-height: 100%;
+  line-height: 1.2;
   letter-spacing: 0;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  gap: 4px;
+}
+
+.modalMessage > div {
+  width: 100%;
 }
 
 .modalButtonGroup {
@@ -58,4 +68,5 @@
 .confirmDeleteButton {
   background: #F62424;
 }
+
 

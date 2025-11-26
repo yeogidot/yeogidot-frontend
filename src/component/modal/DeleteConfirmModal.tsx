@@ -19,9 +19,11 @@ export default function DeleteConfirmModal({
         aria-labelledby="delete-modal-title"
         onClick={(event) => event.stopPropagation()}
       >
-        <p id="delete-modal-title" className={classes.modalMessage}>
-          {message}
-        </p>
+        <div id="delete-modal-title" className={classes.modalMessage}>
+          {message.split('\n').map((line, index) => (
+            <div key={index}>{line}</div>
+          ))}
+        </div>
 
         <div className={classes.modalButtonGroup}>
           <button type="button" className={classes.cancelButton} onClick={onCancel}>
@@ -35,4 +37,5 @@ export default function DeleteConfirmModal({
     </div>
   );
 }
+
 
