@@ -1,0 +1,46 @@
+.container {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  padding-top: 9px;
+  padding-bottom: 22px;
+  column-gap: 5%;
+  width: 100%;
+}
+
+@media (min-width: 400px) {
+  .container {
+    width: 400px;
+  }
+}
+
+.newTravelButton {
+  display: flex;
+  background-color: #0099ff;
+  width: 53px;
+  height: 50px;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+}
+.tabActivated {
+  text-align: center;
+  text-decoration: none;
+  color: #0099ff;
+  font-size: 15px;
+  font-weight: bold;
+  width: 30%;
+}
+
+.tabDeactivated {
+  text-align: center;
+  text-decoration: none;
+  color: #8ad0ff;
+  align-items: center;
+  font-size: 15px;
+  font-weight: bold;
+  width: 30%;
+}
