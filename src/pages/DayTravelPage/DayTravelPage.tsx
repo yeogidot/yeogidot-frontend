@@ -60,9 +60,7 @@ export default function TravelPage() {
             </div>
           </div>
         </div>
-
       </div>
-
       {showDeleteModal && (
         <DeleteConfirmModal
           message="해당 일차 여행을 정말로 삭제하시겠습니까?"
