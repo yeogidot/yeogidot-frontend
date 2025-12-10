@@ -7,10 +7,14 @@ export default function FileSelectButton({
   id = 'select-photo',
   accept = 'image/*',
   multiple = true,
+  className = '',
   ...props
 }: Props) {
   return (
-    <span className={classes.container} aria-label="사진 업로드 버튼">
+    <span
+      className={`${classes.container} ${className}`}
+      aria-label="사진 업로드 버튼"
+    >
       <label htmlFor={id}>{children}</label>
       <input
         type="file"
