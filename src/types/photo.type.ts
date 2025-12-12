@@ -3,6 +3,7 @@ export interface PhotoData {
   size: number;
   name: string;
   warning?: boolean;
+  link?: string;
 }
 export interface DatedPhotoData extends PhotoData {
   date: string | null;
