@@ -4,11 +4,10 @@ import WarningIcon from '@assets/icons/warning.svg';
 import { Link } from 'react-router-dom';
 interface Props {
   photo: PhotoData;
-  link?: string;
 }
-export default function Photo({ photo, link }: Props) {
+export default function Photo({ photo }: Props) {
   return (
-    <Link className={classes.photoLink} to={link ?? ''}>
+    <Link className={classes.photoLink} to={photo.link ?? ''}>
       {photo.warning && (
         <img
           src={WarningIcon}
