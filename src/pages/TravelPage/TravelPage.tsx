@@ -1,16 +1,23 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classes from './TravelPage.module.css';
-import EditButton from '../../component/Buttons/EditButton.tsx';
-import ShareButton from '../../component/Buttons/ShareButton.tsx';
-import DeleteButton from '../../component/Buttons/DeleteButton.tsx';
-import BackButton from '../../component/Buttons/BackButton.tsx';
-import BackgroundMap from '../../component/map/map.tsx';
-import DeleteConfirmModal from '../../component/modal/DeleteConfirmModal';
-import ShareModal from '../../component/modal/ShareModal';
-import SamplePhoto1 from '../../assets/images/samplePhoto1.jpg';
-import SamplePhoto2 from '../../assets/images/samplePhoto2.jpg';
-import SamplePhoto3 from '../../assets/images/samplePhoto3.jpg';
+import EditButton from '../../components/Buttons/EditButton/EditButton.tsx';
+import ShareButton from '../../components/Buttons/ShareButton/ShareButton.tsx';
+import DeleteButton from '../../components/Buttons/DeleteButton/DeleteButton.tsx';
+import BackButton from '../../components/Buttons/BackButton/BackButton.tsx';
+import BackgroundMap from '../../components/Map/Map.tsx';
+import DeleteConfirmModal from '../../components/Modal/DeleteConfirmModal.tsx';
+import ShareModal from '../../components/Modal/ShareModal.tsx';
+import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
+import { samplePhotos } from 'src/data/samplePhotos';
+
+// 오래된 사진 순서대로 정렬
+const sortedPhotos = [...samplePhotos].sort(
+  (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
+);
+
+const mapCenter = sortedPhotos[0].location; // 가장 오래된 사진 위치를 중심으로
+
 
 const SHARE_URL = 'https://travel.vercel.com/1234df';
 
@@ -27,13 +34,19 @@ export default function TravelPage() {
   };
   const handleShareClick = () => setShowShareModal(true);
   const handleCloseShareModal = () => setShowShareModal(false);
-  const handleDayClick = () => navigate('/daytravel');
+  const handleDayClick = () => navigate('./1');
   const handleBackClick = () => navigate('/mytravel');
 
   return (
     <div className={classes.container}>
 
-      <BackgroundMap />
+      <BackgroundMap center={mapCenter}>
+        {samplePhotos.map((photo, index) => (
+          <PhotoMarker key={index} position={[photo.location[0] + 0.007, photo.location[1]]} photoUrl={photo.url} />
+        ))}
+      </BackgroundMap>
+
+
       <BackButton onClick={handleBackClick} />
       <div className={classes.panel}>
 
@@ -55,9 +68,13 @@ export default function TravelPage() {
             <h3>1일차</h3>
             <div className={classes.dayTravelLocation}>부산광역시 부산진구, 수영구</div>
             <div className={classes.dayTravelPhoto}>
-              {[SamplePhoto1, SamplePhoto2, SamplePhoto3, SamplePhoto1].map((photo, index) => (
-                <img key={`${photo}-${index}`} src={photo} alt={`여행 사진 ${index + 1}`} />
-              ))}
+              {samplePhotos.slice(0, 3).map((photo, index) => (
+              <img
+                key={`${photo.url}-${index}`}
+                src={photo.url}
+                alt={`여행 사진 ${index + 1}`}
+              />
+            ))}
             </div>
           </div>
       </div>

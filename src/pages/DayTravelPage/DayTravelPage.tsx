@@ -1,16 +1,21 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classes from './DayTravelPage.module.css';
-import EditButton from '../../component/Buttons/EditButton.tsx';
-import DeleteButton from '../../component/Buttons/DeleteButton.tsx';
-import BackButton from '../../component/Buttons/BackButton.tsx';
-import BackgroundMap from '../../component/map/map.tsx';
-import DeleteConfirmModal from '../../component/modal/DeleteConfirmModal';
-import ShareModal from '../../component/modal/ShareModal';
+import EditButton from '../../components/Buttons/EditButton/EditButton.tsx';
+import DeleteButton from '../../components/Buttons/DeleteButton/DeleteButton.tsx';
+import BackButton from '../../components/Buttons/BackButton/BackButton.tsx';
+import BackgroundMap from '../../components/Map/Map.tsx';
+import DeleteConfirmModal from '../../components/Modal/DeleteConfirmModal.tsx';
+import ShareModal from '../../components/Modal/ShareModal.tsx';
 import SamplePhoto1 from '../../assets/images/samplePhoto1.jpg';
 import SamplePhoto2 from '../../assets/images/samplePhoto2.jpg';
 import SamplePhoto3 from '../../assets/images/samplePhoto3.jpg';
+import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
+import { samplePhotos } from 'src/data/samplePhotos.ts';
 
+const oldestPhoto = [...samplePhotos].sort(
+  (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
+)[0];
 const SHARE_URL = 'https://travel.vercel.com/1234df';
 
 export default function TravelPage() {
@@ -26,18 +31,28 @@ export default function TravelPage() {
     setShowDeleteModal(false);
   };
   const handleCloseShareModal = () => setShowShareModal(false);
-  const handleBackClick = () => navigate('/travel');
+  const handleBackClick = () => navigate('../');
 
   return (
     <div className={classes.container}>
 
-      <BackgroundMap />
+      <BackgroundMap center={oldestPhoto.location}>
+        {samplePhotos.map((p, idx) => (
+          <PhotoMarker
+            key={idx}
+            photoUrl={p.url}
+            position={[p.location[0] + 0.007, p.location[1]]}
+          />
+        ))}
+      </BackgroundMap>
+
+      
       <BackButton onClick={handleBackClick} />
       <div className={classes.panel}>
 
         <div className={classes.headerRow}>
           <h1 className={classes.header}>부산 여행</h1>
-
+          <h2 className={classes.ab}>1일차</h2>
           <div className={classes.buttonGroup}>
             <EditButton />
             <DeleteButton onClick={handleDeleteClick} />
@@ -54,7 +69,7 @@ export default function TravelPage() {
             </div>
             <div className={classes.dayTravelLocation}><h3>부산광역시 부산진구, 수영구</h3></div>
             <div className={classes.dayTravelPhoto}>
-              {[SamplePhoto1, SamplePhoto2, SamplePhoto3, SamplePhoto1].map((photo, index) => (
+              {[SamplePhoto1, SamplePhoto2, SamplePhoto3].map((photo, index) => (
                 <img key={`${photo}-${index}`} src={photo} alt={`여행 사진 ${index + 1}`} />
               ))}
             </div>

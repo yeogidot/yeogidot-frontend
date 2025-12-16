@@ -17,11 +17,11 @@ const router = createBrowserRouter([
     Component: () => <Navigate to="mytravel" replace={true} />,
   },
   {
-    path: '/daytravel',
+    path: 'travel/1/1',
     Component: DayTravelPage,
   },
   {
-    path: '/travel',
+    path: 'travel/1',
     Component: TravelPage,
   },
 ]);

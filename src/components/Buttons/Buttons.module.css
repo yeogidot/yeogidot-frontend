@@ -1,0 +1,7 @@
+.smallIcon {
+  width: 18px;
+  height: 18px;
+  z-index: 1;
+  pointer-events: none; /* 버튼 클릭 방해 안되게 */
+  vertical-align: middle; /* ← 추가 */
+}
