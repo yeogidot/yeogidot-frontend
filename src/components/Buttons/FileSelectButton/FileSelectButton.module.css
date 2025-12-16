@@ -1,0 +1,15 @@
+.fileInput {
+  display: none;
+}
+.container {
+  display: flex;
+  background-color: #0d9eff;
+  width: 130px;
+  height: 52px;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 5px;
+  color: white;
+  justify-content: center;
+  align-items: center;
+}
