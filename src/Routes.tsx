@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 import MyTravelPage from './pages/MyTravelPage/MyTravelPage';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
+import FullPhotoPage from './pages/FullPhotoPage/FullPhotoPage';
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
   {
     path: '/new-travel',
     Component: NewTravelPage,
+  },
+  {
+    path: '/photo',
+    Component: FullPhotoPage,
   },
   {
     path: '*',
