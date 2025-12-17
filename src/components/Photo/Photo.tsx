@@ -7,7 +7,7 @@ interface Props {
 }
 export default function Photo({ photo }: Props) {
   return (
-    <Link className={classes.photoLink} to={photo.link ?? ''}>
+    <Link className={classes.photoLink} to={photo.link ?? ''} state={photo}>
       {photo.warning && (
         <img
           src={WarningIcon}
