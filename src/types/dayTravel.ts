@@ -8,3 +8,6 @@ export type DayTravel = {
   photos: Photo[]; // photo 리스트
 };
 
+
+
+

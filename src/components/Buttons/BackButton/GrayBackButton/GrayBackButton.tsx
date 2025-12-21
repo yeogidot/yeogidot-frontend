@@ -1,5 +1,5 @@
-import classes from './BackButton.module.css';
-import backIcon from '../../../assets/icons/back-white.svg';
+import classes from './GrayBackButton.module.css';
+import backIcon from '../../../../assets/icons/back-white.svg';
 
 type BackButtonProps = {
   onClick?: () => void;

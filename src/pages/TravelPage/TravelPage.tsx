@@ -4,12 +4,13 @@ import classes from './TravelPage.module.css';
 import EditButton from '../../components/Buttons/EditButton/EditButton.tsx';
 import ShareButton from '../../components/Buttons/ShareButton/ShareButton.tsx';
 import DeleteButton from '../../components/Buttons/DeleteButton/DeleteButton.tsx';
-import BackButton from '../../components/Buttons/BackButton/BackButton.tsx';
+import BackButton from '../../components/Buttons/BackButton/GrayBackButton/GrayBackButton.tsx';
 import BackgroundMap from '../../components/Map/Map.tsx';
 import DeleteConfirmModal from '../../components/Modal/DeleteConfirmModal.tsx';
 import ShareModal from '../../components/Modal/ShareModal.tsx';
 import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
 import { samplePhotos } from 'src/data/samplePhotos';
+import { sampleTravelData, sampleDayTravels } from 'src/data/sampleTravelData';
 
 // 오래된 사진 순서대로 정렬
 const sortedPhotos = [...samplePhotos].sort(
@@ -51,7 +52,7 @@ export default function TravelPage() {
       <div className={classes.panel}>
 
         <div className={classes.headerRow}>
-          <h1 className={classes.header}>부산 여행</h1>
+          <h1 className={classes.header}>{sampleTravelData.title}</h1>
 
           <div className={classes.buttonGroup}>
             <EditButton />
@@ -61,14 +62,14 @@ export default function TravelPage() {
         </div>
 
         <div className={classes.travelInformation}>
-          <div>부산광역시</div>
-          <div>2025-10-16 ~ 2025-10-18</div>
+          <div>{sampleTravelData.city}</div>
+          <div>{sampleTravelData.period}</div>
         </div>
         <div className={classes.dayTravelRow} onClick={handleDayClick} style={{ cursor: 'pointer' }}>
-            <h3>1일차</h3>
-            <div className={classes.dayTravelLocation}>부산광역시 부산진구, 수영구</div>
+            <h3>{sampleDayTravels[0].day}일차</h3>
+            <div className={classes.dayTravelLocation}>{sampleDayTravels[0].locations}</div>
             <div className={classes.dayTravelPhoto}>
-              {samplePhotos.slice(0, 3).map((photo, index) => (
+              {sampleDayTravels[0].photos.map((photo, index) => (
               <img
                 key={`${photo.url}-${index}`}
                 src={photo.url}
