@@ -37,6 +37,7 @@ export default function NewTravelPage() {
           size: file.size,
           date: await getCreatedDateTime(file),
           GPSCoordinates: await getGPSCoordinates(file),
+          link: '/photo',
         };
       }
     );

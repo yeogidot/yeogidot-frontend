@@ -10,6 +10,7 @@ import WriteTravelDiaryPage from './pages/WriteTravelDiaryPage/WriteTravelDiaryP
 import EditTravelDiaryPage from './pages/EditTravelDiaryPage/EditTravelDiaryPage';
 import WriteTravelPhotoComment from './pages/WriteTravelPhotoComment/WriteTravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
+import FullPhotoPage from './pages/FullPhotoPage/FullPhotoPage';
 
 
 const router = createBrowserRouter([
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: '/new-travel',
     Component: NewTravelPage,
+  },
+  {
+    path: '/photo',
+    Component: FullPhotoPage,
   },
   {
     path: '*',
