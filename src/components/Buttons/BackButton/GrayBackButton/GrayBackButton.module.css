@@ -1,0 +1,23 @@
+.grayIconWrapper {
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border: none;
+  width: 50px;  /* 지름 32px */
+  height: 50px;
+  background-color: #3636364D;
+  opacity: 70%;
+}
+
+.mapBackButton {
+  position: absolute;
+  top: 16px;     /* 원하는 거리로 조절 */
+  left: 16px;
+  z-index: 999;  /* 지도보다 위로 */
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+}
