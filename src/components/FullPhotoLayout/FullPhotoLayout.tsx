@@ -4,7 +4,7 @@ import classes from './FullPhotoLayout.module.css';
 import { getCenter, getDiff, detectZoom } from '@utils/zoom';
 interface Props {
   photo: DatedPhotoData;
-  children: ReactElement[] | ReactElement;
+  children?: ReactElement[] | ReactElement;
   imageWidthDefaultPercent?: number;
 }
 
