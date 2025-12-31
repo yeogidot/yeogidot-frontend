@@ -4,7 +4,6 @@
   align-items: center;
   overflow: hidden;
   border: none;
-  margin-right: 8px; /* 버튼 간격 */
   width: 32px;  /* 지름 32px */
   height: 32px;
   background-color: #AEE6FF; /* 하늘색 */

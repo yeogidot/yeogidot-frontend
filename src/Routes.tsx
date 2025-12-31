@@ -12,31 +12,31 @@ import WriteTravelPhotoComment from './pages/WriteTravelPhotoComment/WriteTravel
 
 const router = createBrowserRouter([
   {
-    path: '/mytravel',
+    path: '/my-travel',
     Component: MyTravelPage,
   },
   {
     path: '*',
-    Component: () => <Navigate to="mytravel" replace={true} />,
+    Component: () => <Navigate to="/my-travel" replace={true} />,
   },
   {
-    path: 'travel/1',
+    path: '/travel/:travelId',
     Component: TravelPage,
   },
   {
-    path: 'travel/1/1',
+    path: '/travel/:travelId/:day',
     Component: DayTravelPage,
   },
   {
-    path: 'travel/1/1/writeTravelDiaryPage',
+    path: '/travel/:travelId/:day/writeTravelDiaryPage',
     Component: WriteTravelDiaryPage,
   },
   {
-    path: 'travel/1/1/EditTravelDiaryPage',
+    path: '/travel/:travelId/:day/EditTravelDiaryPage',
     Component: EditTravelDiaryPage,
   },
   {
-    path: 'travel/1/1/photos/1/WriteTravelPhotoComment',
+    path: '/photos/:photoId/WriteTravelPhotoComment',
     Component: WriteTravelPhotoComment,
   }
 ]);
