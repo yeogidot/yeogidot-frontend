@@ -1,0 +1,11 @@
+.image {
+  object-fit: contain;
+  min-height: 100vh;
+}
+.container {
+  touch-action: pan-x pan-y;
+  width: 100%;
+  background-color: black;
+  height: 100vh;
+  overflow: scroll;
+}
