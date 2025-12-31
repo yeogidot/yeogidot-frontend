@@ -1,7 +1,7 @@
 import { useRef, useState, type ReactElement } from 'react';
 import type { DatedPhotoData } from 'src/types/photo.type';
 import classes from './FullPhotoLayout.module.css';
-
+import { getCenter, getDiff, detectZoom } from '@utils/zoom';
 interface Props {
   photo: DatedPhotoData;
   children: ReactElement[] | ReactElement;
@@ -17,50 +17,11 @@ export default function FullPhotoLayout({
     eventCache: React.PointerEvent[];
     previousDiff: null | number;
   }>({ eventCache: [], previousDiff: null });
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [imageWidthPercent, setImageWidthPercent] = useState(
     imageWidthDefaultPercent
   );
-
-  const detectZoom = (
-    previousDiff: number | null,
-    nowDiff: number | null,
-    threshold = 1
-  ) => {
-    if (
-      previousDiff === null ||
-      nowDiff === null ||
-      Math.abs(nowDiff - previousDiff) <= threshold
-    ) {
-      return null;
-    }
-    if (nowDiff > previousDiff) {
-      return 'ZOOM IN';
-    }
-    if (nowDiff < previousDiff) {
-      return 'ZOOM OUT';
-    }
-  };
-
-  const getDiff = (eventCache: React.PointerEvent[]) => {
-    if (eventCache.length < 2) {
-      return null;
-    }
-    const [a, b] = eventCache;
-    return Math.sqrt(
-      (a.clientX - b.clientX) ** 2 + (a.clientY - b.clientY) ** 2
-    );
-  };
-  const getCenter = (eventCache: React.PointerEvent[]) => {
-    if (eventCache.length < 2) {
-      return null;
-    }
-    const [a, b] = eventCache;
-    return {
-      x: (a.clientX + b.clientX) / 2,
-      y: (a.clientY + b.clientY) / 2,
-    };
-  };
 
   const scrollToScailedCenter = (
     center: { x: number; y: number } | null,
