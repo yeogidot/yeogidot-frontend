@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import classes from './DayTravelPage.module.css';
 import EditButton from '../../components/Buttons/EditButton/EditButton.tsx';
 import DeleteButton from '../../components/Buttons/DeleteButton/DeleteButton.tsx';
@@ -16,8 +16,9 @@ const oldestPhoto = [...samplePhotos].sort(
 )[0];
 const SHARE_URL = 'https://travel.vercel.com/1234df';
 
-export default function TravelPage() {
+export default function DayTravelPage() {
   const navigate = useNavigate();
+  const { travelId, day } = useParams<{ travelId: string; day: string }>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const dayTravelData = sampleDayTravels[0]; // 현재는 1일차 데이터만 사용
@@ -50,8 +51,10 @@ export default function TravelPage() {
       <div className={classes.panel}>
 
         <div className={classes.headerRow}>
-          <h1 className={classes.header}>부산 여행</h1>
-          <h2 className={classes.ab}>1일차</h2>
+          <div className={classes.header}>
+            <h1>부산 여행</h1>
+            <h2>1일차</h2>
+          </div>
           <div className={classes.buttonGroup}>
             <EditButton />
             <DeleteButton onClick={handleDeleteClick} />
