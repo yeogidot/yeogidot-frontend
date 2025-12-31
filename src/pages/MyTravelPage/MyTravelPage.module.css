@@ -1,3 +1,20 @@
 .header {
-  color: #800080;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-top: 134px;
+  margin-bottom: 39px;
+  padding-inline: 37px;
+  z-index: 1;
+  background-color: white;
+}
+.headerText {
+  margin: 0;
+}
+.logoutLink {
+  color: #029aff;
+  text-decoration: none;
+}
+.container {
+  width: 100%;
 }
