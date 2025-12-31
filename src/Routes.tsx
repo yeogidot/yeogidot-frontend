@@ -9,11 +9,17 @@ import DayTravelPage from './pages/DayTravelPage/DayTravelPage';
 import WriteTravelDiaryPage from './pages/WriteTravelDiaryPage/WriteTravelDiaryPage';
 import EditTravelDiaryPage from './pages/EditTravelDiaryPage/EditTravelDiaryPage';
 import WriteTravelPhotoComment from './pages/WriteTravelPhotoComment/WriteTravelPhotoComment';
+import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
+
 
 const router = createBrowserRouter([
   {
     path: '/my-travel',
     Component: MyTravelPage,
+  },
+  {
+    path: '/new-travel',
+    Component: NewTravelPage,
   },
   {
     path: '*',

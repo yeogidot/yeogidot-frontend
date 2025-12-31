@@ -1,0 +1,43 @@
+.itemContainer {
+  border-radius: 5px;
+  height: 188px;
+  overflow: hidden;
+  width: 311px;
+  position: relative;
+}
+.thumbnail {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  filter: brightness(65%) blur(1px);
+}
+.thumbnailLink {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.infoContainer {
+  display: block;
+  text-decoration: none;
+  padding-inline: 20px;
+  position: absolute;
+  bottom: 22px;
+  color: #d9f0ff;
+}
+
+.editButton {
+  border-radius: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  background-color: #d9f0ff;
+  position: absolute;
+  right: 14px;
+  top: 16px;
+}
+.title {
+  font-weight: bold;
+  font-size: 20px;
+}

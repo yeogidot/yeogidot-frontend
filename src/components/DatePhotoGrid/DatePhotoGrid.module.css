@@ -1,0 +1,15 @@
+.container {
+  overflow: scroll;
+  height: 35vh;
+  -ms-overflow-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 24px;
+}
+.container::-webkit-scrollbar {
+  display: none;
+}
+.date {
+  margin-block: 7px;
+}
