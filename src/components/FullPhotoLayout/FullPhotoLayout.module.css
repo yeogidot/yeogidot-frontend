@@ -8,4 +8,9 @@
   background-color: black;
   height: 100vh;
   overflow: scroll;
+  scrollbar-width: none;
+}
+
+.container::-webkit-scrollbar {
+  display: none;
 }
