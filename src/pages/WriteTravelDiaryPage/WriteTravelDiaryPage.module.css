@@ -6,8 +6,12 @@
   font-family: sans-serif;
 }
 
+.panel {
+  padding:24px;
+}
+
 .backButtonWrapper {
-  position: absolute;
+  position: relative;
   top: 83px;
   left: 32px;
 }
@@ -31,4 +35,14 @@
     border:none;
     background-color: #F6F6F6;
     resize: none;
+}
+
+.finishButton {
+  position: absolute;
+  width: 130px;
+  height: 52px;
+  top: 557px;
+  left: 132px;
+  border-radius: 5px;
+  font-size: 20px;
 }

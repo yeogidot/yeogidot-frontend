@@ -5,6 +5,27 @@
   overflow: hidden;
   font-family: sans-serif;
 }
+
+.bottomPanel {
+  position: absolute;
+  top:400px;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255);
+  z-index: 1;
+  overflow-y: auto;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between; /* 좌: 제목 / 우: 버튼 */
+  align-items: center;
+  height: 39px;
+}
+
 .dayTravelPhoto {
   display: flex;
   overflow-x: auto;
@@ -19,40 +40,39 @@
 }
 
 .backButtonWrapper {
-    position: absolute;
-    Top: 73px;
-    Left:22px;
-}
-
-.bottomPanel {
-    position: absolute;
-    top:426px;
-    left:39px;
+  position: absolute;
+  top: 73px;
+  left: 22px;
 }
 
 .deleteButtonWrapper{
-    position: absolute;
-    top:4px;
-    left:288px;
 }
 
 .photoInformation{
-    font-size: 16px;
-    color:#5B5B5B;
+  font-size: 16px;
+  color:#5B5B5B;
 }
 .photoInformation a {
-    color:#029AFF;
+  color:#029AFF;
 }
 
 .textAreaWrapper {
-    position: relative;
-    top:21px;
-    width: 315px;
-    height: 153px;
-    border-radius: 5px;
-    border:none;
-    background-color: #F6F6F6;
-    resize: none;
-    padding-top: 12px;
-    padding-left: 16px;
+  position: relative;
+  margin-top: 2px;
+  width: 100%;
+  height: 153px;
+  border-radius: 5px;
+  border:none;
+  background-color: #F6F6F6;
+  resize: none;
+}
+
+.finishButton Button{
+  top:50%;
+  width: 59px;
+  height: 32px;
+  float: right;
+  margin-top: 2px;
+  border-radius: 5px;
+  font-size:16px;
 }
