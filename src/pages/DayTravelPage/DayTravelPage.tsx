@@ -27,12 +27,16 @@ export default function DayTravelPage() {
   const handleDeleteClick = () => setShowDeleteModal(true);
   const handleCloseModal = () => setShowDeleteModal(false);
   const handleConfirmDelete = () => {
-    // TODO: wire up actual delete handler when backend is ready
     setShowDeleteModal(false);
   };
+  const handleEditClick = () => {
+    navigate(`/travel/${travelId}/${day}/writeTravelDiaryPage`);
+  };
   const handleCloseShareModal = () => setShowShareModal(false);
-  const handleBackClick = () => navigate('../');
-
+  const handleBackClick = () => navigate(-1);
+  const handlePhotoClick = (photoId: string | number) => {
+    navigate(`/photos/${photoId}/WriteTravelPhotoComment`);
+  };
   return (
     <div className={classes.container}>
 
@@ -46,8 +50,9 @@ export default function DayTravelPage() {
         ))}
       </BackgroundMap>
 
-      
-      <BackButton onClick={handleBackClick} />
+      <div className={classes.backButton}>
+        <BackButton onClick={handleBackClick} />
+      </div>
       <div className={classes.panel}>
 
         <div className={classes.headerRow}>
@@ -56,7 +61,7 @@ export default function DayTravelPage() {
             <h2>1일차</h2>
           </div>
           <div className={classes.buttonGroup}>
-            <EditButton />
+            <EditButton onClick={handleEditClick} />
             <DeleteButton onClick={handleDeleteClick} />
           </div>
         </div>
@@ -72,7 +77,12 @@ export default function DayTravelPage() {
             <div className={classes.dayTravelLocation}><h3>{dayTravelData.locations}</h3></div>
             <div className={classes.dayTravelPhoto}>
               {dayTravelData.photos.map((photo, index) => (
-                <img key={`${photo.url}-${index}`} src={photo.url} alt={`여행 사진 ${index + 1}`} />
+                <img
+                  key={`${photo.url}-${index}`}
+                  src={photo.url}
+                  alt={`여행 사진 ${index + 1}`}
+                  onClick={() => handlePhotoClick(index + 1)}
+                  className={classes.clickablePhoto}/>
               ))}
             </div>
           </div>

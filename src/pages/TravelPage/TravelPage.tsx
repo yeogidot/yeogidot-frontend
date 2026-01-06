@@ -48,8 +48,9 @@ export default function TravelPage() {
         ))}
       </BackgroundMap>
 
-
-      <BackButton onClick={handleBackClick} />
+      <div className={classes.backButton}>
+        <BackButton onClick={handleBackClick} />
+      </div>
       <div className={classes.panel}>
 
         <div className={classes.headerRow}>
