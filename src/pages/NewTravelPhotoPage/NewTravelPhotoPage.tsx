@@ -8,7 +8,13 @@ import { convertISOToKorean } from '@utils/date';
 import CircularIconButton from '@components/CircularIconButton/CircularIconButton';
 import CalendarIcon from '@assets/icons/datetime-white.svg';
 import BinIcon from '@assets/icons/trash-can.svg';
+import { useState } from 'react';
+import DatetimeModal from '@components/Modal/DatetimeModal/DatetimeModal';
+import DeleteConfirmModal from '@components/Modal/DeleteConfirmModal';
+
 export default function FullPhotoPage() {
+  const [datetimeModalState, setDatetimeModalState] = useState(false);
+  const [deleteModalState, setDeleteModalState] = useState(false);
   const photo: DatedPhotoData = useLocation().state;
   const navigate = useNavigate();
   return (
@@ -32,9 +38,36 @@ export default function FullPhotoPage() {
         </div>
       </header>
       <footer className={classes.footer}>
-        <CircularIconButton icon={CalendarIcon} />
-        <CircularIconButton icon={BinIcon} />
+        <CircularIconButton
+          icon={CalendarIcon}
+          onClick={() => {
+            setDatetimeModalState(true);
+          }}
+        />
+        <CircularIconButton
+          icon={BinIcon}
+          onClick={() => {
+            setDeleteModalState(true);
+          }}
+        />
       </footer>
+      {datetimeModalState ? (
+        <DatetimeModal
+          currentDate={photo.date ? photo.date : null}
+          onCancel={() => setDatetimeModalState(false)}
+        />
+      ) : (
+        <></>
+      )}
+      {deleteModalState ? (
+        <DeleteConfirmModal
+          message={'사진을 삭제하시겠습니까?'}
+          onConfirm={() => undefined}
+          onCancel={() => setDeleteModalState(false)}
+        />
+      ) : (
+        <></>
+      )}
     </FullPhotoLayout>
   );
 }
