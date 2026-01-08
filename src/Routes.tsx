@@ -9,9 +9,9 @@ import DayTravelPage from './pages/DayTravelPage/DayTravelPage';
 import WriteTravelDiaryPage from './pages/WriteTravelDiaryPage/WriteTravelDiaryPage';
 import EditTravelDiaryPage from './pages/EditTravelDiaryPage/EditTravelDiaryPage';
 import WriteTravelPhotoComment from './pages/WriteTravelPhotoComment/WriteTravelPhotoComment';
+import NewTravelHome from './pages/NewTravelHome/NewTravelHome';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
 import FullPhotoPage from './pages/FullPhotoPage/FullPhotoPage';
-
 
 const router = createBrowserRouter([
   {
@@ -21,6 +21,7 @@ const router = createBrowserRouter([
   {
     path: '/new-travel',
     Component: NewTravelPage,
+    children: [{ index: true, Component: NewTravelHome }],
   },
   {
     path: '/photo',
@@ -49,7 +50,7 @@ const router = createBrowserRouter([
   {
     path: '/photos/:photoId/WriteTravelPhotoComment',
     Component: WriteTravelPhotoComment,
-  }
+  },
 ]);
 
 export function Routes() {
