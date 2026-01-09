@@ -21,11 +21,10 @@ const router = createBrowserRouter([
   {
     path: '/new-travel',
     Component: NewTravelPage,
-    children: [{ index: true, Component: NewTravelHome }],
-  },
-  {
-    path: '/photo',
-    Component: FullPhotoPage,
+    children: [
+      { index: true, Component: NewTravelHome },
+      { path: 'photo', Component: FullPhotoPage },
+    ],
   },
   {
     path: '*',
