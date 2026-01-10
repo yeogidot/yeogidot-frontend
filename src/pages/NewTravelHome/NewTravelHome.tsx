@@ -1,12 +1,12 @@
 import BlackBackIcon from '@assets/icons/back-black.svg';
 import FileSelectButton from '@components/Buttons/FileSelectButton/FileSelectButton';
 import Button from '@components/Buttons/Button/Button';
-import { useState } from 'react';
 import type { DatedPhotoData, FullPhotoData } from 'src/types/photo.type';
 import classes from './NewTravelHome.module.css';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import { useNavigate } from 'react-router-dom';
 import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
+import { useTravel } from '../NewTravelPage/NewTravelPage';
 
 const createPhotoDateMap = (photos: DatedPhotoData[]) => {
   return photos.reduce((photoDateMap, currentPhoto) => {
@@ -20,32 +20,42 @@ const createPhotoDateMap = (photos: DatedPhotoData[]) => {
 };
 
 export default function NewTravelHome() {
+  const [travel, setTravel] = useTravel();
   const navigate = useNavigate();
-  const [photos, setPhotos] = useState<FullPhotoData[]>([]);
-  const [travelName, setTravelName] = useState<string>('');
+  const photos = travel.photos;
 
-  const handleTravelNameInputChange = (
+  const setPhotos = (photos: FullPhotoData[]) => {
+    setTravel(travel => {
+      return { ...travel, photos };
+    });
+  };
+  const travelTitle = travel.title;
+  const setTravelTitle = (title: string) => {
+    setTravel(travel => {
+      return { ...travel, title: title };
+    });
+  };
+  const handleTravelTitleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>
-  ) => setTravelName(e.target.value);
+  ) => setTravelTitle(e.target.value);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPhotosPromises = Array.from(e.target.files ?? []).map(
-      async file => {
+      async (file, index) => {
         return {
+          id: index,
           url: URL.createObjectURL(file),
           name: file.name,
           size: file.size,
           date: await getCreatedDateTime(file),
           GPSCoordinates: await getGPSCoordinates(file),
-          link: '/photo',
+          link: 'photo',
         };
       }
     );
 
     const newPhotos = await Promise.all(newPhotosPromises);
-    setPhotos(photos => {
-      return [...photos, ...newPhotos];
-    });
+    setPhotos([...photos, ...newPhotos]);
   };
   const photoDateMap = createPhotoDateMap(
     photos.map(photo => {
@@ -69,8 +79,8 @@ export default function NewTravelHome() {
         <h3 className={classes.inputHeader}>여행 이름</h3>
         <input
           className={classes.textInput}
-          onChange={handleTravelNameInputChange}
-          value={travelName}
+          onChange={handleTravelTitleInputChange}
+          value={travelTitle}
           type="text"
           id="travel-name"
           autoComplete="off"
