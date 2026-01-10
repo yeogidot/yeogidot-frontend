@@ -6,7 +6,7 @@ import classes from './NewTravelHome.module.css';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import { useNavigate } from 'react-router-dom';
 import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
-import { useTravel } from '../NewTravelPage/NewTravelPage';
+import { useTravel } from '@hooks/travel';
 
 const createPhotoDateMap = (photos: DatedPhotoData[]) => {
   return photos.reduce((photoDateMap, currentPhoto) => {
