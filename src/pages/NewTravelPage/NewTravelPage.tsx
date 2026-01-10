@@ -1,4 +1,4 @@
-import { Outlet, useOutletContext } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import type { NewTravelInfo } from 'src/types/travel.type';
 
