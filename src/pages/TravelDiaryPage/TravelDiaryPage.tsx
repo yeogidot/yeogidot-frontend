@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
-import classes from "./WriteTravelDiaryPage.module.css";
+import classes from "./TravelDiaryPage.module.css";
 import BlackBackButton from "src/components/Buttons/BackButton/BlackBackButton/BlackBackButton";
 import { sampleDiaryEntries } from '../../data/sampleTravelData';
 import Button from '@components/Buttons/Button/Button';
 
-export default function WriteTravelDiaryPage() {
+export default function TravelDiaryPage() {
   const { travelId, day } = useParams<{ travelId: string; day: string }>();
   const navigate = useNavigate();
 

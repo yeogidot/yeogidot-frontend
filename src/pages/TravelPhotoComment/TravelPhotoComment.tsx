@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import classes from './WriteTravelPhotoComment.module.css'
+import classes from './TravelPhotoComment.module.css'
 import BackButton from 'src/components/Buttons/BackButton/GrayBackButton/GrayBackButton'
 import DeleteButton from 'src/components/Buttons/DeleteButton/DeleteButton'
-import { samplePhotoComments } from '../../data/sampleTravelData'
+import { samplePhotoComments } from '../../data/sampleTravelData.ts'
 import DeleteConfirmModal from '../../components/Modal/DeleteConfirmModal.tsx';
 import Button from '@components/Buttons/Button/Button';
 
-export default function WriteTravelPhotoComment() {
+export default function TravelPhotoComment() {
   const { photoId } = useParams<{ photoId: string }>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
