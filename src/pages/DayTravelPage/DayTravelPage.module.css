@@ -34,12 +34,13 @@
 
 .header h2{
   color: #5B5B5B;
+  margin-left: 5px;
 }
 
 /* 버튼 3개를 가로로 나란히 */
 .buttonGroup {
   display: flex;
-  gap: 8px; /*버튼 사이 간격 */
+  gap: 13px; /*버튼 사이 간격 */
 }
 .travelInformation {
   font-size:16px;

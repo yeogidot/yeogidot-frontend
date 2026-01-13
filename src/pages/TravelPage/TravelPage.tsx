@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import classes from './TravelPage.module.css';
 import EditButton from '../../components/Buttons/EditButton/EditButton.tsx';
 import ShareButton from '../../components/Buttons/ShareButton/ShareButton.tsx';
@@ -24,7 +24,6 @@ const SHARE_URL = 'https://travel.vercel.com/1234df';
 
 export default function TravelPage() {
   const navigate = useNavigate();
-  const { travelId } = useParams<{ travelId: string }>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
 

@@ -30,12 +30,12 @@ export default function DayTravelPage() {
     setShowDeleteModal(false);
   };
   const handleEditClick = () => {
-    navigate(`/travel/${travelId}/${day}/writeTravelDiaryPage`);
+    navigate(`/travel/${travelId}/${day}/travel-diary-page`);
   };
   const handleCloseShareModal = () => setShowShareModal(false);
   const handleBackClick = () => navigate(-1);
   const handlePhotoClick = (photoId: string | number) => {
-    navigate(`/photos/${photoId}/WriteTravelPhotoComment`);
+    navigate(`/photos/${photoId}/travel-photo-comment`);
   };
   return (
     <div className={classes.container}>
@@ -61,7 +61,7 @@ export default function DayTravelPage() {
             <h2>1일차</h2>
           </div>
           <div className={classes.buttonGroup}>
-            <EditButton onClick={handleEditClick} />
+            <EditButton/>
             <DeleteButton onClick={handleDeleteClick} />
           </div>
         </div>
@@ -71,7 +71,7 @@ export default function DayTravelPage() {
           <div>{sampleTravelData.period}</div>
           <div className={classes.dayTravelRow}>
             <h3>{dayTravelData.title}</h3>
-            <div className={`${classes.dailyCommentBox} ${dailyComment ? classes.hasComment : classes.noComment}`}>
+            <div className={`${classes.dailyCommentBox} ${dailyComment ? classes.hasComment : classes.noComment}`}  onClick={handleEditClick} >
               {dailyComment ? dailyComment : '아직 여행일기가 없습니다.'}
             </div>
             <div className={classes.dayTravelLocation}><h3>{dayTravelData.locations}</h3></div>
