@@ -38,4 +38,55 @@ export const sampleDayTravels = [
     diary: '많이 걸어서 힘들었지만 재미있었음',
     photos: samplePhotos.slice(0, 3), // 1일차는 처음 3장 사진
   },
+  {
+    day: 2,
+    title: '2일차 여행일기',
+    locations: '부산광역시 해운대구',
+    diary: '바다를 보며 힐링했어요',
+    photos: [], // 2일차는 아직 사진 없음
+  },
+];
+
+// 여행일기 작성 샘플 데이터
+export const sampleDiaryEntries = [
+  {
+    travelId: '1',
+    day: 1,
+    existingDiary: '많이 걸어서 힘들었지만 재미있었음',
+    placeholder: '여기에 내용을 입력해주세요!',
+  },
+  {
+    travelId: '1',
+    day: 2,
+    existingDiary: null,
+    placeholder: '여기에 내용을 입력해주세요!',
+  },
+];
+
+// 사진 코멘트 작성 샘플 데이터
+export const samplePhotoComments = [
+  {
+    travelId: '1',
+    day: 1,
+    photoId: '1',
+    photo: samplePhotos[0],
+    existingComment: '부산항대교에서 찍은 사진이에요',
+    placeholder: '여기에 내용을 입력해주세요!',
+  },
+  {
+    travelId: '1',
+    day: 1,
+    photoId: '2',
+    photo: samplePhotos[1],
+    existingComment: null,
+    placeholder: '여기에 내용을 입력해주세요!',
+  },
+  {
+    travelId: '1',
+    day: 1,
+    photoId: '3',
+    photo: samplePhotos[2],
+    existingComment: '맛있는 음식 사진!',
+    placeholder: '여기에 내용을 입력해주세요!',
+  },
 ];

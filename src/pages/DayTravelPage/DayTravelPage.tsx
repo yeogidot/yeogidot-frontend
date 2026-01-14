@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import classes from './DayTravelPage.module.css';
 import EditButton from '../../components/Buttons/EditButton/EditButton.tsx';
 import DeleteButton from '../../components/Buttons/DeleteButton/DeleteButton.tsx';
@@ -16,8 +16,9 @@ const oldestPhoto = [...samplePhotos].sort(
 )[0];
 const SHARE_URL = 'https://travel.vercel.com/1234df';
 
-export default function TravelPage() {
+export default function DayTravelPage() {
   const navigate = useNavigate();
+  const { travelId, day } = useParams<{ travelId: string; day: string }>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const dayTravelData = sampleDayTravels[0]; // 현재는 1일차 데이터만 사용
@@ -26,12 +27,16 @@ export default function TravelPage() {
   const handleDeleteClick = () => setShowDeleteModal(true);
   const handleCloseModal = () => setShowDeleteModal(false);
   const handleConfirmDelete = () => {
-    // TODO: wire up actual delete handler when backend is ready
     setShowDeleteModal(false);
   };
+  const handleEditClick = () => {
+    navigate(`/travel/${travelId}/${day}/travel-diary-page`);
+  };
   const handleCloseShareModal = () => setShowShareModal(false);
-  const handleBackClick = () => navigate('../');
-
+  const handleBackClick = () => navigate(-1);
+  const handlePhotoClick = (photoId: string | number) => {
+    navigate(`/photos/${photoId}/travel-photo-comment`);
+  };
   return (
     <div className={classes.container}>
 
@@ -45,15 +50,18 @@ export default function TravelPage() {
         ))}
       </BackgroundMap>
 
-      
-      <BackButton onClick={handleBackClick} />
+      <div className={classes.backButton}>
+        <BackButton onClick={handleBackClick} />
+      </div>
       <div className={classes.panel}>
 
         <div className={classes.headerRow}>
-          <h1 className={classes.header}>부산 여행</h1>
-          <h2 className={classes.ab}>1일차</h2>
+          <div className={classes.header}>
+            <h1>부산 여행</h1>
+            <h2>1일차</h2>
+          </div>
           <div className={classes.buttonGroup}>
-            <EditButton />
+            <EditButton/>
             <DeleteButton onClick={handleDeleteClick} />
           </div>
         </div>
@@ -63,13 +71,18 @@ export default function TravelPage() {
           <div>{sampleTravelData.period}</div>
           <div className={classes.dayTravelRow}>
             <h3>{dayTravelData.title}</h3>
-            <div className={`${classes.dailyCommentBox} ${dailyComment ? classes.hasComment : classes.noComment}`}>
+            <div className={`${classes.dailyCommentBox} ${dailyComment ? classes.hasComment : classes.noComment}`}  onClick={handleEditClick} >
               {dailyComment ? dailyComment : '아직 여행일기가 없습니다.'}
             </div>
             <div className={classes.dayTravelLocation}><h3>{dayTravelData.locations}</h3></div>
             <div className={classes.dayTravelPhoto}>
               {dayTravelData.photos.map((photo, index) => (
-                <img key={`${photo.url}-${index}`} src={photo.url} alt={`여행 사진 ${index + 1}`} />
+                <img
+                  key={`${photo.url}-${index}`}
+                  src={photo.url}
+                  alt={`여행 사진 ${index + 1}`}
+                  onClick={() => handlePhotoClick(index + 1)}
+                  className={classes.clickablePhoto}/>
               ))}
             </div>
           </div>
