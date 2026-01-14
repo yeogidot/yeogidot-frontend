@@ -6,11 +6,11 @@ import {
 import MyTravelPage from './pages/MyTravelPage/MyTravelPage';
 import TravelPage from './pages/TravelPage/TravelPage';
 import DayTravelPage from './pages/DayTravelPage/DayTravelPage';
+import NewTravelHome from './pages/NewTravelHome/NewTravelHome';
 import TravelDiaryPage from './pages/TravelDiaryPage/TravelDiaryPage';
 import TravelPhotoComment from './pages/TravelPhotoComment/TravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
 import FullPhotoPage from './pages/FullPhotoPage/FullPhotoPage';
-
 
 const router = createBrowserRouter([
   {
@@ -20,10 +20,10 @@ const router = createBrowserRouter([
   {
     path: '/new-travel',
     Component: NewTravelPage,
-  },
-  {
-    path: '/photo',
-    Component: FullPhotoPage,
+    children: [
+      { index: true, Component: NewTravelHome },
+      { path: 'photo', Component: FullPhotoPage },
+    ],
   },
   {
     path: '*',
