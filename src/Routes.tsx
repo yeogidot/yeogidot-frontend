@@ -10,7 +10,7 @@ import NewTravelHome from './pages/NewTravelHome/NewTravelHome';
 import TravelDiaryPage from './pages/TravelDiaryPage/TravelDiaryPage';
 import TravelPhotoComment from './pages/TravelPhotoComment/TravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
-import FullPhotoPage from './pages/FullPhotoPage/FullPhotoPage';
+import NewTravelPhotoPage from './pages/NewTravelPhotoPage/NewTravelPhotoPage';
 import SelectThumbnailPage from './pages/SelectThumbnailPage/SelectThumbnailPage';
 
 const router = createBrowserRouter([
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
     Component: NewTravelPage,
     children: [
       { index: true, Component: NewTravelHome },
-      { path: 'photo', Component: FullPhotoPage },
+      { path: 'photo', Component: NewTravelPhotoPage },
     ],
   },
   {
