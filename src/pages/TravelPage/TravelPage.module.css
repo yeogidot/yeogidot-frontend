@@ -8,9 +8,10 @@
 
 .panel {
   position: absolute;
+  top:400px;
   bottom: 0;
   width: 100%;
-  height: 50%;
+  height: 100%;
   padding: 24px;
   box-sizing: border-box;
   background: rgba(255, 255, 255);
@@ -30,7 +31,7 @@
 /* 버튼 3개를 가로로 나란히 */
 .buttonGroup {
   display: flex;
-  gap: 1.5px; /* 버튼 사이 간격 */
+  gap: 13px; /* 버튼 사이 간격 */
 }
 .travelInformation {
   font-size:16px;
@@ -47,6 +48,12 @@ h1, h3 {
 }
 h3 {
   height: 24px;
+}
+
+.backButton {
+  position: absolute;
+  top: 59px;
+  left: 8px;
 }
 
 .dayTravelPhoto {
