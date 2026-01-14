@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import classes from './TravelPage.module.css';
 import EditButton from '../../components/Buttons/EditButton/EditButton.tsx';
 import ShareButton from '../../components/Buttons/ShareButton/ShareButton.tsx';
@@ -35,7 +35,7 @@ export default function TravelPage() {
   };
   const handleShareClick = () => setShowShareModal(true);
   const handleCloseShareModal = () => setShowShareModal(false);
-  const handleDayClick = () => navigate('./1');
+  const handleDayClick = () => navigate(`./${sampleDayTravels[0].day}`);
   const handleBackClick = () => navigate('/mytravel');
 
   return (
@@ -47,8 +47,9 @@ export default function TravelPage() {
         ))}
       </BackgroundMap>
 
-
-      <BackButton onClick={handleBackClick} />
+      <div className={classes.backButton}>
+        <BackButton onClick={handleBackClick} />
+      </div>
       <div className={classes.panel}>
 
         <div className={classes.headerRow}>

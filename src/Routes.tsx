@@ -6,9 +6,8 @@ import {
 import MyTravelPage from './pages/MyTravelPage/MyTravelPage';
 import TravelPage from './pages/TravelPage/TravelPage';
 import DayTravelPage from './pages/DayTravelPage/DayTravelPage';
-import WriteTravelDiaryPage from './pages/WriteTravelDiaryPage/WriteTravelDiaryPage';
-import EditTravelDiaryPage from './pages/EditTravelDiaryPage/EditTravelDiaryPage';
-import WriteTravelPhotoComment from './pages/WriteTravelPhotoComment/WriteTravelPhotoComment';
+import TravelDiaryPage from './pages/TravelDiaryPage/TravelDiaryPage';
+import TravelPhotoComment from './pages/TravelPhotoComment/TravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
 import FullPhotoPage from './pages/FullPhotoPage/FullPhotoPage';
 
@@ -39,16 +38,12 @@ const router = createBrowserRouter([
     Component: DayTravelPage,
   },
   {
-    path: '/travel/:travelId/:day/writeTravelDiaryPage',
-    Component: WriteTravelDiaryPage,
+    path: '/travel/:travelId/:day/travel-diary-page',
+    Component: TravelDiaryPage,
   },
   {
-    path: '/travel/:travelId/:day/EditTravelDiaryPage',
-    Component: EditTravelDiaryPage,
-  },
-  {
-    path: '/photos/:photoId/WriteTravelPhotoComment',
-    Component: WriteTravelPhotoComment,
+    path: '/photos/:photoId/travel-photo-comment',
+    Component: TravelPhotoComment,
   }
 ]);
 
