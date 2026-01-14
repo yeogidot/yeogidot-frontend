@@ -9,6 +9,11 @@
   width: 100px;
   height: 100px;
 }
+.thumbnail {
+  border-style: solid;
+  border-width: 2px;
+  border-color: #0d9eff;
+}
 
 .warning {
   border-style: solid;
@@ -16,7 +21,8 @@
   border-color: #ff9d00;
 }
 
-.warningIcon {
+.warningIcon,
+.thumbnailIcon {
   margin-left: 6px;
   margin-top: 7px;
   z-index: 1;

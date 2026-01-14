@@ -11,8 +11,13 @@ import TravelDiaryPage from './pages/TravelDiaryPage/TravelDiaryPage';
 import TravelPhotoComment from './pages/TravelPhotoComment/TravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
 import FullPhotoPage from './pages/FullPhotoPage/FullPhotoPage';
+import SelectThumbnailPage from './pages/SelectThumbnailPage/SelectThumbnailPage';
 
 const router = createBrowserRouter([
+  {
+    path: `/select-thumbnail`,
+    Component: SelectThumbnailPage,
+  },
   {
     path: '/my-travel',
     Component: MyTravelPage,

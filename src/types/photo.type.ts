@@ -4,6 +4,7 @@ export interface PhotoData {
   size: number;
   name: string;
   warning?: boolean;
+  isThumbnail?: boolean;
   link?: string;
 }
 export interface DatedPhotoData extends PhotoData {
