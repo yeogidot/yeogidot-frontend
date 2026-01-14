@@ -1,8 +1,10 @@
 export interface PhotoData {
+  id: number;
   url: string;
   size: number;
   name: string;
   warning?: boolean;
+  isThumbnail?: boolean;
   link?: string;
 }
 export interface DatedPhotoData extends PhotoData {

@@ -1,0 +1,51 @@
+import classes from './SelectThumbnailPage.module.css';
+import { useNavigate } from 'react-router-dom';
+import BlackBackIcon from '@assets/icons/back-black.svg';
+import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
+import Button from '@components/Buttons/Button/Button';
+import type { DatedPhotoData } from 'src/types/photo.type';
+import { mockPhotos } from './mockPhotoData';
+
+const createPhotoDateMap = (photos: DatedPhotoData[]) => {
+  return photos.reduce((photoDateMap, currentPhoto) => {
+    const date = currentPhoto.date ? currentPhoto.date.split('T')[0] : null;
+    const photos = photoDateMap.get(date);
+    if (photos) {
+      return photoDateMap.set(date, [...photos, currentPhoto]);
+    }
+    return photoDateMap.set(date, [currentPhoto]);
+  }, new Map<string | null, DatedPhotoData[]>());
+};
+
+export default function SelectThumbnailPage() {
+  const photoDateMap = createPhotoDateMap(
+    mockPhotos.map(photo => {
+      return { ...photo, warning: false };
+    })
+  );
+  const navigate = useNavigate();
+  return (
+    <div className={classes.container}>
+      <header className={classes.header}>
+        <button
+          className={classes.backButton}
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          <img src={BlackBackIcon} alt="뒤로가기 버튼 이미지" />
+        </button>
+        <h1 className={classes.headerText}>대표 사진 선택</h1>
+        <p className={classes.uploadDescription}>
+          내 여행목록 리스트에 보여지는 사진입니다.
+        </p>
+      </header>
+      <h3 className={classes.photoHeader}>여행 사진</h3>
+      <DatePhotoGrid
+        className={classes.photoGrid}
+        photoDateMap={photoDateMap}
+      />
+      <Button className={classes.button}>여행 추가</Button>
+    </div>
+  );
+}

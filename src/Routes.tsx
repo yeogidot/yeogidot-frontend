@@ -6,13 +6,18 @@ import {
 import MyTravelPage from './pages/MyTravelPage/MyTravelPage';
 import TravelPage from './pages/TravelPage/TravelPage';
 import DayTravelPage from './pages/DayTravelPage/DayTravelPage';
-import WriteTravelDiaryPage from './pages/WriteTravelDiaryPage/WriteTravelDiaryPage';
-import EditTravelDiaryPage from './pages/EditTravelDiaryPage/EditTravelDiaryPage';
-import WriteTravelPhotoComment from './pages/WriteTravelPhotoComment/WriteTravelPhotoComment';
+import NewTravelHome from './pages/NewTravelHome/NewTravelHome';
+import TravelDiaryPage from './pages/TravelDiaryPage/TravelDiaryPage';
+import TravelPhotoComment from './pages/TravelPhotoComment/TravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
 import NewTravelPhotoPage from './pages/NewTravelPhotoPage/NewTravelPhotoPage';
+import SelectThumbnailPage from './pages/SelectThumbnailPage/SelectThumbnailPage';
 
 const router = createBrowserRouter([
+  {
+    path: `/select-thumbnail`,
+    Component: SelectThumbnailPage,
+  },
   {
     path: '/my-travel',
     Component: MyTravelPage,
@@ -20,10 +25,10 @@ const router = createBrowserRouter([
   {
     path: '/new-travel',
     Component: NewTravelPage,
-  },
-  {
-    path: '/new-travel/photo',
-    Component: NewTravelPhotoPage,
+    children: [
+      { index: true, Component: NewTravelHome },
+      { path: 'photo', Component: NewTravelPhotoPage },
+    ],
   },
   {
     path: '*',
@@ -38,17 +43,13 @@ const router = createBrowserRouter([
     Component: DayTravelPage,
   },
   {
-    path: '/travel/:travelId/:day/writeTravelDiaryPage',
-    Component: WriteTravelDiaryPage,
+    path: '/travel/:travelId/:day/travel-diary-page',
+    Component: TravelDiaryPage,
   },
   {
-    path: '/travel/:travelId/:day/EditTravelDiaryPage',
-    Component: EditTravelDiaryPage,
-  },
-  {
-    path: '/photos/:photoId/WriteTravelPhotoComment',
-    Component: WriteTravelPhotoComment,
-  },
+    path: '/photos/:photoId/travel-photo-comment',
+    Component: TravelPhotoComment,
+  }
 ]);
 
 export function Routes() {
