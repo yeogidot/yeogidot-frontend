@@ -4,8 +4,7 @@ import BlackBackIcon from '@assets/icons/back-black.svg';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import Button from '@components/Buttons/Button/Button';
 import type { DatedPhotoData } from 'src/types/photo.type';
-import { mockPhotos } from './mockPhotoData';
-
+import { useTravel } from '@hooks/travel';
 const createPhotoDateMap = (photos: DatedPhotoData[]) => {
   return photos.reduce((photoDateMap, currentPhoto) => {
     const date = currentPhoto.date ? currentPhoto.date.split('T')[0] : null;
@@ -18,9 +17,14 @@ const createPhotoDateMap = (photos: DatedPhotoData[]) => {
 };
 
 export default function SelectThumbnailPage() {
+  const [travel, setTravel] = useTravel();
   const photoDateMap = createPhotoDateMap(
-    mockPhotos.map(photo => {
-      return { ...photo, warning: false };
+    travel.photos.map(photo => {
+      return {
+        ...photo,
+        warning: false,
+        isThumbnail: travel.thumbnailPhotoId === photo.id,
+      };
     })
   );
   const navigate = useNavigate();
