@@ -29,6 +29,13 @@ export default function NewTravelHome() {
       return { ...travel, photos };
     });
   };
+
+  const setThumbnailPhotoId = (id: number) => {
+    setTravel(travel => {
+      return { ...travel, thumbnailPhotoId: id };
+    });
+  };
+
   const travelTitle = travel.title;
   const setTravelTitle = (title: string) => {
     setTravel(travel => {
@@ -41,9 +48,9 @@ export default function NewTravelHome() {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPhotosPromises = Array.from(e.target.files ?? []).map(
-      async (file, index) => {
+      async file => {
         return {
-          id: index,
+          id: travel.photos.length,
           url: URL.createObjectURL(file),
           name: file.name,
           size: file.size,
@@ -56,6 +63,15 @@ export default function NewTravelHome() {
 
     const newPhotos = await Promise.all(newPhotosPromises);
     setPhotos([...photos, ...newPhotos]);
+    const earlyestPhotoId = [...photos, ...newPhotos]
+      .filter(photo => photo.date)
+      .reduce((earlyestPhoto, photo) => {
+        return Date.parse(earlyestPhoto.date as string) >
+          Date.parse(photo.date as string)
+          ? photo
+          : earlyestPhoto;
+      }).id;
+    setThumbnailPhotoId(earlyestPhotoId);
   };
   const photoDateMap = createPhotoDateMap(
     photos.map(photo => {
