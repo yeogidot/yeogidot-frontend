@@ -117,7 +117,12 @@ export default function NewTravelHome() {
         (카카오톡 사진 전송시, 원본 사진 요망)
       </p>
       <DatePhotoGrid photoDateMap={photoDateMap} />
-      <Button className={classes.button}>다음</Button>
+      <Button
+        className={classes.button}
+        onClick={() => navigate('select-thumbnail')}
+      >
+        다음
+      </Button>
     </div>
   );
 }
