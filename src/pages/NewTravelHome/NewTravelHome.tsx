@@ -7,7 +7,7 @@ import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import { useNavigate } from 'react-router-dom';
 import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
 import { useTravel } from '@hooks/travel';
-
+import { useState } from 'react';
 const createPhotoDateMap = (photos: DatedPhotoData[]) => {
   return photos.reduce((photoDateMap, currentPhoto) => {
     const date = currentPhoto.date ? currentPhoto.date.split('T')[0] : null;
@@ -23,6 +23,7 @@ export default function NewTravelHome() {
   const [travel, setTravel] = useTravel();
   const navigate = useNavigate();
   const photos = travel.photos;
+  const [titleErrorText, setTitleErrorText] = useState('');
 
   const setPhotos = (photos: FullPhotoData[]) => {
     setTravel(travel => {
@@ -44,8 +45,19 @@ export default function NewTravelHome() {
   };
   const handleTravelTitleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>
-  ) => setTravelTitle(e.target.value);
-
+  ) => {
+    if (e.target.value !== '') {
+      setTitleErrorText('');
+    }
+    setTravelTitle(e.target.value);
+  };
+  const handleClickNextButton = () => {
+    if (travel.title === '') {
+      setTitleErrorText('여행 이름을 입력해주세요.');
+      return;
+    }
+    navigate('select-thumbnail');
+  };
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPhotosPromises = Array.from(e.target.files ?? []).map(
       async file => {
@@ -71,6 +83,7 @@ export default function NewTravelHome() {
           ? photo
           : earlyestPhoto;
       }).id;
+
     setThumbnailPhotoId(earlyestPhotoId);
   };
   const photoDateMap = createPhotoDateMap(
@@ -94,13 +107,16 @@ export default function NewTravelHome() {
       <section className={classes.inputSection}>
         <h3 className={classes.inputHeader}>여행 이름</h3>
         <input
-          className={classes.textInput}
+          className={`${classes.textInput} ${titleErrorText !== '' ? classes.textInputError : ''}`}
           onChange={handleTravelTitleInputChange}
           value={travelTitle}
           type="text"
           id="travel-name"
           autoComplete="off"
         />
+        {titleErrorText !== '' && (
+          <p className={classes.inputErrorHelperText}>{titleErrorText}</p>
+        )}
       </section>
       <section className={classes.inputSection}>
         <h3 className={classes.inputHeader}>여행 사진</h3>
@@ -117,10 +133,7 @@ export default function NewTravelHome() {
         (카카오톡 사진 전송시, 원본 사진 요망)
       </p>
       <DatePhotoGrid photoDateMap={photoDateMap} />
-      <Button
-        className={classes.button}
-        onClick={() => navigate('select-thumbnail')}
-      >
+      <Button className={classes.button} onClick={handleClickNextButton}>
         다음
       </Button>
     </div>

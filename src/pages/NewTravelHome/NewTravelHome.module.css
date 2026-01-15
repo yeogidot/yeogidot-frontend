@@ -18,6 +18,12 @@
   margin-bottom: 0px;
 }
 
+.inputErrorHelperText {
+  color: red;
+  font-size: 14px;
+  margin: 0px 0px;
+}
+
 .backButton {
   border-radius: 10px;
   padding: 0px;
@@ -35,7 +41,14 @@
   background-color: #f5f5f5;
   padding-inline: 5%;
 }
+.textInputError {
+  border-style: solid;
+  border-color: red;
+}
 
+.textInputError:focus {
+  outline-color: red;
+}
 .inputHeader {
   margin: 0px;
 }
