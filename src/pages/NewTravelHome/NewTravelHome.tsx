@@ -11,7 +11,10 @@ import { useState } from 'react';
 import { dateCompare } from '@utils/date';
 
 const checkFileExtension = (file: File, extensions: string[]) => {
-  const fileExtension = file.name.split('.')[1];
+  const fileExtension = file.name.split('.').pop()?.toLowerCase();
+  if (fileExtension === undefined) {
+    return false;
+  }
   return extensions.includes(fileExtension);
 };
 
