@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
 import { useTravel } from '@hooks/travel';
 import { useState } from 'react';
+
 const createPhotoDateMap = (photos: DatedPhotoData[]) => {
   return photos.reduce((photoDateMap, currentPhoto) => {
     const date = currentPhoto.date ? currentPhoto.date.split('T')[0] : null;
@@ -95,18 +96,21 @@ export default function NewTravelHome() {
       };
     });
 
-    const newPhotos = await Promise.all(newPhotosPromises);
-    setPhotos([...photos, ...newPhotos]);
-    const earlyestPhotoId = [...photos, ...newPhotos]
-      .filter(photo => photo.date)
-      .reduce((earlyestPhoto, photo) => {
-        return Date.parse(earlyestPhoto.date as string) >
-          Date.parse(photo.date as string)
-          ? photo
-          : earlyestPhoto;
-      }).id;
+    const newPhotos = [...photos, ...(await Promise.all(newPhotosPromises))];
+    const earlyestPhoto = newPhotos.reduce((earlyestPhoto, photo) => {
+      if (earlyestPhoto.date === null) {
+        return photo;
+      }
+      if (photo.date === null) {
+        return earlyestPhoto;
+      }
+      return Date.parse(photo.date) < Date.parse(earlyestPhoto.date)
+        ? photo
+        : earlyestPhoto;
+    });
 
-    setThumbnailPhotoId(earlyestPhotoId);
+    setPhotos(newPhotos);
+    setThumbnailPhotoId(earlyestPhoto.id);
   };
   const photoDateMap = createPhotoDateMap(
     photos.map(photo => {
