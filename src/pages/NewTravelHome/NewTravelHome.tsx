@@ -18,7 +18,10 @@ const checkFileExtenstion = (file: File, extensions: string[]) => {
 export default function NewTravelHome() {
   const [travel, setTravel] = useTravel();
   const navigate = useNavigate();
-  const photos = travel.photos;
+
+  const warnedPhotos = travel.photos.map(photo => {
+    return { ...photo, warning: photo.GPSCoordinates === null };
+  });
   const [titleErrorText, setTitleErrorText] = useState('');
   const [photoErrorText, setPhotoErrorText] = useState('');
 
@@ -34,7 +37,6 @@ export default function NewTravelHome() {
     });
   };
 
-  const travelTitle = travel.title;
   const setTravelTitle = (title: string) => {
     setTravel(travel => {
       return { ...travel, title: title };
@@ -90,14 +92,11 @@ export default function NewTravelHome() {
       })
     );
 
-    const newPhotos = [...photos, ...addedPhotos];
+    const newPhotos = [...travel.photos, ...addedPhotos];
     const earlyestPhoto = newPhotos.sort(dateCompare).find(({ date }) => date);
     setPhotos(newPhotos);
     setThumbnailPhotoId(earlyestPhoto ? earlyestPhoto.id : 0);
   };
-  const warnedPhotos = photos.map(photo => {
-    return { ...photo, warning: photo.GPSCoordinates === null };
-  });
   return (
     <div className={classes.container}>
       <header className={classes.header}>
@@ -116,7 +115,7 @@ export default function NewTravelHome() {
         <input
           className={`${classes.textInput} ${titleErrorText !== '' ? classes.textInputError : ''}`}
           onChange={handleTravelTitleInputChange}
-          value={travelTitle}
+          value={travel.title}
           type="text"
           id="travel-name"
           autoComplete="off"
