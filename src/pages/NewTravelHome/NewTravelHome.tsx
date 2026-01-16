@@ -19,12 +19,17 @@ const createPhotoDateMap = (photos: DatedPhotoData[]) => {
   }, new Map<string | null, DatedPhotoData[]>());
 };
 
+const checkFileExtenstion = (file: File, extensions: string[]) => {
+  const fileExtension = file.name.split('.')[1];
+  return extensions.includes(fileExtension);
+};
+
 export default function NewTravelHome() {
   const [travel, setTravel] = useTravel();
   const navigate = useNavigate();
   const photos = travel.photos;
   const [titleErrorText, setTitleErrorText] = useState('');
-
+  const [photoErrorText, setPhotoErrorText] = useState('');
   const setPhotos = (photos: FullPhotoData[]) => {
     setTravel(travel => {
       return { ...travel, photos };
@@ -56,22 +61,39 @@ export default function NewTravelHome() {
       setTitleErrorText('여행 이름을 입력해주세요.');
       return;
     }
+    if (travel.photos.length === 0) {
+      setPhotoErrorText('사진을 업로드 해주세요.');
+      return;
+    }
     navigate('select-thumbnail');
   };
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newPhotosPromises = Array.from(e.target.files ?? []).map(
-      async file => {
-        return {
-          id: travel.photos.length,
-          url: URL.createObjectURL(file),
-          name: file.name,
-          size: file.size,
-          date: await getCreatedDateTime(file),
-          GPSCoordinates: await getGPSCoordinates(file),
-          link: 'photo',
-        };
-      }
-    );
+    const fileArray = Array.from(e.target.files ?? []);
+    setPhotoErrorText('');
+
+    if (fileArray.length === 0) {
+      return;
+    }
+    if (
+      fileArray.find(
+        file => checkFileExtenstion(file, ['.jpg', '.jpeg']) === false
+      )
+    ) {
+      setPhotoErrorText('사진은 jpg 형식만 업로드 가능합니다.');
+      return;
+    }
+
+    const newPhotosPromises = fileArray.map(async file => {
+      return {
+        id: travel.photos.length,
+        url: URL.createObjectURL(file),
+        name: file.name,
+        size: file.size,
+        date: await getCreatedDateTime(file),
+        GPSCoordinates: await getGPSCoordinates(file),
+        link: 'photo',
+      };
+    });
 
     const newPhotos = await Promise.all(newPhotosPromises);
     setPhotos([...photos, ...newPhotos]);
@@ -115,7 +137,7 @@ export default function NewTravelHome() {
           autoComplete="off"
         />
         {titleErrorText !== '' && (
-          <p className={classes.inputErrorHelperText}>{titleErrorText}</p>
+          <p className={classes.titleErrorHelperText}>{titleErrorText}</p>
         )}
       </section>
       <section className={classes.inputSection}>
@@ -126,12 +148,16 @@ export default function NewTravelHome() {
         >
           사진 업로드
         </FileSelectButton>
+        {photoErrorText !== '' && (
+          <p className={classes.photoErrorHelperText}>{photoErrorText}</p>
+        )}
       </section>
       <p className={classes.uploadDescription}>
         사진 위치 정보가 없으면 위치가 표시 되지 않습니다.
         <br />
         (카카오톡 사진 전송시, 원본 사진 요망)
       </p>
+
       <DatePhotoGrid photoDateMap={photoDateMap} />
       <Button className={classes.button} onClick={handleClickNextButton}>
         다음

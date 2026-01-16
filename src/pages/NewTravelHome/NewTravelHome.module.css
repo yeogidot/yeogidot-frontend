@@ -18,10 +18,16 @@
   margin-bottom: 0px;
 }
 
-.inputErrorHelperText {
+.titleErrorHelperText {
   color: red;
   font-size: 14px;
   margin: 0px 0px;
+}
+.photoErrorHelperText {
+  color: red;
+  font-size: 14px;
+  margin: 0px 0px;
+  text-align: center;
 }
 
 .backButton {
