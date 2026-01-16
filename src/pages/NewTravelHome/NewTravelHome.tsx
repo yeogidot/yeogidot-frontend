@@ -84,7 +84,7 @@ export default function NewTravelHome() {
     const addedPhotos = await Promise.all(
       fileArray.map(async file => {
         return {
-          id: travel.photos.length,
+          id: Date.now(),
           url: URL.createObjectURL(file),
           name: file.name,
           size: file.size,
@@ -98,7 +98,7 @@ export default function NewTravelHome() {
     const newPhotos = [...travel.photos, ...addedPhotos];
     const earliestPhoto = newPhotos.sort(dateCompare).find(({ date }) => date);
     setPhotos(newPhotos);
-    setThumbnailPhotoId(earliestPhoto ? earliestPhoto.id : 0);
+    setThumbnailPhotoId(earliestPhoto ? earliestPhoto.id : newPhotos[0].id);
   };
   return (
     <div className={classes.container}>
