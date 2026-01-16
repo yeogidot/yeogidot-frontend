@@ -2,11 +2,23 @@ import type { DatedPhotoData } from 'src/types/photo.type';
 import classes from './DatePhotoGrid.module.css';
 import PhotoGrid from '@components/PhotoGrid/PhotoGrid';
 interface Props {
-  photoDateMap: Map<string | null, DatedPhotoData[]>;
+  photos: DatedPhotoData[];
   className?: string | undefined;
 }
 
-export default function DatePhotoGrid({ photoDateMap, className = '' }: Props) {
+const createPhotoDateMap = (photos: DatedPhotoData[]) => {
+  return photos.reduce((photoDateMap, currentPhoto) => {
+    const date = currentPhoto.date ? currentPhoto.date.split('T')[0] : null;
+    const photos = photoDateMap.get(date);
+    if (photos) {
+      return photoDateMap.set(date, [...photos, currentPhoto]);
+    }
+    return photoDateMap.set(date, [currentPhoto]);
+  }, new Map<string | null, DatedPhotoData[]>());
+};
+
+export default function DatePhotoGrid({ photos, className = '' }: Props) {
+  const photoDateMap = createPhotoDateMap(photos);
   const dateKeys = Array.from(photoDateMap.keys()).filter(date => date);
   const dateNullPhotos = photoDateMap.get(null);
   return (

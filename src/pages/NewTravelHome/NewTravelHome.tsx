@@ -1,7 +1,7 @@
 import BlackBackIcon from '@assets/icons/back-black.svg';
 import FileSelectButton from '@components/Buttons/FileSelectButton/FileSelectButton';
 import Button from '@components/Buttons/Button/Button';
-import type { DatedPhotoData, FullPhotoData } from 'src/types/photo.type';
+import type { FullPhotoData } from 'src/types/photo.type';
 import classes from './NewTravelHome.module.css';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import { useNavigate } from 'react-router-dom';
@@ -9,17 +9,6 @@ import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
 import { useTravel } from '@hooks/travel';
 import { useState } from 'react';
 import { dateCompare } from '@utils/date';
-
-const createPhotoDateMap = (photos: DatedPhotoData[]) => {
-  return photos.reduce((photoDateMap, currentPhoto) => {
-    const date = currentPhoto.date ? currentPhoto.date.split('T')[0] : null;
-    const photos = photoDateMap.get(date);
-    if (photos) {
-      return photoDateMap.set(date, [...photos, currentPhoto]);
-    }
-    return photoDateMap.set(date, [currentPhoto]);
-  }, new Map<string | null, DatedPhotoData[]>());
-};
 
 const checkFileExtenstion = (file: File, extensions: string[]) => {
   const fileExtension = file.name.split('.')[1];
@@ -32,6 +21,7 @@ export default function NewTravelHome() {
   const photos = travel.photos;
   const [titleErrorText, setTitleErrorText] = useState('');
   const [photoErrorText, setPhotoErrorText] = useState('');
+
   const setPhotos = (photos: FullPhotoData[]) => {
     setTravel(travel => {
       return { ...travel, photos };
@@ -105,11 +95,9 @@ export default function NewTravelHome() {
     setPhotos(newPhotos);
     setThumbnailPhotoId(earlyestPhoto ? earlyestPhoto.id : 0);
   };
-  const photoDateMap = createPhotoDateMap(
-    photos.map(photo => {
-      return { ...photo, warning: photo.GPSCoordinates === null };
-    })
-  );
+  const warnedPhotos = photos.map(photo => {
+    return { ...photo, warning: photo.GPSCoordinates === null };
+  });
   return (
     <div className={classes.container}>
       <header className={classes.header}>
@@ -155,7 +143,7 @@ export default function NewTravelHome() {
         (카카오톡 사진 전송시, 원본 사진 요망)
       </p>
 
-      <DatePhotoGrid photoDateMap={photoDateMap} />
+      <DatePhotoGrid photos={warnedPhotos} />
       <Button className={classes.button} onClick={handleClickNextButton}>
         다음
       </Button>
