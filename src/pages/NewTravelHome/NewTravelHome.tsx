@@ -10,7 +10,7 @@ import { useTravel } from '@hooks/travel';
 import { useState } from 'react';
 import { dateCompare } from '@utils/date';
 
-const checkFileExtenstion = (file: File, extensions: string[]) => {
+const checkFileExtension = (file: File, extensions: string[]) => {
   const fileExtension = file.name.split('.')[1];
   return extensions.includes(fileExtension);
 };
@@ -71,7 +71,7 @@ export default function NewTravelHome() {
     }
     if (
       fileArray.find(
-        file => checkFileExtenstion(file, ['jpg', 'jpeg']) === false
+        file => checkFileExtension(file, ['jpg', 'jpeg']) === false
       )
     ) {
       setPhotoErrorText('사진은 jpg 형식만 업로드 가능합니다.');
@@ -93,9 +93,9 @@ export default function NewTravelHome() {
     );
 
     const newPhotos = [...travel.photos, ...addedPhotos];
-    const earlyestPhoto = newPhotos.sort(dateCompare).find(({ date }) => date);
+    const earliestPhoto = newPhotos.sort(dateCompare).find(({ date }) => date);
     setPhotos(newPhotos);
-    setThumbnailPhotoId(earlyestPhoto ? earlyestPhoto.id : 0);
+    setThumbnailPhotoId(earliestPhoto ? earliestPhoto.id : 0);
   };
   return (
     <div className={classes.container}>
