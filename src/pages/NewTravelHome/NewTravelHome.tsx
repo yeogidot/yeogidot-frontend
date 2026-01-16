@@ -69,7 +69,7 @@ export default function NewTravelHome() {
     }
     if (
       fileArray.find(
-        file => checkFileExtenstion(file, ['.jpg', '.jpeg']) === false
+        file => checkFileExtenstion(file, ['jpg', 'jpeg']) === false
       )
     ) {
       setPhotoErrorText('사진은 jpg 형식만 업로드 가능합니다.');
