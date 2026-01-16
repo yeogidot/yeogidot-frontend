@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
 import { useTravel } from '@hooks/travel';
 import { useState } from 'react';
+import { dateCompare } from '@utils/date';
 
 const createPhotoDateMap = (photos: DatedPhotoData[]) => {
   return photos.reduce((photoDateMap, currentPhoto) => {
@@ -68,6 +69,7 @@ export default function NewTravelHome() {
     }
     navigate('select-thumbnail');
   };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileArray = Array.from(e.target.files ?? []);
     setPhotoErrorText('');
@@ -84,33 +86,24 @@ export default function NewTravelHome() {
       return;
     }
 
-    const newPhotosPromises = fileArray.map(async file => {
-      return {
-        id: travel.photos.length,
-        url: URL.createObjectURL(file),
-        name: file.name,
-        size: file.size,
-        date: await getCreatedDateTime(file),
-        GPSCoordinates: await getGPSCoordinates(file),
-        link: 'photo',
-      };
-    });
+    const addedPhotos = await Promise.all(
+      fileArray.map(async file => {
+        return {
+          id: travel.photos.length,
+          url: URL.createObjectURL(file),
+          name: file.name,
+          size: file.size,
+          date: await getCreatedDateTime(file),
+          GPSCoordinates: await getGPSCoordinates(file),
+          link: 'photo',
+        };
+      })
+    );
 
-    const newPhotos = [...photos, ...(await Promise.all(newPhotosPromises))];
-    const earlyestPhoto = newPhotos.reduce((earlyestPhoto, photo) => {
-      if (earlyestPhoto.date === null) {
-        return photo;
-      }
-      if (photo.date === null) {
-        return earlyestPhoto;
-      }
-      return Date.parse(photo.date) < Date.parse(earlyestPhoto.date)
-        ? photo
-        : earlyestPhoto;
-    });
-
+    const newPhotos = [...photos, ...addedPhotos];
+    const earlyestPhoto = newPhotos.sort(dateCompare).find(({ date }) => date);
     setPhotos(newPhotos);
-    setThumbnailPhotoId(earlyestPhoto.id);
+    setThumbnailPhotoId(earlyestPhoto ? earlyestPhoto.id : 0);
   };
   const photoDateMap = createPhotoDateMap(
     photos.map(photo => {
