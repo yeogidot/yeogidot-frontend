@@ -1,16 +1,21 @@
 import classes from './DatetimeModal.module.css';
+import { useState } from 'react';
 interface Props {
   currentDate: string | null;
-  onDatetimeChange?: () => void;
   onCancel?: () => void;
+  onConfirm?: (ISODateString?: string) => void;
 }
 
 export default function DatetimeModal({
   currentDate,
-  onDatetimeChange,
   onCancel,
+  onConfirm,
 }: Props) {
   const timezoneOffset = new Date().getTimezoneOffset() * 60000;
+  const [date, setDate] = useState(currentDate);
+  const handleDatetimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDate(event.currentTarget.value);
+  };
   return (
     <div
       className={classes.modalOverlay}
@@ -33,14 +38,14 @@ export default function DatetimeModal({
             className={classes.datetimePicker}
             id="datetime-picker"
             type="datetime-local"
-            value={
+            defaultValue={
               currentDate
                 ? currentDate.slice(0, 16)
                 : new Date(Date.now() - timezoneOffset)
                     .toISOString()
                     .slice(0, 16)
             }
-            onChange={onDatetimeChange}
+            onChange={handleDatetimeChange}
           />
         </div>
 
@@ -52,7 +57,14 @@ export default function DatetimeModal({
           >
             취소
           </button>
-          <button type="button" className={classes.confirmButton}>
+          <button
+            type="button"
+            className={classes.confirmButton}
+            onClick={() => {
+              if (onConfirm) {
+                onConfirm(date ?? undefined)
+              }}}
+          >
             완료
           </button>
         </div>
