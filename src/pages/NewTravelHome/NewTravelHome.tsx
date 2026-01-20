@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
 import { useTravel } from '@hooks/travel';
 import { useState } from 'react';
-import { dateCompare } from '@utils/date';
 
 const checkFileExtension = (file: File, extensions: string[]) => {
   const fileExtension = file.name.split('.').pop()?.toLowerCase();
@@ -28,12 +27,6 @@ export default function NewTravelHome() {
   const setPhotos = (photos: FullPhotoData[]) => {
     setTravel(travel => {
       return { ...travel, photos };
-    });
-  };
-
-  const setThumbnailPhotoId = (id: number) => {
-    setTravel(travel => {
-      return { ...travel, thumbnailPhotoId: id };
     });
   };
 
@@ -95,9 +88,7 @@ export default function NewTravelHome() {
       return { ...photo, warning: photo.GPSCoordinates === null };
     });
     const newPhotos = [...travel.photos, ...warnedPhotos];
-    const earliestPhoto = newPhotos.sort(dateCompare).find(({ date }) => date);
     setPhotos(newPhotos);
-    setThumbnailPhotoId(earliestPhoto ? earliestPhoto.id : newPhotos[0].id);
   };
   return (
     <div className={classes.container}>
