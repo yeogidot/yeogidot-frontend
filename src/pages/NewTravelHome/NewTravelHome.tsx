@@ -22,9 +22,6 @@ export default function NewTravelHome() {
   const [travel, setTravel] = useTravel();
   const navigate = useNavigate();
 
-  const warnedPhotos = travel.photos.map(photo => {
-    return { ...photo, warning: photo.GPSCoordinates === null };
-  });
   const [titleErrorText, setTitleErrorText] = useState('');
   const [photoErrorText, setPhotoErrorText] = useState('');
 
@@ -94,8 +91,10 @@ export default function NewTravelHome() {
         };
       })
     );
-
-    const newPhotos = [...travel.photos, ...addedPhotos];
+    const warnedPhotos = addedPhotos.map(photo => {
+      return { ...photo, warning: photo.GPSCoordinates === null };
+    });
+    const newPhotos = [...travel.photos, ...warnedPhotos];
     const earliestPhoto = newPhotos.sort(dateCompare).find(({ date }) => date);
     setPhotos(newPhotos);
     setThumbnailPhotoId(earliestPhoto ? earliestPhoto.id : newPhotos[0].id);
@@ -145,7 +144,7 @@ export default function NewTravelHome() {
         (카카오톡 사진 전송시, 원본 사진 요망)
       </p>
 
-      <DatePhotoGrid photos={warnedPhotos} />
+      <DatePhotoGrid photos={travel.photos} />
       <Button className={classes.button} onClick={handleClickNextButton}>
         다음
       </Button>
