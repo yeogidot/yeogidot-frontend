@@ -1,6 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import classes from './NewTravelPhotoPage.module.css';
-import type { FullPhotoData } from 'src/types/photo.type';
 import WarningIcon from '@assets/icons/warning.svg';
 import FullPhotoLayout from '@components/FullPhotoLayout/FullPhotoLayout';
 import GrayBackButton from '@components/Buttons/BackButton/GrayBackButton/GrayBackButton';
@@ -32,9 +31,9 @@ export default function FullPhotoPage() {
   const [datetimeModalState, setDatetimeModalState] = useState(false);
   const [deleteModalState, setDeleteModalState] = useState(false);
   const photoId = useLocation().state.id;
-  const photo = travel.photos.find(({ id }) => id === photoId) as FullPhotoData;
+  const photo = travel.photos.find(({ id }) => id === photoId);
   const navigate = useNavigate();
-  return (
+  return photo ? (
     <FullPhotoLayout photo={photo} imageWidthDefaultPercent={100}>
       <header className={classes.header}>
         <GrayBackButton
@@ -72,7 +71,7 @@ export default function FullPhotoPage() {
         <DatetimeModal
           currentDate={photo.date}
           onCancel={() => setDatetimeModalState(false)}
-          onConfirm={(date) => {
+          onConfirm={date => {
             if (date) {
               setPhotoDate(photo.id, date);
             }
@@ -85,12 +84,22 @@ export default function FullPhotoPage() {
       {deleteModalState ? (
         <DeleteConfirmModal
           message={'사진을 삭제하시겠습니까?'}
-          onConfirm={() => undefined}
+          onConfirm={() => {
+            setTravel(travel => {
+              return {
+                ...travel,
+                photos: travel.photos.filter(({ id }) => id !== photoId),
+              };
+            });
+            navigate(-1);
+          }}
           onCancel={() => setDeleteModalState(false)}
         />
       ) : (
         <></>
       )}
     </FullPhotoLayout>
+  ) : (
+    ''
   );
 }
