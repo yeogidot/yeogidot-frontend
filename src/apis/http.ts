@@ -4,12 +4,15 @@ const request = async <T>(
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
   url: string,
   headers: Record<string, string> = { 'Content-Type': 'application/json' },
-  body?: string
+  body?: unknown
 ) => {
   try {
     const response = await fetch(`${BASE_URL}/${url}`, {
       method,
-      body,
+      body:
+        body instanceof FormData || body === undefined
+          ? body
+          : JSON.stringify(body),
       headers,
     });
     if (!response.ok) {
@@ -30,21 +33,21 @@ export const http = {
   },
   post: async <T>(
     url: string,
-    body: string,
+    body: unknown,
     headers?: Record<string, string>
   ) => {
     return request<T>('POST', url, headers, body);
   },
   put: async <T>(
     url: string,
-    body: string,
+    body: unknown,
     headers?: Record<string, string>
   ) => {
     return request<T>('PUT', url, headers, body);
   },
   delete: async <T>(
     url: string,
-    body: string,
+    body: unknown,
     headers?: Record<string, string>
   ) => {
     return request<T>('DELETE', url, headers, body);
