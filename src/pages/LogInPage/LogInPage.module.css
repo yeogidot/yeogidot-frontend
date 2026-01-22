@@ -1,0 +1,62 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 852px;
+  overflow: hidden;
+  font-family: sans-serif;
+}
+
+.logo {
+  display: block;
+  margin: 133px auto 0;
+  width: 250px;
+  height: 150px;
+}
+
+
+.logInForm {
+  position: relative;
+  padding: 59px 46px 0;
+  overflow-y: auto;
+}
+
+.idForm {
+    position: relative;
+}
+
+.idInput {
+    margin-top: 12px;
+    width: 100%;
+    height: 49px;
+    border-radius: 5px;
+    border-color: #A9A9A9;
+    border-style: solid;
+}
+
+.passwordForm {
+    margin-top: 33px;
+}
+
+.passwordInput {
+    position: relative;
+    margin-top: 12px;
+    width: 100%;
+    height: 49px;
+    border-radius: 5px;
+    border-color: #A9A9A9;
+    border-style: solid;
+}
+
+.signIn {
+    margin-top: 15px;
+    color: #626161;
+    float: right;
+}
+
+.logInButton {
+    position: relative;
+    margin: 146px auto 0;
+    width: 108px;
+    height: 55px;
+    font-size: 20px;
+}

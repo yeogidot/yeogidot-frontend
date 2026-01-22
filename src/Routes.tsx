@@ -9,6 +9,7 @@ import DayTravelPage from './pages/DayTravelPage/DayTravelPage';
 import TravelDiaryPage from './pages/TravelDiaryPage/TravelDiaryPage';
 import TravelPhotoComment from './pages/TravelPhotoComment/TravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
+import LogInPage from './pages/LogInPage/LogInPage';
 
 
 const router = createBrowserRouter([
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: '/photos/:photoId/travel-photo-comment',
     Component: TravelPhotoComment,
+  },
+  {
+    path: '/login',
+    Component: LogInPage,
   }
 ]);
 
