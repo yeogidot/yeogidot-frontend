@@ -3,9 +3,13 @@ const BASE_URL = '';
 const request = async <T>(
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
   url: string,
+  token?: string,
   headers: Record<string, string> = { 'Content-Type': 'application/json' },
   body?: unknown
 ) => {
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
   try {
     const response = await fetch(`${BASE_URL}/${url}`, {
       method,
@@ -26,30 +30,36 @@ const request = async <T>(
     console.error(`에러 발생 : ${error}`);
   }
 };
-
 export const http = {
-  get: async <T>(url: string, headers?: Record<string, string>) => {
-    return request<T>('GET', url, headers);
+  get: async <T>(
+    url: string,
+    token?: string,
+    headers?: Record<string, string>
+  ) => {
+    return request<T>('GET', url, token, headers);
   },
   post: async <T>(
     url: string,
     body: unknown,
+    token?: string,
     headers?: Record<string, string>
   ) => {
-    return request<T>('POST', url, headers, body);
+    return request<T>('POST', url, token, headers, body);
   },
   put: async <T>(
     url: string,
     body: unknown,
+    token?: string,
     headers?: Record<string, string>
   ) => {
-    return request<T>('PUT', url, headers, body);
+    return request<T>('PUT', url, token, headers, body);
   },
   delete: async <T>(
     url: string,
     body: unknown,
+    token?: string,
     headers?: Record<string, string>
   ) => {
-    return request<T>('DELETE', url, headers, body);
+    return request<T>('DELETE', url, token, headers, body);
   },
 };
