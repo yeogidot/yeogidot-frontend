@@ -3,26 +3,32 @@ import { useNavigate } from 'react-router-dom';
 import BlackBackIcon from '@assets/icons/back-black.svg';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import Button from '@components/Buttons/Button/Button';
-import type { DatedPhotoData } from 'src/types/photo.type';
-import { mockPhotos } from './mockPhotoData';
-
-const createPhotoDateMap = (photos: DatedPhotoData[]) => {
-  return photos.reduce((photoDateMap, currentPhoto) => {
-    const date = currentPhoto.date ? currentPhoto.date.split('T')[0] : null;
-    const photos = photoDateMap.get(date);
-    if (photos) {
-      return photoDateMap.set(date, [...photos, currentPhoto]);
-    }
-    return photoDateMap.set(date, [currentPhoto]);
-  }, new Map<string | null, DatedPhotoData[]>());
-};
-
+import { useTravel } from '@hooks/travel';
+import { dateCompare } from '@utils/date';
 export default function SelectThumbnailPage() {
-  const photoDateMap = createPhotoDateMap(
-    mockPhotos.map(photo => {
-      return { ...photo, warning: false };
-    })
+  const [travel, setTravel] = useTravel();
+
+  const thumbnail = travel.photos.find(
+    ({ id }) => id === travel.thumbnailPhotoId
   );
+  const setThumbnailPhotoId = (id: number) => {
+    setTravel(travel => {
+      return { ...travel, thumbnailPhotoId: id };
+    });
+  };
+  if (thumbnail === undefined) {
+    const earliestPhoto = [...travel.photos]
+      .sort(dateCompare)
+      .find(({ date }) => date);
+    setThumbnailPhotoId(earliestPhoto ? earliestPhoto.id : travel.photos[0].id);
+  }
+  const thumbnailCheckedPhotos = travel.photos.map(photo => {
+    return {
+      ...photo,
+      warning: false,
+      isThumbnail: travel.thumbnailPhotoId === photo.id,
+    };
+  });
   const navigate = useNavigate();
   return (
     <div className={classes.container}>
@@ -43,7 +49,7 @@ export default function SelectThumbnailPage() {
       <h3 className={classes.photoHeader}>여행 사진</h3>
       <DatePhotoGrid
         className={classes.photoGrid}
-        photoDateMap={photoDateMap}
+        photos={thumbnailCheckedPhotos}
       />
       <Button className={classes.button}>여행 추가</Button>
     </div>

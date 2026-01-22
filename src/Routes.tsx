@@ -12,6 +12,7 @@ import TravelPhotoComment from './pages/TravelPhotoComment/TravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
 import NewTravelPhotoPage from './pages/NewTravelPhotoPage/NewTravelPhotoPage';
 import SelectThumbnailPage from './pages/SelectThumbnailPage/SelectThumbnailPage';
+import SelectThumbnailPhotoPage from './pages/SelectThumbnailPhotoPage/SelectThumbnailPhotoPage';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,11 @@ const router = createBrowserRouter([
     children: [
       { index: true, Component: NewTravelHome },
       { path: 'photo', Component: NewTravelPhotoPage },
+      {
+        path: 'select-thumbnail',
+        Component: SelectThumbnailPage,
+      },
+      { path: 'select-thumbnail/photo', Component: SelectThumbnailPhotoPage },
     ],
   },
   {
@@ -49,7 +55,7 @@ const router = createBrowserRouter([
   {
     path: '/photos/:photoId/travel-photo-comment',
     Component: TravelPhotoComment,
-  }
+  },
 ]);
 
 export function Routes() {
