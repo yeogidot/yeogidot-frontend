@@ -1,4 +1,4 @@
-const BASE_URL = '';
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const request = async <T>(
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
@@ -11,7 +11,7 @@ const request = async <T>(
     headers.Authorization = `Bearer ${token}`;
   }
   try {
-    const response = await fetch(`${BASE_URL}/${url}`, {
+    const response = await fetch(`${BASE_URL}${url}`, {
       method,
       body:
         body instanceof FormData || body === undefined
