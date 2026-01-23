@@ -14,3 +14,25 @@ export interface DatedPhotoData extends PhotoData {
 export interface FullPhotoData extends DatedPhotoData {
   GPSCoordinates: { latitude: number; longitude: number } | null;
 }
+
+export interface Photo {
+  id: number;
+  url: string;
+  createdDate?: string;
+  modifiedDate?: string;
+  warning?: boolean;
+  isThumbnail?: boolean;
+  link?: string;
+}
+export interface PhotoMetadata {
+  originalName: string;
+  takenAt: string;
+  latitude: number | null;
+  logitude: number | null;
+}
+
+export interface DatedPhoto extends Photo {
+  takenAt: string | null;
+}
+
+export type FullPhoto = Photo & PhotoMetadata;
