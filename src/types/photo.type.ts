@@ -3,6 +3,7 @@ export interface PhotoData {
   url: string;
   size: number;
   name: string;
+  file: File;
   warning?: boolean;
   isThumbnail?: boolean;
   link?: string;
@@ -26,9 +27,9 @@ export interface Photo {
 }
 export interface PhotoMetadata {
   originalName: string;
-  takenAt: string;
+  takenAt: string | null;
   latitude: number | null;
-  logitude: number | null;
+  longitude: number | null;
 }
 
 export interface DatedPhoto extends Photo {
