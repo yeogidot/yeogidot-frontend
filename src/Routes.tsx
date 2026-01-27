@@ -11,6 +11,7 @@ import TravelDiaryEditPage from './pages/TravelDiaryEditPage/TravelDiaryEditPage
 import TravelPhotoComment from './pages/TravelPhotoComment/TravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
 import LogInPage from './pages/LogInPage/LogInPage';
+import SignInPage from './pages/SignInPage/SignInPage';
 
 
 const router = createBrowserRouter([
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
   {
     path: '/login',
     Component: LogInPage,
+  },
+  {
+    path: '/signin',
+    Component: SignInPage,
   }
 ]);
 
