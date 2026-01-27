@@ -12,3 +12,26 @@ export interface TravelInfo extends NewTravelInfo {
   endDate: string;
   location: string;
 }
+
+export interface TravelDay {
+  dayId: number;
+  dayNumber: number;
+  date: string;
+  dayRegion: string;
+  photos: Partial<FullPhotoData>[];
+  diary: {
+    logId: number;
+    content: string;
+    logCreated: string;
+  };
+}
+
+export interface FullTravel {
+  travelId: number;
+  title: string;
+  representativePhotoId: number;
+  shareUrl: string;
+  startDate: string;
+  endDate: string;
+  days: TravelDay[];
+}
