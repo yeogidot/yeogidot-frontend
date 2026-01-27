@@ -1,12 +1,19 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import classes from './LogInPage.module.css'
 import LogoImg from '../../assets/images/Logo.svg'
+import BackButton from '../../components/Buttons/BackButton/BlackBackButton/BlackBackButton';
 import Button from '../../components/Buttons/Button/Button';
 
 export default function LogInPage() {
   return (
     <div className={classes.container}>
+      <Link to='/..'>
+        <div className={classes.backButton}>
+          <BackButton/>
+        </div>
+      </Link>
+      
       <img src={LogoImg} className={classes.logo}/>
         
 
@@ -20,7 +27,7 @@ export default function LogInPage() {
             <input className={classes.passwordInput}/>
         </div>
 
-        <a className={classes.signIn}>회원가입</a>
+        <Link to="/signin" className={classes.signIn}>회원가입</Link>
       </div>
 
       <Button className={classes.logInButton}>로그인</Button>

@@ -6,6 +6,12 @@
   font-family: sans-serif;
 }
 
+.backButton{
+    position: absolute;
+    left: 30px;
+    top: 83px;
+}
+
 .logo {
   display: block;
   margin: 133px auto 0;
