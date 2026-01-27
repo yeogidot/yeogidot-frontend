@@ -7,6 +7,7 @@ import MyTravelPage from './pages/MyTravelPage/MyTravelPage';
 import TravelPage from './pages/TravelPage/TravelPage';
 import DayTravelPage from './pages/DayTravelPage/DayTravelPage';
 import TravelDiaryPage from './pages/TravelDiaryPage/TravelDiaryPage';
+import TravelDiaryEditPage from './pages/TravelDiaryEditPage/TravelDiaryEditPage'
 import TravelPhotoComment from './pages/TravelPhotoComment/TravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
 import LogInPage from './pages/LogInPage/LogInPage';
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
   {
     path: '/travel/:travelId/:day/travel-diary-page',
     Component: TravelDiaryPage,
+  },
+  {
+    path: '/travel/:travelId/:day/travel-diary-edit-page',
+    Component: TravelDiaryEditPage,
   },
   {
     path: '/photos/:photoId/travel-photo-comment',
