@@ -36,7 +36,7 @@ export interface FullTravel {
   days: TravelDay[];
 }
 
-export interface SharedTravel {
+export interface SharedTravelUrl {
   status: number;
   message: string;
   data: {
