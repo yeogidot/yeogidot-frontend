@@ -1,3 +1,5 @@
+import type { ApiResponse } from 'src/types/api.type';
+import { HttpError, NetworkError, ParseError } from 'src/types/error.type';
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const request = async <T>(
@@ -6,12 +8,14 @@ const request = async <T>(
   token?: string,
   headers: Record<string, string> = { 'Content-Type': 'application/json' },
   body?: unknown
-) => {
+): Promise<ApiResponse<T>> => {
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
+
+  let response: Response;
   try {
-    const response = await fetch(`${BASE_URL}${url}`, {
+    response = await fetch(`${BASE_URL}${url}`, {
       method,
       body:
         body instanceof FormData || body === undefined
@@ -19,16 +23,30 @@ const request = async <T>(
           : JSON.stringify(body),
       headers,
     });
-    if (!response.ok) {
-      throw new Error(
-        `네트워크 응답 오류 발생. 오류 코드 : ${response.status}`
-      );
-    }
-    const responseData: T = await response.json();
-    return responseData;
-  } catch (error) {
-    console.error(`에러 발생 : ${error}`);
+  } catch (e) {
+    throw new NetworkError(e instanceof Error ? e.message : '네트워크 에러');
   }
+  const contentType = response.headers.get('content-type');
+  const isJson = contentType?.includes('application/json');
+
+  const responseBodyText = await response.text();
+  let responseData: T | undefined;
+
+  try {
+    responseData = isJson ? JSON.parse(responseBodyText) : undefined;
+  } catch (error) {
+    throw new ParseError('응답 JSON 파싱 에러');
+  }
+
+  if (!response.ok) {
+    throw new HttpError('HTTP 에러', response.status, responseBodyText);
+  }
+
+  return {
+    data: responseData,
+    status: response.status,
+    message: responseData ? undefined : responseBodyText,
+  };
 };
 export const http = {
   get: async <T>(
