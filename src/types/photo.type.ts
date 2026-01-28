@@ -21,9 +21,6 @@ export interface Photo {
   url: string;
   createdDate?: string;
   modifiedDate?: string;
-  warning?: boolean;
-  isThumbnail?: boolean;
-  link?: string;
 }
 export interface PhotoMetadata {
   originalName: string;
