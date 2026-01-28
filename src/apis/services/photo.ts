@@ -14,7 +14,7 @@ export const photoService = {
       `/api/photos/upload?${encodedMetadata}`,
       formData,
       token,
-      { 'Content-Type': 'multi-part/formdata' }
+      { 'Content-Type': 'multipart/form-data' }
     );
   },
   getPhotos: (token: string) => {
@@ -33,16 +33,23 @@ export const photoService = {
       token
     );
   },
+  updatePhotoTravelDay: (photoId: number, dayId: string, token: string) => {
+    return http.post(`/api/photos/${photoId}/comments`, { dayId }, token);
+  },
   deletePhoto: (id: number, token: string) => {
-    return http.get<{
+    return http.delete<{
       message: string;
       status: number;
       deletedPhotoId: number;
     }>(`/api/photos/${id}`, token);
   },
   writePhotoComment: (photoId: number, content: string, token: string) => {
-    return http.post(`/api/v1/photos/${photoId}/comments`, { content }, token);
+    return http.post(`/api/photos/${photoId}/comments`, { content }, token);
   },
-  // TODO: 사진의 여행날짜 수정, 코멘트 수정은 추후 백엔드 API 수정 후 구현 예정
-  // 수정 후 url 중간 경로('v1') 역시 통일 필요
+  updatePhotoComment: (commentId: number, token: string) => {
+    return http.put<{ content: string }>(`/api/comments/${commentId}`, token);
+  },
+  deletePhotoComment: (commentId: number, token: string) => {
+    return http.delete(`/api/comments/${commentId}`, token);
+  },
 };
