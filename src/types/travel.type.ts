@@ -35,3 +35,12 @@ export interface FullTravel {
   endDate: string;
   days: TravelDay[];
 }
+
+export interface SharedTravel {
+  status: number;
+  message: string;
+  data: {
+    travelId: number;
+    shareUrl: string;
+  }[];
+}
