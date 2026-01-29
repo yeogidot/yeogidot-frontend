@@ -14,7 +14,7 @@ export const photoService = {
       `/api/photos/upload?metadata=${encodedMetadata}`,
       formData,
       token,
-      { 'Content-Type': 'multipart/form-data' }
+      {}
     );
   },
   getPhotos: (token: string) => {
