@@ -86,6 +86,17 @@ export const travelService = {
   deleteTravel: (id: number, token: string) => {
     return http.delete(`/api/travels/${id}`, token);
   },
+  updateTravelInfo: (
+    travelId: number,
+    newTravelInfo: Partial<FullTravel>,
+    token: string
+  ) => {
+    return http.patch<{ status: number; message: string }>(
+      `/api/travels/${travelId}`,
+      newTravelInfo,
+      token
+    );
+  },
   deleteTravelDay: (dayId: number, token: string) => {
     return http.delete(`/api/travels/days/${dayId}`, token);
   },
