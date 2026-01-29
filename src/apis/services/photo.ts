@@ -52,4 +52,15 @@ export const photoService = {
   deletePhotoComment: (commentId: number, token: string) => {
     return http.delete(`/api/comments/${commentId}`, token);
   },
+  updatePhotoInfo: (
+    photoId: number,
+    newPhotoInfo: Partial<FullPhoto>,
+    token: string
+  ) => {
+    return http.patch<{ status: number; message: string }>(
+      `/api/photos/${photoId}`,
+      newPhotoInfo,
+      token
+    );
+  },
 };
