@@ -11,7 +11,7 @@ export const photoService = {
 
     const encodedMetadata = encodeURIComponent(JSON.stringify(metadataArray));
     return http.post<{ uploadedPhotos: FullPhoto[] }>(
-      `/api/photos/upload?${encodedMetadata}`,
+      `/api/photos/upload?metadata=${encodedMetadata}`,
       formData,
       token,
       { 'Content-Type': 'multipart/form-data' }
