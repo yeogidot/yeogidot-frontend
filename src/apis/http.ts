@@ -80,4 +80,12 @@ export const http = {
   ) => {
     return request<T>('DELETE', url, token, headers, body);
   },
+  patch: async <T>(
+    url: string,
+    body: unknown,
+    token?: string,
+    headers?: Record<string, string>
+  ) => {
+    return request<T>('PATCH', url, token, headers, body);
+  },
 };
