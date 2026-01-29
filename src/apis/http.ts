@@ -74,11 +74,10 @@ export const http = {
   },
   delete: async <T>(
     url: string,
-    body: unknown,
     token?: string,
     headers?: Record<string, string>
   ) => {
-    return request<T>('DELETE', url, token, headers, body);
+    return request<T>('DELETE', url, token, headers);
   },
   patch: async <T>(
     url: string,
