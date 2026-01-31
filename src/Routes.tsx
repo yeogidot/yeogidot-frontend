@@ -7,10 +7,12 @@ import MyTravelPage from './pages/MyTravelPage/MyTravelPage';
 import TravelPage from './pages/TravelPage/TravelPage';
 import DayTravelPage from './pages/DayTravelPage/DayTravelPage';
 import NewTravelHome from './pages/NewTravelHome/NewTravelHome';
+import EditTravelPage from './pages/EditTravelPage/EditTravelPage';
 import TravelDiaryPage from './pages/TravelDiaryPage/TravelDiaryPage';
 import TravelPhotoComment from './pages/TravelPhotoComment/TravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
 import NewTravelPhotoPage from './pages/NewTravelPhotoPage/NewTravelPhotoPage';
+import EditTravelHome from './pages/EditTravelHome /EditTravelHome';
 import SelectThumbnailPage from './pages/SelectThumbnailPage/SelectThumbnailPage';
 import SelectThumbnailPhotoPage from './pages/SelectThumbnailPhotoPage/SelectThumbnailPhotoPage';
 
@@ -36,6 +38,20 @@ const router = createBrowserRouter([
       { path: 'select-thumbnail/photo', Component: SelectThumbnailPhotoPage },
     ],
   },
+  {
+    path: '/edit-travel',
+    Component: EditTravelPage,
+    children: [
+      { index: true, Component: EditTravelHome },
+      { path: 'photo', Component: NewTravelPhotoPage },
+      {
+        path: 'select-thumbnail',
+        Component: SelectThumbnailPage,
+      },
+      { path: 'select-thumbnail/photo', Component: SelectThumbnailPhotoPage },
+    ],
+  },
+
   {
     path: '*',
     Component: () => <Navigate to="/my-travel" replace={true} />,
