@@ -14,6 +14,8 @@ import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
 import NewTravelPhotoPage from './pages/NewTravelPhotoPage/NewTravelPhotoPage';
 import EditTravelHome from './pages/EditTravelHome /EditTravelHome';
 import SelectThumbnailPage from './pages/SelectThumbnailPage/SelectThumbnailPage';
+import SelectThumbnailPageForEdit from './pages/SelectThumbnailPageForEdit/SelectThumbnailPageForEdit';
+
 import SelectThumbnailPhotoPage from './pages/SelectThumbnailPhotoPage/SelectThumbnailPhotoPage';
 
 const router = createBrowserRouter([
@@ -46,9 +48,12 @@ const router = createBrowserRouter([
       { path: 'photo', Component: NewTravelPhotoPage },
       {
         path: 'select-thumbnail',
-        Component: SelectThumbnailPage,
+        Component: SelectThumbnailPageForEdit,
       },
-      { path: 'select-thumbnail/photo', Component: SelectThumbnailPhotoPage },
+      {
+        path: 'select-thumbnail/photo',
+        Component: SelectThumbnailPhotoPage,
+      },
     ],
   },
 
