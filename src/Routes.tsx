@@ -6,15 +6,18 @@ import {
 import MyTravelPage from './pages/MyTravelPage/MyTravelPage';
 import TravelPage from './pages/TravelPage/TravelPage';
 import DayTravelPage from './pages/DayTravelPage/DayTravelPage';
+import NewTravelHome from './pages/NewTravelHome/NewTravelHome';
 import TravelDiaryPage from './pages/TravelDiaryPage/TravelDiaryPage';
 import TravelDiaryEditPage from './pages/TravelDiaryEditPage/TravelDiaryEditPage'
 import TravelPhotoComment from './pages/TravelPhotoComment/TravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
-import LogInPage from './pages/LogInPage/LogInPage';
-import SignUpPage from './pages/SignUpPage/SignUpPage'
 
 
 const router = createBrowserRouter([
+  {
+    path: `/select-thumbnail`,
+    Component: SelectThumbnailPage,
+  },
   {
     path: '/my-travel',
     Component: MyTravelPage,
@@ -22,6 +25,15 @@ const router = createBrowserRouter([
   {
     path: '/new-travel',
     Component: NewTravelPage,
+    children: [
+      { index: true, Component: NewTravelHome },
+      { path: 'photo', Component: NewTravelPhotoPage },
+      {
+        path: 'select-thumbnail',
+        Component: SelectThumbnailPage,
+      },
+      { path: 'select-thumbnail/photo', Component: SelectThumbnailPhotoPage },
+    ],
   },
   {
     path: '*',
@@ -46,14 +58,6 @@ const router = createBrowserRouter([
   {
     path: '/photos/:photoId/travel-photo-comment',
     Component: TravelPhotoComment,
-  },
-  {
-    path: '/login',
-    Component: LogInPage,
-  },
-  {
-    path: '/signup',
-    Component: SignUpPage,
   }
 ]);
 

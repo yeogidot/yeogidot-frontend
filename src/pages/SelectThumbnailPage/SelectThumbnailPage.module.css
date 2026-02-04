@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+.photoHeader {
+  padding-inline: 40px;
+}
+.photoGrid {
+  height: 50vh;
+}
+.header {
+  padding-top: 83px;
+  padding-inline: 38px;
+}
+
+.headerText {
+  margin-bottom: 0px;
+}
+
+.backButton {
+  border-radius: 10px;
+  padding: 0px;
+  border-style: none;
+  background-color: transparent;
+}
+
+.button {
+  margin: 5% auto;
+}
+
+.uploadDescription {
+  color: #787777;
+  margin: 0px;
+}
