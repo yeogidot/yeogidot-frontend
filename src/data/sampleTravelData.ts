@@ -52,14 +52,14 @@ export const sampleDiaryEntries = [
   {
     travelId: '1',
     day: 1,
-    existingDiary: '많이 걸어서 힘들었지만 재미있었음',
-    placeholder: '여기에 내용을 입력해주세요!',
+    existingDiary: '',
+    placeholder: '많이 걸어서 힘들었지만 재미있었음',
   },
   {
     travelId: '1',
     day: 2,
     existingDiary: null,
-    placeholder: '여기에 내용을 입력해주세요!',
+    placeholder: '2일차 여행일기 입니다.',
   },
 ];
 
@@ -70,6 +70,8 @@ export const samplePhotoComments = [
     day: 1,
     photoId: '1',
     photo: samplePhotos[0],
+    cment_created: new Date('2025-01-04T14:30:00'),
+    cment_update: new Date('2025-01-05T04:20:00'),
     existingComment: '부산항대교에서 찍은 사진이에요',
     placeholder: '여기에 내용을 입력해주세요!',
   },
@@ -78,6 +80,7 @@ export const samplePhotoComments = [
     day: 1,
     photoId: '2',
     photo: samplePhotos[1],
+    cment_created: new Date('2025-01-04T14:30:00'),
     existingComment: null,
     placeholder: '여기에 내용을 입력해주세요!',
   },
@@ -86,6 +89,7 @@ export const samplePhotoComments = [
     day: 1,
     photoId: '3',
     photo: samplePhotos[2],
+    cment_created: new Date('2025-01-04T14:30:00'),
     existingComment: '맛있는 음식 사진!',
     placeholder: '여기에 내용을 입력해주세요!',
   },

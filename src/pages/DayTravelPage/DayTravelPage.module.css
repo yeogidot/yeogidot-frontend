@@ -105,12 +105,11 @@ h3 {
 }
 
 .dailyCommentBox.hasComment {
-  background: #EDEAEA;
+  background: #F6F6F6;
 }
 
 .dailyCommentBox.noComment {
-  background: transparent;
-  color: #999;
+  background: #F6F6F6;
 }
 
 .mapPhoto img {

@@ -61,12 +61,15 @@ export default function TravelPhotoComment() {
             {/* 위치 정보는 실제로는 역지오코딩으로 얻어야 하지만, 샘플에서는 고정 값 사용 */}
             부산광역시 부산진구
         </div>
+        <div
+          className={`${classes.textAreaWrapper} ${
+            !photoComment.existingComment ? classes.placeholder : ''
+          }`}
+          contentEditable
+          suppressContentEditableWarning>
+          {photoComment.existingComment || photoComment.placeholder}
+        </div>
 
-        <textarea
-          className={classes.textAreaWrapper}
-          placeholder={photoComment.placeholder}
-          defaultValue={photoComment.existingComment || ''}
-        />
 
         <div className={classes.finishButton}>
           <Button onClick={handleFinishClick}>{photoComment.existingComment ? '수정' : '작성'}</Button>

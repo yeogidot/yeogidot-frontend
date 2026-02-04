@@ -9,7 +9,7 @@ import DeleteConfirmModal from '../../components/Modal/DeleteConfirmModal.tsx';
 import ShareModal from '../../components/Modal/ShareModal.tsx';
 import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
 import { samplePhotos } from 'src/data/samplePhotos.ts';
-import { sampleTravelData, sampleDayTravels } from 'src/data/sampleTravelData.ts';
+import { sampleTravelData, sampleDayTravels, sampleDiaryEntries } from 'src/data/sampleTravelData.ts';
 
 const oldestPhoto = [...samplePhotos].sort(
   (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
@@ -22,7 +22,8 @@ export default function DayTravelPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const dayTravelData = sampleDayTravels[0]; // 현재는 1일차 데이터만 사용
-  const dailyComment = dayTravelData.diary; // 일일 코멘트
+  const dailyComment = sampleDiaryEntries[0].placeholder; // 일일 코멘트
+  const noComment = String('아직 여행일기가 없습니다.')
 
   const handleDeleteClick = () => setShowDeleteModal(true);
   const handleCloseModal = () => setShowDeleteModal(false);
@@ -30,7 +31,7 @@ export default function DayTravelPage() {
     setShowDeleteModal(false);
   };
   const handleEditClick = () => {
-    navigate(`/travel/${travelId}/${day}/travel-diary-page`);
+    navigate(`/travel/${travelId}/${day}/${dailyComment ? "travel-diary-edit-page" : "travel-diary-page"}`);
   };
   const handleCloseShareModal = () => setShowShareModal(false);
   const handleBackClick = () => navigate(-1);
@@ -72,7 +73,7 @@ export default function DayTravelPage() {
           <div className={classes.dayTravelRow}>
             <h3>{dayTravelData.title}</h3>
             <div className={`${classes.dailyCommentBox} ${dailyComment ? classes.hasComment : classes.noComment}`}  onClick={handleEditClick} >
-              {dailyComment ? dailyComment : '아직 여행일기가 없습니다.'}
+              {dailyComment ? dailyComment : noComment}
             </div>
             <div className={classes.dayTravelLocation}><h3>{dayTravelData.locations}</h3></div>
             <div className={classes.dayTravelPhoto}>
