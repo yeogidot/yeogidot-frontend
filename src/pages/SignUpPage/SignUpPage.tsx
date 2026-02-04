@@ -1,28 +1,54 @@
-import { useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import classes from './SignUpPage.module.css'
-import LogoImg from '../../assets/images/Logo.svg'
-import BackButton from '../../components/Buttons/BackButton/BlackBackButton/BlackBackButton';
-import Button from '../../components/Buttons/Button/Button';
-import { z } from 'zod';
+import { useNavigate, Link } from 'react-router-dom'; // useNavigate 추가
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+import classes from './SignUpPage.module.css';
+import LogoImg from '../../assets/images/Logo.svg';
+import BackButton from '../../components/Buttons/BackButton/BlackBackButton/BlackBackButton';
+import Button from '../../components/Buttons/Button/Button';
 import { SignUpSchema } from './SignUpSchema';
+
+// API 서비스 import
+import { authService } from '../../apis/services/auth';
 
 type SignUpForm = z.infer<typeof SignUpSchema>;
 
 export default function SignUpPage() {
+  const navigate = useNavigate(); // 페이지 이동을 위한 훅
+
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm<SignUpForm>({
-    resolver: zodResolver(SignUpSchema)
+    resolver: zodResolver(SignUpSchema),
+    mode: 'onChange' // 입력할 때마다 실시간으로 유효성 검사 (선택 사항)
   });
 
-  const onSubmit = (data: SignUpForm) => {
-    console.log(data);
-    // axios.post('/api/signup', data)
+  const onSubmit = async (data: SignUpForm) => {
+    try {
+      console.log('회원가입 요청 데이터:', data);
+
+      await authService.signUp({
+        email: data.email,
+        password: data.password,
+        password_check: data.passwordCheck,
+        privacy_policy_agreed: data.agree
+      } as any);
+
+      // 성공 시 처리
+      alert('회원가입이 성공적으로 완료되었습니다!\n로그인 페이지로 이동합니다.');
+      navigate('/login');
+
+    } catch (error: any) {
+      console.error('회원가입 에러:', error);
+      
+      // 에러 메시지 상세 출력
+      const errorMsg = error.responseBody || error.message || "알 수 없는 에러";
+      const statusCode = error.statusCode || error.status || "";
+      alert(`회원가입 실패 (${statusCode}):\n${errorMsg}`);
+    }
   };
 
   return (
@@ -33,12 +59,19 @@ export default function SignUpPage() {
         </div>
       </Link>
 
-      <img src={LogoImg} className={classes.logo} alt="Logo" />
+      <img src={LogoImg} className={classes.logo} alt="Logo"/>
         
+      {/* 폼 제출 핸들러 연결 */}
       <form onSubmit={handleSubmit(onSubmit)} className={classes.signUpForm}>
+        
+        {/* 이메일 */}
         <div className={classes.idForm}>
           <h3>이메일</h3>
-          <input {...register('email')} className={classes.idInput} />
+          <input 
+            {...register('email')} 
+            className={classes.idInput} 
+            placeholder="이메일을 입력해주세요"
+          />
           {errors.email && (
             <span className={classes.errorMessage}>
               {errors.email.message}
@@ -46,12 +79,14 @@ export default function SignUpPage() {
           )}
         </div>
 
+        {/* 비밀번호 */}
         <div className={classes.passwordForm}>
           <h3>비밀번호</h3>
           <input
             {...register('password')}
             type="password"
             className={classes.passwordInput}
+            placeholder="영문, 숫자 포함 8자 이상"
           />
           {errors.password && (
             <span className={classes.errorMessage}>
@@ -60,12 +95,14 @@ export default function SignUpPage() {
           )}
         </div>
 
+        {/* 비밀번호 확인 */}
         <div className={classes.passwordCheckForm}>
           <h3>비밀번호 확인</h3>
           <input
             {...register('passwordCheck')}
             type="password"
             className={classes.passwordCheckInput}
+            placeholder="비밀번호를 다시 입력해주세요"
           />
           {errors.passwordCheck && (
             <span className={classes.errorMessage}>
@@ -74,6 +111,7 @@ export default function SignUpPage() {
           )}
         </div>
 
+        {/* 약관 동의 (체크박스 버전) */}
         <div className={classes.privacyPolicyContainer}>
           <label className={classes.checkPrivacyPolicy}>
             <input 
@@ -82,7 +120,7 @@ export default function SignUpPage() {
               className={classes.checkboxInput}
             />
             <span>
-              <a href="https://lilac-crystal-fca.notion.site/2fdc68016f76806b90b0ec82a710b7c9" target="_blank">개인정보약관</a>에 동의합니다.
+              <a>개인정보약관</a>에 동의합니다.
             </span>
           </label>
           
