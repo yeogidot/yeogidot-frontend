@@ -11,7 +11,11 @@ import TravelDiaryPage from './pages/TravelDiaryPage/TravelDiaryPage';
 import TravelDiaryEditPage from './pages/TravelDiaryEditPage/TravelDiaryEditPage'
 import TravelPhotoComment from './pages/TravelPhotoComment/TravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
-
+import SignUpPage from './pages/SignUpPage/SignUpPage';
+import LogInPage from './pages/LogInPage/LogInPage';
+import SelectThumbnailPage from './pages/SelectThumbnailPage/SelectThumbnailPage';
+import NewTravelPhotoPage from './pages/NewTravelPhotoPage/NewTravelPhotoPage';
+import SelectThumbnailPhotoPage from './pages/SelectThumbnailPhotoPage/SelectThumbnailPhotoPage';
 
 const router = createBrowserRouter([
   {
@@ -58,7 +62,15 @@ const router = createBrowserRouter([
   {
     path: '/photos/:photoId/travel-photo-comment',
     Component: TravelPhotoComment,
-  }
+  },
+  {
+    path: '/signup',
+    Component: SignUpPage
+  },
+  {
+    path: '/login',
+    Component: LogInPage,
+  },
 ]);
 
 export function Routes() {
