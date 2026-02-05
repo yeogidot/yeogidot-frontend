@@ -2,6 +2,8 @@ import classes from './TravelItem.module.css';
 import { Link } from 'react-router-dom';
 import EditIcon from '@assets/icons/edit.svg?react';
 import type { TravelInfo } from 'src/types/travel.type';
+import FallbackImage from '@assets/images/travel_item_fallback.svg';
+
 interface Props {
   travel: TravelInfo;
 }
@@ -15,6 +17,10 @@ export default function TravelItem({ travel }: Props) {
           alt={`여행 ${travel.title}의 대표이미지`}
           className={classes.thumbnail}
           draggable={false}
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null;
+            currentTarget.src = FallbackImage;
+          }}
         />
       </Link>
       <Link to={`/travel/${travel.travelId}`} className={classes.infoContainer}>
