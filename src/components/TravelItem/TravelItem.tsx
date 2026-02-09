@@ -28,7 +28,11 @@ export default function TravelItem({ travel }: Props) {
         {travel.startDate} ~ {travel.endDate} <br />
         {travel.trvRegion}
       </Link>
-      <Link to={`/edit/${travel.travelId}`} className={classes.editButton}>
+      <Link
+        to={`/edit-travel`}
+        state={{ travel: travel.travelId }}
+        className={classes.editButton}
+      >
         <EditIcon />
       </Link>
     </div>
