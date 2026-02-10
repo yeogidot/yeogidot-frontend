@@ -11,8 +11,8 @@ import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
 import { samplePhotos } from 'src/data/samplePhotos.ts';
 import { sampleTravelData, sampleDayTravels, sampleDiaryEntries } from 'src/data/sampleTravelData.ts';
 
-const oldestPhoto = [...samplePhotos].sort(
-  (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
+const latestPhoto = [...samplePhotos].sort(
+  (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
 )[0];
 const SHARE_URL = 'https://travel.vercel.com/1234df';
 
@@ -41,7 +41,7 @@ export default function DayTravelPage() {
   return (
     <div className={classes.container}>
 
-      <BackgroundMap center={oldestPhoto.location}>
+      <BackgroundMap position={latestPhoto.location}>
         {samplePhotos.map((p, idx) => (
           <PhotoMarker
             key={idx}
@@ -62,7 +62,7 @@ export default function DayTravelPage() {
             <h2>1일차</h2>
           </div>
           <div className={classes.buttonGroup}>
-            <EditButton/>
+            <EditButton />
             <DeleteButton onClick={handleDeleteClick} />
           </div>
         </div>
@@ -72,7 +72,7 @@ export default function DayTravelPage() {
           <div>{sampleTravelData.period}</div>
           <div className={classes.dayTravelRow}>
             <h3>{dayTravelData.title}</h3>
-            <div className={`${classes.dailyCommentBox} ${dailyComment ? classes.hasComment : classes.noComment}`}  onClick={handleEditClick} >
+            <div className={`${classes.dailyCommentBox} ${dailyComment ? classes.hasComment : classes.noComment}`} onClick={handleEditClick} >
               {dailyComment ? dailyComment : noComment}
             </div>
             <div className={classes.dayTravelLocation}><h3>{dayTravelData.locations}</h3></div>
@@ -83,7 +83,7 @@ export default function DayTravelPage() {
                   src={photo.url}
                   alt={`여행 사진 ${index + 1}`}
                   onClick={() => handlePhotoClick(index + 1)}
-                  className={classes.clickablePhoto}/>
+                  className={classes.clickablePhoto} />
               ))}
             </div>
           </div>
