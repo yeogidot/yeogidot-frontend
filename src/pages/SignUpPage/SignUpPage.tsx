@@ -120,7 +120,7 @@ export default function SignUpPage() {
               className={classes.checkboxInput}
             />
             <span>
-              <a>개인정보약관</a>에 동의합니다.
+              <a href="https://lilac-crystal-fca.notion.site/2fdc68016f76806b90b0ec82a710b7c9">개인정보약관</a>에 동의하시겠습니까?
             </span>
           </label>
           
