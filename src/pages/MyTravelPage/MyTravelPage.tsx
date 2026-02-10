@@ -12,11 +12,13 @@ export default function MyTravelPage() {
 
   useEffect(() => {
     if (!token) {
+      alert('로그인이 필요한 서비스입니다.');
       navigate('/login');
     }
     if (token) {
       request(token).then(() => {
         if (status === 403) {
+          alert('로그인이 필요한 서비스입니다.');
           navigate('/login');
         }
       });
