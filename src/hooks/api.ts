@@ -17,6 +17,7 @@ export function useApi<ServiceArguments extends unknown[], ServiceData>(
   const request = async (...args: ServiceArguments) => {
     setLoading(true);
     setError(null);
+    setStatus(null);
     try {
       const response = await serviceMethod(...args);
       setData(response.data);

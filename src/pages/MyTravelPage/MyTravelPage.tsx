@@ -9,24 +9,23 @@ import { travelService } from 'src/apis/services/travel';
 export default function MyTravelPage() {
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
+  const { data, error, request, loading, status } = useApi(
+    travelService.getTravels
+  );
 
   useEffect(() => {
     if (!token) {
       alert('로그인이 필요한 서비스입니다.');
       navigate('/login');
+      return;
     }
-    if (token) {
-      request(token).then(() => {
-        if (status === 403) {
-          alert('로그인이 필요한 서비스입니다.');
-          navigate('/login');
-        }
-      });
+    request(token);
+    if (status === 403) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/login');
     }
-  }, [token]);
-  const { data, error, request, loading, status } = useApi(
-    travelService.getTravels
-  );
+  }, [token, status, navigate]);
+
   return (
     <>
       <header className={classes.header}>
