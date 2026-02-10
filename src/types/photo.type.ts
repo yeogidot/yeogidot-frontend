@@ -1,8 +1,6 @@
 export interface PhotoData {
   id: number;
   url: string;
-  size: number;
-  name: string;
   file: File;
   warning?: boolean;
   isThumbnail?: boolean;
