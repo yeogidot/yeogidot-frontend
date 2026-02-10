@@ -90,11 +90,10 @@ export default function EditTravelHome() {
         return {
           id: Date.now(),
           url: URL.createObjectURL(file),
-          name: file.name,
-          size: file.size,
           date: await getCreatedDateTime(file),
           GPSCoordinates: await getGPSCoordinates(file),
           link: 'photo',
+          file,
         };
       })
     );
