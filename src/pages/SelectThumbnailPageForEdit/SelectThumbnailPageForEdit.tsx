@@ -4,24 +4,9 @@ import BlackBackIcon from '@assets/icons/back-black.svg';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import Button from '@components/Buttons/Button/Button';
 import { useTravel } from '@hooks/travel';
-import { dateCompare } from '@utils/date';
 export default function SelectThumbnailPageForEdit() {
   const [travel, setTravel] = useTravel();
 
-  const thumbnail = travel.photos.find(
-    ({ id }) => id === travel.thumbnailPhotoId
-  );
-  const setThumbnailPhotoId = (id: number) => {
-    setTravel(travel => {
-      return { ...travel, thumbnailPhotoId: id };
-    });
-  };
-  if (thumbnail === undefined) {
-    const earliestPhoto = [...travel.photos]
-      .sort(dateCompare)
-      .find(({ date }) => date);
-    setThumbnailPhotoId(earliestPhoto ? earliestPhoto.id : travel.photos[0].id);
-  }
   const thumbnailCheckedPhotos = travel.photos.map(photo => {
     return {
       ...photo,

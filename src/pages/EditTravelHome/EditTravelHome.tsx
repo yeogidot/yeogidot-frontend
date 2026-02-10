@@ -7,6 +7,7 @@ import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import { useNavigate } from 'react-router-dom';
 import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
 import { useTravel } from '@hooks/travel';
+import { dateCompare } from '@utils/date';
 import { useState } from 'react';
 
 const checkFileExtension = (file: File, extensions: string[]) => {
@@ -24,6 +25,11 @@ export default function EditTravelHome() {
   const [titleErrorText, setTitleErrorText] = useState('');
   const [photoErrorText, setPhotoErrorText] = useState('');
 
+  const setThumbnailPhotoId = (id: number) => {
+    setTravel(travel => {
+      return { ...travel, thumbnailPhotoId: id };
+    });
+  };
   const setPhotos = (photos: FullPhotoData[]) => {
     setTravel(travel => {
       return { ...travel, photos };
@@ -51,6 +57,14 @@ export default function EditTravelHome() {
     if (travel.photos.length === 0) {
       setPhotoErrorText('사진을 업로드 해주세요.');
       return;
+    }
+    if (travel.thumbnailPhotoId === null) {
+      const earliestPhoto = [...travel.photos]
+        .sort(dateCompare)
+        .find(({ date }) => date);
+      setThumbnailPhotoId(
+        earliestPhoto ? earliestPhoto.id : travel.photos[0].id
+      );
     }
     navigate('select-thumbnail');
   };
