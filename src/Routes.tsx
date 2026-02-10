@@ -16,11 +16,16 @@ import LogInPage from './pages/LogInPage/LogInPage';
 import SelectThumbnailPage from './pages/SelectThumbnailPage/SelectThumbnailPage';
 import NewTravelPhotoPage from './pages/NewTravelPhotoPage/NewTravelPhotoPage';
 import SelectThumbnailPhotoPage from './pages/SelectThumbnailPhotoPage/SelectThumbnailPhotoPage';
+import MapPage from './pages/MapPage/MapPage';
 
 const router = createBrowserRouter([
   {
     path: `/select-thumbnail`,
     Component: SelectThumbnailPage,
+  },
+  {
+    path: '/map',
+    Component: MapPage,
   },
   {
     path: '/my-travel',
