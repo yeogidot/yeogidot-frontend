@@ -3,6 +3,7 @@ import type {
   NewTravelInfo,
   SharedTravelUrl,
   TravelDay,
+  TravelInfo,
 } from 'src/types/travel.type';
 import { http } from '../http';
 import { photoService } from './photo';
@@ -12,7 +13,7 @@ export const travelService = {
     return http.get<FullTravel>(`/api/travels/${id}`, token);
   },
   getTravels: (token: string) => {
-    return http.get<FullTravel[]>(`/api/travels/`, token);
+    return http.get<TravelInfo[]>(`/api/travels`, token);
   },
   getTravelDay: (travelId: number, dayNumber: number, token: string) => {
     return http.get<TravelDay>(

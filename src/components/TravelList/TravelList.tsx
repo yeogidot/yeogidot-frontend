@@ -2,7 +2,7 @@ import LuggageEmoji from '@assets/images/Luggage.svg?react';
 import { Link } from 'react-router-dom';
 import classes from './TravelList.module.css';
 import TravelItem from '@components/TravelItem/TravelItem';
-import type { TravelInfo } from '@types/travel.type';
+import type { TravelInfo } from 'src/types/travel.type';
 
 interface Props {
   travels: TravelInfo[];
@@ -30,7 +30,9 @@ export default function TravelList({ travels }: Props) {
           </div>
         </div>
       ) : (
-        travels.map(travel => <TravelItem key={travel.id} travel={travel} />)
+        travels.map(travel => (
+          <TravelItem key={travel.travelId} travel={travel} />
+        ))
       )}
     </div>
   );

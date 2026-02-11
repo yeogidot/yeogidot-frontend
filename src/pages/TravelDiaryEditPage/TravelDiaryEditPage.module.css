@@ -1,0 +1,52 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 852px;
+  overflow: hidden;
+  font-family: sans-serif;
+}
+
+.panel {
+  padding:38px;
+}
+
+.backButtonWrapper {
+  position: relative;
+  top: 83px;
+  left: 32px;
+}
+
+.writeTitleWrapper {
+  margin-top: 96px;
+  position: relative;
+  width: 185;
+  height: 78;
+  opacity: 1;
+  margin-bottom: 48px;
+}
+
+.textAreaWrapper {
+  position: relative;
+  width: 100%;
+  height: 262px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  border:none;
+  background-color: #F6F6F6;
+  resize: none;
+  padding: 20px;
+  font-size: 20px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: #847E7E;
+  margin-bottom: 35px;
+}
+
+.finishButton {
+  position: relative;
+  width: 130px;
+  height: 52px;
+  border-radius: 5px;
+  font-size: 20px;
+  display: block;
+  margin: 0 auto;
+}

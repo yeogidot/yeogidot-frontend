@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import classes from "./TravelDiaryPage.module.css";
+import { useState } from 'react';
+import classes from "./TravelDiaryEditPage.module.css";
 import BlackBackButton from "src/components/Buttons/BackButton/BlackBackButton/BlackBackButton";
 import { sampleDiaryEntries } from '../../data/sampleTravelData';
 import Button from '@components/Buttons/Button/Button';
@@ -12,6 +13,10 @@ export default function TravelDiaryPage() {
       entry => entry.travelId === travelId && entry.day === Number(day)
     ) || sampleDiaryEntries[0];
 
+  // ✅ textarea 상태
+  const [diaryText, setDiaryText] = useState(
+    diaryEntry.existingDiary || ''
+  );
 
   const handleBackClick = () => navigate(-1);
 
@@ -26,15 +31,18 @@ export default function TravelDiaryPage() {
 
       <div className={classes.panel}>
         <h1 className={classes.writeTitleWrapper}>
-          {diaryEntry.day}일차<br />여행일기 작성
+          {diaryEntry.day}일차<br />여행일기 수정
         </h1>
 
         <textarea
           className={classes.textAreaWrapper}
+          placeholder={diaryEntry.placeholder}
+          value={diaryText}
+          onChange={(e) => setDiaryText(e.target.value)}
         />
 
         <div className={classes.finishButton}>
-          <Button onClick={handleSave}>작성</Button>
+          <Button onClick={handleSave}>수정</Button>
         </div>
       </div>
     </div>

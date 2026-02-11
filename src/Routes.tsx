@@ -9,19 +9,27 @@ import DayTravelPage from './pages/DayTravelPage/DayTravelPage';
 import NewTravelHome from './pages/NewTravelHome/NewTravelHome';
 import EditTravelPage from './pages/EditTravelPage/EditTravelPage';
 import TravelDiaryPage from './pages/TravelDiaryPage/TravelDiaryPage';
+import TravelDiaryEditPage from './pages/TravelDiaryEditPage/TravelDiaryEditPage'
 import TravelPhotoComment from './pages/TravelPhotoComment/TravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
 import NewTravelPhotoPage from './pages/NewTravelPhotoPage/NewTravelPhotoPage';
 import EditTravelHome from './pages/EditTravelHome/EditTravelHome';
-import SelectThumbnailPage from './pages/SelectThumbnailPage/SelectThumbnailPage';
 import SelectThumbnailPageForEdit from './pages/SelectThumbnailPageForEdit/SelectThumbnailPageForEdit';
-
+import SignUpPage from './pages/SignUpPage/SignUpPage';
+import LogInPage from './pages/LogInPage/LogInPage';
+import SelectThumbnailPage from './pages/SelectThumbnailPage/SelectThumbnailPage';
+import NewTravelPhotoPage from './pages/NewTravelPhotoPage/NewTravelPhotoPage';
 import SelectThumbnailPhotoPage from './pages/SelectThumbnailPhotoPage/SelectThumbnailPhotoPage';
+import MapPage from './pages/MapPage/MapPage';
 
 const router = createBrowserRouter([
   {
     path: `/select-thumbnail`,
     Component: SelectThumbnailPage,
+  },
+  {
+    path: '/map',
+    Component: MapPage,
   },
   {
     path: '/my-travel',
@@ -74,8 +82,20 @@ const router = createBrowserRouter([
     Component: TravelDiaryPage,
   },
   {
+    path: '/travel/:travelId/:day/travel-diary-edit-page',
+    Component: TravelDiaryEditPage,
+  },
+  {
     path: '/photos/:photoId/travel-photo-comment',
     Component: TravelPhotoComment,
+  },
+  {
+    path: '/signup',
+    Component: SignUpPage
+  },
+  {
+    path: '/login',
+    Component: LogInPage,
   },
 ]);
 
