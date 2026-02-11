@@ -21,7 +21,7 @@ export default function MapPage() {
             try {
                 // TODO: Replace with actual token management
                 const token = localStorage.getItem('accessToken') || '';
-                const response = await photoService.getPhotosForMarker(token);
+                const response = await photoService.getPhotos(token);
 
                 if (response.data) {
                     const validPhotos = response.data.filter(
