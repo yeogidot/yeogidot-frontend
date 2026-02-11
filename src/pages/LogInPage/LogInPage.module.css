@@ -1,33 +1,34 @@
 .container {
-  position: relative;
-  width: 100%;
-  height: 852px;
-  overflow: hidden;
-  font-family: sans-serif;
+    position: relative;
+    width: 100%;
+    height: 852px;
+    overflow: hidden;
+    font-family: sans-serif;
 }
 
-.backButton{
+.backButton {
     position: absolute;
     left: 30px;
     top: 83px;
 }
 
 .logo {
-  display: block;
-  margin: 133px auto 0;
-  width: 250px;
-  height: 150px;
+    display: block;
+    margin: 133px auto 0;
+    width: 250px;
+    height: 150px;
 }
 
 
 .logInForm {
-  position: relative;
-  padding: 59px 46px 0;
-  overflow-y: auto;
+    position: relative;
+    padding: 59px 46px 0;
+    overflow-y: auto;
 }
 
 .idForm {
     position: relative;
+    margin-bottom: 30px;
 }
 
 .idInput {
@@ -40,7 +41,9 @@
 }
 
 .passwordForm {
+    position: relative;
     margin-top: 33px;
+    margin-bottom: 30px;
 }
 
 .passwordInput {
@@ -65,4 +68,16 @@
     width: 108px;
     height: 55px;
     font-size: 20px;
+}
+
+.errorMessage {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    margin-top: 6px;
+
+    font-size: 15px;
+    color: #e53935;
+    line-height: 1.2;
+    white-space: nowrap;
 }
