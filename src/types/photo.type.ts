@@ -1,9 +1,7 @@
 export interface PhotoData {
   id: number;
   url: string;
-  size: number;
-  name: string;
-  file: File;
+  file?: File;
   warning?: boolean;
   isThumbnail?: boolean;
   link?: string;
@@ -17,10 +15,11 @@ export interface FullPhotoData extends DatedPhotoData {
 }
 
 export interface Photo {
-  id: number;
+  photoId: number;
   url: string;
   createdDate?: string;
   modifiedDate?: string;
+  comments: Comment[];
 }
 export interface PhotoMetadata {
   originalName: string;
@@ -34,3 +33,9 @@ export interface DatedPhoto extends Photo {
 }
 
 export type FullPhoto = Photo & PhotoMetadata;
+
+export interface Comment {
+  commentId: number;
+  content: string;
+  createdAt: string;
+}
