@@ -4,24 +4,33 @@ import BlackBackIcon from '@assets/icons/back-black.svg';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import Button from '@components/Buttons/Button/Button';
 import { useTravel } from '@hooks/travel';
-import { dateCompare } from '@utils/date';
+import { useApi } from '@hooks/api';
+import { travelService } from 'src/apis/services/travel';
+import { useEffect } from 'react';
 export default function SelectThumbnailPage() {
+  const token = localStorage.getItem('accessToken');
   const [travel, setTravel] = useTravel();
-
-  const thumbnail = travel.photos.find(
-    ({ id }) => id === travel.thumbnailPhotoId
-  );
-  const setThumbnailPhotoId = (id: number) => {
-    setTravel(travel => {
-      return { ...travel, thumbnailPhotoId: id };
-    });
+  const { error, data, loading, request } = useApi(travelService.createTravel);
+  const handleClickButton = async () => {
+    if (!token) {
+      alert('로그인이 필요한 서비스입니다.');
+      return;
+    }
+    request(travel, token);
   };
-  if (thumbnail === undefined) {
-    const earliestPhoto = [...travel.photos]
-      .sort(dateCompare)
-      .find(({ date }) => date);
-    setThumbnailPhotoId(earliestPhoto ? earliestPhoto.id : travel.photos[0].id);
-  }
+  useEffect(() => {
+    if (loading) {
+      return;
+    }
+    if (error) {
+      alert(error);
+      return;
+    }
+    if (data) {
+      alert(`성공적으로 여행을 추가했습니다.${'\n'}여행페이지로 이동합니다.`);
+      navigate(`/travel/${data}`);
+    }
+  }, [error, loading, data]);
   const thumbnailCheckedPhotos = travel.photos.map(photo => {
     return {
       ...photo,
@@ -51,7 +60,9 @@ export default function SelectThumbnailPage() {
         className={classes.photoGrid}
         photos={thumbnailCheckedPhotos}
       />
-      <Button className={classes.button}>여행 추가</Button>
+      <Button className={classes.button} onClick={handleClickButton}>
+        여행 추가
+      </Button>
     </div>
   );
 }
