@@ -28,29 +28,26 @@ export default function LogInPage() {
       if (response.data) {
         const token = response.data;
 
-
+        // 예시: 토큰이 객체이고 accessToken 프로퍼티가 있다면
         localStorage.setItem('accessToken', token.access_token);
 
-
         // 메인 페이지로 이동
-        // alert('로그인에 성공했습니다.'); // 성공 알림 제거 (기획에 따라 유지 가능)
+        alert('로그인에 성공했습니다.');
         navigate('/');
       }
     } catch (error: any) {
+      // 4. 에러 처리 (http.ts에서 던진 에러 잡기)
       console.error(error);
 
       const status = error.statusCode || error.status || error.response?.status;
 
       if (status === 400) {
         setError('password', { message: '이메일과 비밀번호를 입력해주세요.' });
-        // 또는 이메일 쪽에도 표시하고 싶다면:
-        // setError('email', { message: '이메일과 비밀번호를 입력해주세요.' });
-      } else if (status === 401) {
+      } else if (status === 403) {
         setError('password', { message: '이메일 또는 비밀번호가 일치하지 않습니다.' });
       } else if (status === 404) {
         setError('email', { message: '가입되지 않은 이메일입니다.' });
       } else {
-        // 그 외 에러는 기존처럼 alert 혹은 포괄적 에러 메시지 처리
         const errorMessage = error.message || '로그인에 실패했습니다.';
         alert(errorMessage);
       }

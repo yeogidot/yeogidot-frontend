@@ -1,50 +1,148 @@
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import classes from './TravelPhotoComment.module.css'
 import BackButton from 'src/components/Buttons/BackButton/GrayBackButton/GrayBackButton'
 import DeleteButton from 'src/components/Buttons/DeleteButton/DeleteButton'
-import { samplePhotoComments } from '../../data/sampleTravelData.ts'
 import DeleteConfirmModal from '../../components/Modal/DeleteConfirmModal.tsx';
 import Button from '@components/Buttons/Button/Button';
 import FullPhotoLayout from '@components/FullPhotoLayout/FullPhotoLayout';
-import type { DatedPhotoData } from 'src/types/photo.type';
+import type { DatedPhotoData, FullPhoto } from 'src/types/photo.type';
+import { photoService } from 'src/apis/services/photo';
+import { useApi } from 'src/hooks/api';
+
+// Local interface since we cannot change types/photo.type.ts
+interface FullPhotoWithComment extends FullPhoto {
+  comment?: {
+    id: number;
+    content: string;
+  };
+}
 
 export default function TravelPhotoComment() {
   const { photoId } = useParams<{ photoId: string }>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isFullPhoto, setIsFullPhoto] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const [isEditing, setIsEditing] = useState(false); // To track if we are editing an existing comment
+  const divRef = useRef<HTMLDivElement>(null);
 
-  // 해당 사진에 맞는 코멘트 데이터 찾기
-  const photoComment = samplePhotoComments.find(
-    comment => comment.photoId === photoId
-  ) || samplePhotoComments[0]; // 기본값으로 첫 번째 항목 사용
+  const navigate = useNavigate()
+
+  const {
+    data: rawPhoto,
+    loading: photoLoading,
+    error: photoError,
+    request: fetchPhoto,
+  } = useApi(photoService.getPhoto);
+
+  const photo = rawPhoto as FullPhotoWithComment | undefined;
+
+  const {
+    request: writeComment
+  } = useApi(photoService.writePhotoComment);
+
+  const {
+    request: updateComment
+  } = useApi(photoService.updatePhotoComment);
+
+  const {
+    request: deleteComment
+  } = useApi(photoService.deletePhotoComment);
+
+  // const {
+  //     request: deletePhoto
+  // } = useApi(photoService.deletePhoto);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    if (photoId) {
+      fetchPhoto(Number(photoId), token);
+    }
+  }, [photoId]);
+
+  useEffect(() => {
+    if (photo?.comment) {
+      setCommentText(photo.comment.content);
+      setIsEditing(true);
+      if (divRef.current) {
+        divRef.current.innerText = photo.comment.content;
+      }
+    } else {
+      setIsEditing(false);
+      if (divRef.current) {
+        divRef.current.innerText = '';
+      }
+    }
+  }, [photo]);
+
+  if (photoLoading) return <div>Loading...</div>;
+  if (photoError) return <div>Error: {photoError}</div>;
+  if (!photo) return <div>No photo data.</div>;
 
   // 날짜 포맷팅 함수
-  const formatDate = (date: Date): string => {
-    return date.toISOString().split('T')[0];
+  const formatDate = (dateString?: string | null): string => {
+    if (!dateString) return '';
+    return dateString.split('T')[0];
   };
-  const navigate = useNavigate()
+
   const handleBackClick = () => navigate(-1);
   const handleDeleteClick = () => setShowDeleteModal(true);
   const handleCloseModal = () => setShowDeleteModal(false);
-  const handleConfirmDelete = () => {
+
+  const handleConfirmDelete = async () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      if (photo.comment) {
+        // If deleting comment
+        await deleteComment(photo.comment.id, token);
+        setCommentText('');
+        if (divRef.current) divRef.current.innerText = '';
+        setIsEditing(false);
+        // Optionally refresh photo to sync state
+        await fetchPhoto(Number(photoId), token);
+      }
+    }
     setShowDeleteModal(false);
   };
-  // 현재 뒤로가는 부분만 구현, 백엔드 연동시 글 저장까지 구현 예정
-  const handleFinishClick = () => navigate(-1);
+
+  const handleFinishClick = async () => {
+    const token = localStorage.getItem('token');
+    if (!token || !photoId) return;
+
+    const content = divRef.current?.innerText || '';
+    if (!content.trim()) return;
+
+    if (isEditing && photo.comment) {
+      // Update
+      await updateComment(photo.comment.id, content, token);
+      navigate(-1);
+    } else {
+      // Create
+      await writeComment(Number(photoId), content, token);
+      navigate(-1);
+    }
+  };
 
   const handlePhotoClick = () => {
     setIsFullPhoto(true);
   };
 
+  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+    setCommentText(e.currentTarget.innerText);
+  };
+
   const datedPhotoData: DatedPhotoData = {
-    id: Number(photoComment.photoId),
-    url: photoComment.photo.url,
-    date: photoComment.photo.timestamp.toISOString(),
-    // Dummy data to satisfy DatedPhotoData interface
+    id: Number(photoId),
+    url: photo.url,
+    date: photo.createdDate ?? new Date().toISOString(), // Fallback
+    // Dummy data
     size: 0,
-    name: 'photo',
-    file: new File([], 'photo'),
+    name: photo.originalName ?? 'photo',
+    file: new File([], photo.originalName ?? 'photo'),
     isThumbnail: false
   };
 
@@ -64,8 +162,8 @@ export default function TravelPhotoComment() {
       <div className={classes.topPanel}>
         <div className={classes.dayTravelPhoto}>
           <img
-            src={photoComment.photo.url}
-            alt={`여행 사진 ${photoComment.photoId}`}
+            src={photo.url}
+            alt={`여행 사진 ${photoId}`}
             onClick={handlePhotoClick}
             style={{ cursor: 'pointer' }}
           />
@@ -85,24 +183,28 @@ export default function TravelPhotoComment() {
         </div>
 
         <div className={classes.photoInformation}>
-          <a>부산여행:{photoComment.day}일차</a>
+          {/* Need travel day info? photo doesn't have it directly. 
+               We might need to pass it or fetch it. 
+               For now showing what we have. 
+           */}
+          <a>{formatDate(photo.takenAt)}</a>
           <br />
-          {formatDate(photoComment.photo.timestamp)}
-          <br />
-          {/* 위치 정보는 실제로는 역지오코딩으로 얻어야 하지만, 샘플에서는 고정 값 사용 */}
-          부산광역시 부산진구
+          {/* Location? photo metadata */}
+          {photo.latitude && photo.longitude ? `${photo.latitude}, ${photo.longitude}` : ''}
         </div>
         <div
-          className={`${classes.textAreaWrapper} ${!photoComment.existingComment ? classes.placeholder : ''
-            }`}
+          className={`${classes.textAreaWrapper} ${!commentText ? classes.placeholder : ''}`}
           contentEditable
-          suppressContentEditableWarning>
-          {photoComment.existingComment || photoComment.placeholder}
+          suppressContentEditableWarning
+          ref={divRef}
+          onInput={handleInput}
+          data-placeholder="코멘트를 입력하세요."
+        >
         </div>
 
 
         <div className={classes.finishButton}>
-          <Button onClick={handleFinishClick}>{photoComment.existingComment ? '수정' : '작성'}</Button>
+          <Button onClick={handleFinishClick}>{isEditing ? '수정' : '작성'}</Button>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import classes from './DayTravelPage.module.css';
 import EditButton from '../../components/Buttons/EditButton/EditButton.tsx';
@@ -8,28 +8,64 @@ import BackgroundMap from '../../components/Map/Map.tsx';
 import DeleteConfirmModal from '../../components/Modal/DeleteConfirmModal.tsx';
 import ShareModal from '../../components/Modal/ShareModal.tsx';
 import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
-import { samplePhotos } from 'src/data/samplePhotos.ts';
-import { sampleTravelData, sampleDayTravels, sampleDiaryEntries } from 'src/data/sampleTravelData.ts';
+import { travelService } from 'src/apis/services/travel';
+import { useApi } from 'src/hooks/api';
 
-const latestPhoto = [...samplePhotos].sort(
-  (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
-)[0];
-const SHARE_URL = 'https://travel.vercel.com/1234df';
+const SHARE_URL = 'https://travel.vercel.com/1234df'; // This might need to be dynamic if sharing day specifically is supported, otherwise keep static or fetch from somewhere
 
 export default function DayTravelPage() {
   const navigate = useNavigate();
+  // day is dayNumber
   const { travelId, day } = useParams<{ travelId: string; day: string }>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const dayTravelData = sampleDayTravels[0]; // 현재는 1일차 데이터만 사용
-  const dailyComment = sampleDiaryEntries[0].placeholder; // 일일 코멘트
-  const noComment = String('아직 여행일기가 없습니다.')
+
+  const {
+    data: dayTravel,
+    loading: dayTravelLoading,
+    error: dayTravelError,
+    request: fetchDayTravel,
+  } = useApi(travelService.getTravelDay);
+
+  const {
+    request: deleteTravelDay,
+  } = useApi(travelService.deleteTravelDay);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    if (travelId && day) {
+      fetchDayTravel(Number(travelId), Number(day), token);
+    }
+  }, [travelId, day]);
+
+  if (dayTravelLoading) return <div>Loading...</div>;
+  if (dayTravelError) return <div>Error: {dayTravelError}</div>;
+  if (!dayTravel) return <div>No data found.</div>;
+
+  // Safe check for photos
+  const safePhotos = dayTravel.photos || [];
+  const latestPhoto = safePhotos.length > 0 ? safePhotos[0] : null;
+  // Sorting might be needed if backend doesn't sort
+
+  const dailyComment = dayTravel.diary?.content; // 일일 코멘트
+  const noComment = String('아직 여행일기가 없습니다.');
 
   const handleDeleteClick = () => setShowDeleteModal(true);
   const handleCloseModal = () => setShowDeleteModal(false);
-  const handleConfirmDelete = () => {
+
+  const handleConfirmDelete = async () => {
+    const token = localStorage.getItem('token');
+    if (dayTravel.dayId && token) {
+      await deleteTravelDay(dayTravel.dayId, token);
+      navigate(-1); // Go back after delete
+    }
     setShowDeleteModal(false);
   };
+
   const handleEditClick = () => {
     navigate(`/travel/${travelId}/${day}/${dailyComment ? "travel-diary-edit-page" : "travel-diary-page"}`);
   };
@@ -38,16 +74,19 @@ export default function DayTravelPage() {
   const handlePhotoClick = (photoId: string | number) => {
     navigate(`/photos/${photoId}/travel-photo-comment`);
   };
+
   return (
     <div className={classes.container}>
 
-      <BackgroundMap position={latestPhoto.location}>
-        {samplePhotos.map((p, idx) => (
-          <PhotoMarker
-            key={idx}
-            photoUrl={p.url}
-            position={[p.location[0] + 0.007, p.location[1]]}
-          />
+      <BackgroundMap position={latestPhoto?.GPSCoordinates ? [latestPhoto.GPSCoordinates.latitude, latestPhoto.GPSCoordinates.longitude] : undefined}>
+        {safePhotos.map((p, idx) => (
+          p.GPSCoordinates ? (
+            <PhotoMarker
+              key={idx}
+              photoUrl={p.url!}
+              position={[p.GPSCoordinates.latitude + 0.007, p.GPSCoordinates.longitude]}
+            />
+          ) : null
         ))}
       </BackgroundMap>
 
@@ -58,8 +97,9 @@ export default function DayTravelPage() {
 
         <div className={classes.headerRow}>
           <div className={classes.header}>
-            <h1>부산 여행</h1>
-            <h2>1일차</h2>
+            {/* Title might need to come from parent travel or we just show day number */}
+            <h1>{day}일차</h1>
+            {/* <h2>{dayTravel.date}</h2> */}
           </div>
           <div className={classes.buttonGroup}>
             <EditButton />
@@ -68,21 +108,22 @@ export default function DayTravelPage() {
         </div>
 
         <div className={classes.travelInformation}>
-          <div>{sampleTravelData.city}</div>
-          <div>{sampleTravelData.period}</div>
+          <div>{dayTravel.dayRegion}</div>
+          <div>{dayTravel.date}</div>
           <div className={classes.dayTravelRow}>
-            <h3>{dayTravelData.title}</h3>
+            {/* <h3>Title?</h3> Day object doesn't have title similar to sample data '1일차'. We used day number above. */}
             <div className={`${classes.dailyCommentBox} ${dailyComment ? classes.hasComment : classes.noComment}`} onClick={handleEditClick} >
               {dailyComment ? dailyComment : noComment}
             </div>
-            <div className={classes.dayTravelLocation}><h3>{dayTravelData.locations}</h3></div>
+            {/* locations might be granular region info, but we have dayRegion */}
+            <div className={classes.dayTravelLocation}><h3>{dayTravel.dayRegion}</h3></div>
             <div className={classes.dayTravelPhoto}>
-              {dayTravelData.photos.map((photo, index) => (
+              {safePhotos.map((photo, index) => (
                 <img
-                  key={`${photo.url}-${index}`}
+                  key={`${photo.id}-${index}`}
                   src={photo.url}
                   alt={`여행 사진 ${index + 1}`}
-                  onClick={() => handlePhotoClick(index + 1)}
+                  onClick={() => handlePhotoClick(photo.id!)}
                   className={classes.clickablePhoto} />
               ))}
             </div>

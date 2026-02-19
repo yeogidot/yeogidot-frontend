@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import classes from './TravelPage.module.css';
 import EditButton from '../../components/Buttons/EditButton/EditButton.tsx';
 import ShareButton from '../../components/Buttons/ShareButton/ShareButton.tsx';
@@ -9,41 +9,100 @@ import BackgroundMap from '../../components/Map/Map.tsx';
 import DeleteConfirmModal from '../../components/Modal/DeleteConfirmModal.tsx';
 import ShareModal from '../../components/Modal/ShareModal.tsx';
 import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
-import { samplePhotos } from 'src/data/samplePhotos';
-import { sampleTravelData, sampleDayTravels } from 'src/data/sampleTravelData';
-
-// 최신 사진 순서대로 정렬 (latest first)
-const sortedPhotos = [...samplePhotos].sort(
-  (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
-);
-
-const mapCenter = sortedPhotos[0].location; // 가장 최신 사진 위치를 중심으로
-
-
-const SHARE_URL = 'https://travel.vercel.com/1234df';
+import { travelService } from 'src/apis/services/travel';
+import { useApi } from 'src/hooks/api';
+// import type { FullTravel } from 'src/types/travel.type'; // inferred from service
 
 export default function TravelPage() {
   const navigate = useNavigate();
+  const { travelId } = useParams<{ travelId: string }>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
 
+  // API Hooks
+  const {
+    data: travel,
+    loading: travelLoading,
+    error: travelError,
+    request: fetchTravel,
+  } = useApi(travelService.getTravel);
+
+  const {
+    request: deleteTravel,
+  } = useApi(travelService.deleteTravel);
+
+  const {
+    data: sharedUrlData,
+    request: fetchSharedUrl,
+  } = useApi(travelService.getSharedUrl);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    if (travelId) {
+      fetchTravel(Number(travelId), token);
+    }
+  }, [travelId]);
+
+  if (travelLoading) return <div>Loading...</div>;
+  if (travelError) return <div>Error: {travelError}</div>;
+  if (!travel) return <div>No travel data found.</div>;
+
+  // Photos from all days for the map
+  // Note: TravelDay photos type is Partial<FullPhotoData> which has GPSCoordinates
+  // We filter out those without valid coordinates
+  const allPhotos = travel.days.flatMap(day =>
+    (day.photos || []).filter(p => p.url && p.GPSCoordinates?.latitude !== undefined && p.GPSCoordinates?.longitude !== undefined)
+  );
+
+  // Map center: representatitve photo or first photo
+  const mapCenter = allPhotos.length > 0 && allPhotos[0].GPSCoordinates
+    ? { lat: allPhotos[0].GPSCoordinates.latitude, lng: allPhotos[0].GPSCoordinates.longitude }
+    : undefined;
+
   const handleDeleteClick = () => setShowDeleteModal(true);
   const handleCloseModal = () => setShowDeleteModal(false);
-  const handleConfirmDelete = () => {
-    // TODO: wire up actual delete handler when backend is ready
+
+  const handleConfirmDelete = async () => {
+    const token = localStorage.getItem('token');
+    if (travelId && token) {
+      await deleteTravel(Number(travelId), token);
+      navigate('/my-travel'); // Go back to list after delete
+    }
     setShowDeleteModal(false);
   };
-  const handleShareClick = () => setShowShareModal(true);
+
+  const handleShareClick = async () => {
+    const token = localStorage.getItem('token');
+    if (travelId && token) {
+      await fetchSharedUrl(Number(travelId), token);
+      setShowShareModal(true);
+    }
+  };
+
   const handleCloseShareModal = () => setShowShareModal(false);
-  const handleDayClick = () => navigate(`./${sampleDayTravels[0].day}`);
-  const handleBackClick = () => navigate('/mytravel');
+
+  const handleDayClick = (dayNumber: number) => {
+    navigate(`./${dayNumber}`);
+  };
+
+  const handleBackClick = () => navigate('/my-travel');
 
   return (
     <div className={classes.container}>
 
-      <BackgroundMap position={mapCenter}>
-        {samplePhotos.map((photo, index) => (
-          <PhotoMarker key={index} position={[photo.location[0] + 0.007, photo.location[1]]} photoUrl={photo.url} />
+      <BackgroundMap position={mapCenter ? [mapCenter.lat, mapCenter.lng] : undefined}>
+        {allPhotos.map((photo, index) => (
+          photo.GPSCoordinates ? (
+            <PhotoMarker
+              key={`${photo.id}-${index}`}
+              position={[photo.GPSCoordinates.latitude + 0.007, photo.GPSCoordinates.longitude]}
+              photoUrl={photo.url!}
+            />
+          ) : null
         ))}
       </BackgroundMap>
 
@@ -53,7 +112,7 @@ export default function TravelPage() {
       <div className={classes.panel}>
 
         <div className={classes.headerRow}>
-          <h1 className={classes.header}>{sampleTravelData.title}</h1>
+          <h1 className={classes.header}>{travel.title}</h1>
 
           <div className={classes.buttonGroup}>
             <EditButton />
@@ -63,22 +122,30 @@ export default function TravelPage() {
         </div>
 
         <div className={classes.travelInformation}>
-          <div>{sampleTravelData.city}</div>
-          <div>{sampleTravelData.period}</div>
+          <div>{travel.startDate} ~ {travel.endDate}</div>
+          {/* City isn't explicitly in FullTravel root, might need to derive from days or it's missing in type */}
         </div>
-        <div className={classes.dayTravelRow} onClick={handleDayClick} style={{ cursor: 'pointer' }}>
-          <h3>{sampleDayTravels[0].day}일차</h3>
-          <div className={classes.dayTravelLocation}>{sampleDayTravels[0].locations}</div>
-          <div className={classes.dayTravelPhoto}>
-            {sampleDayTravels[0].photos.map((photo, index) => (
-              <img
-                key={`${photo.url}-${index}`}
-                src={photo.url}
-                alt={`여행 사진 ${index + 1}`}
-              />
-            ))}
+
+        {travel.days.map((day) => (
+          <div
+            key={day.dayId}
+            className={classes.dayTravelRow}
+            onClick={() => handleDayClick(day.dayNumber)}
+            style={{ cursor: 'pointer' }}
+          >
+            <h3>{day.dayNumber}일차</h3>
+            <div className={classes.dayTravelLocation}>{day.dayRegion}</div>
+            <div className={classes.dayTravelPhoto}>
+              {day.photos.map((photo, index) => (
+                <img
+                  key={`${photo.id}-${index}`}
+                  src={photo.url}
+                  alt={`여행 사진 ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        ))}
       </div>
 
       {showDeleteModal && (
@@ -88,8 +155,8 @@ export default function TravelPage() {
           onConfirm={handleConfirmDelete}
         />
       )}
-      {showShareModal && (
-        <ShareModal shareUrl={SHARE_URL} onCancel={handleCloseShareModal} />
+      {showShareModal && sharedUrlData && (
+        <ShareModal shareUrl={sharedUrlData.data[0].shareUrl} onCancel={handleCloseShareModal} />
       )}
     </div>
   );
