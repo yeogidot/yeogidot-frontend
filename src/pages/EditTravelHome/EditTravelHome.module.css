@@ -1,0 +1,77 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+.uploadDescription {
+  text-align: center;
+  color: #787777;
+  font-size: 12px;
+  margin: 0px;
+}
+.header {
+  padding-top: 83px;
+  padding-inline: 38px;
+}
+
+.headerText {
+  margin-bottom: 0px;
+}
+
+.titleErrorHelperText {
+  color: red;
+  font-size: 14px;
+  margin: 0px 0px;
+}
+.photoErrorHelperText {
+  color: red;
+  font-size: 14px;
+  margin: 0px 0px;
+  text-align: center;
+}
+
+.backButton {
+  border-radius: 10px;
+  padding: 0px;
+  border-style: none;
+  background-color: transparent;
+}
+.textInput {
+  margin: 0 auto;
+  width: 90%;
+  height: 44px;
+  border-radius: 5px;
+  border-style: none;
+  font-size: 20px;
+  border-width: 1px;
+  background-color: #f5f5f5;
+  padding-inline: 5%;
+}
+.textInputError {
+  border-style: solid;
+  border-color: red;
+}
+
+.textInputError:focus {
+  outline-color: red;
+}
+.inputHeader {
+  margin: 0px;
+}
+
+.textInput:focus {
+  outline-color: #0d9eff;
+  outline-offset: 0px;
+}
+.inputSection {
+  display: flex;
+  flex-direction: column;
+  padding-inline: 40px;
+  row-gap: 8px;
+}
+.button {
+  margin: 5% auto;
+}
+.photoSelectButton {
+  margin: 0 auto;
+}

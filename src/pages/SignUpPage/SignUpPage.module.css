@@ -1,0 +1,105 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 852px;
+  overflow: hidden;
+  font-family: sans-serif;
+}
+
+.backButton {
+  position: absolute;
+  left: 30px;
+  top: 83px;
+}
+
+.logo {
+  display: block;
+  margin: 133px auto 0;
+  width: 250px;
+  height: 150px;
+}
+
+.signUpForm {
+  position: relative;
+  padding: 59px 55px 0;
+  /* 내용이 많아지면 스크롤 */
+  overflow-y: auto;
+  height: calc(100% - 283px); /* 로고 영역 제외한 나머지 높이 활용 */
+}
+
+/* --- 공통 스타일 (입력 폼 래퍼) --- */
+/* 핵심: margin-bottom으로 에러 메시지가 뜰 공간(약 20~30px)을
+   미리 확보해두어야 absolute로 띄운 에러가 다음 칸을 가리지 않습니다.
+*/
+.idForm,
+.passwordForm,
+.passwordCheckForm {
+  position: relative;
+  margin-top: 20px;     /* 위쪽 간격 */
+  margin-bottom: 30px;  /* 아래쪽 간격 (에러 메시지 공간 확보) */
+}
+
+.idInput,
+.passwordInput,
+.passwordCheckInput {
+  margin-top: 5px;
+  width: 100%;
+  height: 49px;
+  border-radius: 5px;
+  border-color: #A9A9A9;
+  border-style: solid;
+  box-sizing: border-box; /* 패딩 포함 크기 계산 */
+}
+
+/* --- 약관 동의 (체크박스) --- */
+.privacyPolicyContainer {
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 40px; /* 버튼과의 간격을 위해 넉넉히 확보 */
+}
+
+/* 텍스트 스타일 */
+.checkPrivacyPolicy {
+  display: flex;
+  align-items: center; /* 체크박스와 텍스트 수직 중앙 정렬 */
+  gap: 8px;
+  font-size: 15px;
+  color: #626161;
+  cursor: pointer;
+}
+
+.checkPrivacyPolicy a {
+  text-decoration: underline;
+}
+
+.checkboxInput {
+  width: 18px;
+  height: 18px;
+  accent-color: #000000;
+  cursor: pointer;
+}
+
+
+/* --- 버튼 --- */
+.signUpButton {
+  display: block;      /* 가운데 정렬을 위해 block 처리 */
+  margin: 0 auto;      /* 좌우 auto로 중앙 정렬 */
+  width: 108px;
+  height: 55px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+
+/* --- 에러 메시지 (핵심) --- */
+.errorMessage {
+  position: absolute;  /* 자리를 차지하지 않고 공중에 뜸 -> 레이아웃 밀림 방지 */
+  left: 0;
+  top: 100%;           /* input의 바로 밑바닥 */
+  margin-top: 6px;     /* input과 살짝 띄우기 */
+  
+  font-size: 15px;
+  color: #e53935;
+  line-height: 1.2;
+  white-space: nowrap; /* 줄바꿈 방지 */
+}

@@ -1,16 +1,17 @@
-import type { FullPhotoData } from './photo.type';
+import type { FullPhotoData, FullPhoto } from './photo.type';
 
 export interface NewTravelInfo {
   title: string;
   photos: FullPhotoData[];
   thumbnailPhotoId: number | string | null;
 }
-export interface TravelInfo extends NewTravelInfo {
-  id: number;
-  thumbnail: string;
+export interface TravelInfo {
+  title: string;
+  travelId: number;
+  representativeImageUrl: string;
   startDate: string;
   endDate: string;
-  location: string;
+  trvRegion: string;
 }
 
 export interface TravelDay {
@@ -18,19 +19,20 @@ export interface TravelDay {
   dayNumber: number;
   date: string;
   dayRegion: string;
-  photos: Partial<FullPhotoData>[];
+  photos: Partial<FullPhoto>[];
   diary: {
     logId: number;
     content: string;
     logCreated: string;
-  };
+  } | null;
 }
 
 export interface FullTravel {
   travelId: number;
   title: string;
   representativePhotoId: number;
-  shareUrl: string;
+  trvRegion: string;
+  shareUrl: string | null;
   startDate: string;
   endDate: string;
   days: TravelDay[];
