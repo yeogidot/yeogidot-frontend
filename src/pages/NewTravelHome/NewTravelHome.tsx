@@ -9,7 +9,6 @@ import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
 import { useTravel } from '@hooks/travel';
 import { useState } from 'react';
 import { dateCompare } from '@utils/date';
-
 const checkFileExtension = (file: File, extensions: string[]) => {
   const fileExtension = file.name.split('.').pop()?.toLowerCase();
   if (fileExtension === undefined) {
@@ -31,7 +30,7 @@ export default function NewTravelHome() {
     });
   };
 
-  const setThumbnailPhotoId = (id: number) => {
+  const setThumbnailPhotoId = (id: number | string) => {
     setTravel(travel => {
       return { ...travel, thumbnailPhotoId: id };
     });
@@ -87,9 +86,11 @@ export default function NewTravelHome() {
 
     const addedPhotos = await Promise.all(
       fileArray.map(async file => {
+        const fileUrl = URL.createObjectURL(file);
+        const blobId = new URL(fileUrl.slice(5)).pathname.slice(1);
         return {
-          id: Date.now(),
-          url: URL.createObjectURL(file),
+          id: blobId,
+          url: fileUrl,
           date: await getCreatedDateTime(file),
           GPSCoordinates: await getGPSCoordinates(file),
           link: 'photo',

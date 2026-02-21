@@ -3,7 +3,7 @@ import type { FullPhotoData } from './photo.type';
 export interface NewTravelInfo {
   title: string;
   photos: FullPhotoData[];
-  thumbnailPhotoId: number | null;
+  thumbnailPhotoId: number | string | null;
 }
 export interface TravelInfo extends NewTravelInfo {
   id: number;
