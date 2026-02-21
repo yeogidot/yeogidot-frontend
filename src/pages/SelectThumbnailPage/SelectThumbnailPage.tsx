@@ -11,7 +11,7 @@ export default function SelectThumbnailPage() {
   const token = localStorage.getItem('accessToken');
   const [travel, setTravel] = useTravel();
   const { error, data, loading, request } = useApi(travelService.createTravel);
-  const handleClickButton = async () => {
+  const handleClickButton = () => {
     if (!token) {
       alert('로그인이 필요한 서비스입니다.');
       return;
@@ -60,9 +60,19 @@ export default function SelectThumbnailPage() {
         className={classes.photoGrid}
         photos={thumbnailCheckedPhotos}
       />
-      <Button className={classes.button} onClick={handleClickButton}>
-        여행 추가
+      <Button
+        className={classes.button}
+        onClick={handleClickButton}
+        disabled={loading}
+        aria-busy={loading}
+      >
+        {loading ? '여행 추가 중...' : '여행 추가'}
       </Button>
+      <p className={classes.loadingMessage} role="status" aria-live="polite">
+        {loading
+          ? '여행을 생성하고 있어요. 완료되면 자동으로 여행 페이지로 이동해요.'
+          : ''}
+      </p>
     </div>
   );
 }
