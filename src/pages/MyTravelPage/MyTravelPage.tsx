@@ -17,7 +17,7 @@ export default function MyTravelPage() {
     if (token) {
       request(token);
     }
-  }, [token]);
+  }, [token, request]);
 
   useEffect(() => {
     if (!token || status === 401) {
