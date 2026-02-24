@@ -37,12 +37,8 @@ export default function TravelPage() {
   } = useApi(travelService.getSharedUrl);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-      return;
-    }
-    if (travelId) {
+    const token = localStorage.getItem('accessToken');
+    if (travelId && token) {
       fetchTravel(Number(travelId), token);
     }
   }, [travelId]);
@@ -51,23 +47,19 @@ export default function TravelPage() {
   if (travelError) return <div>Error: {travelError}</div>;
   if (!travel) return <div>No travel data found.</div>;
 
-  // Photos from all days for the map
-  // Note: TravelDay photos type is Partial<FullPhotoData> which has GPSCoordinates
-  // We filter out those without valid coordinates
   const allPhotos = travel.days.flatMap(day =>
-    (day.photos || []).filter(p => p.url && p.GPSCoordinates?.latitude !== undefined && p.GPSCoordinates?.longitude !== undefined)
+    (day.photos || []).filter(p => p.url && p.latitude !== undefined && p.longitude !== undefined)
   );
 
-  // Map center: representatitve photo or first photo
-  const mapCenter = allPhotos.length > 0 && allPhotos[0].GPSCoordinates
-    ? { lat: allPhotos[0].GPSCoordinates.latitude, lng: allPhotos[0].GPSCoordinates.longitude }
+  const mapCenter = allPhotos.length > 0 && allPhotos[0].latitude !== undefined && allPhotos[0].longitude !== undefined
+    ? { lat: allPhotos[0].latitude, lng: allPhotos[0].longitude }
     : undefined;
 
   const handleDeleteClick = () => setShowDeleteModal(true);
   const handleCloseModal = () => setShowDeleteModal(false);
 
   const handleConfirmDelete = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (travelId && token) {
       await deleteTravel(Number(travelId), token);
       navigate('/my-travel'); // Go back to list after delete
@@ -76,7 +68,7 @@ export default function TravelPage() {
   };
 
   const handleShareClick = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (travelId && token) {
       await fetchSharedUrl(Number(travelId), token);
       setShowShareModal(true);
@@ -95,15 +87,16 @@ export default function TravelPage() {
     <div className={classes.container}>
 
       <BackgroundMap position={mapCenter ? [mapCenter.lat, mapCenter.lng] : undefined}>
-        {allPhotos.map((photo, index) => (
-          photo.GPSCoordinates ? (
+        {allPhotos.map((photo, index) => {
+          const currentPhotoId = photo.photoId ?? (photo as any).id;
+          return (
             <PhotoMarker
-              key={`${photo.id}-${index}`}
-              position={[photo.GPSCoordinates.latitude + 0.007, photo.GPSCoordinates.longitude]}
+              key={`${currentPhotoId}-${index}`}
+              position={[photo.latitude! + 0.007, photo.longitude!]}
               photoUrl={photo.url!}
             />
-          ) : null
-        ))}
+          );
+        })}
       </BackgroundMap>
 
       <div className={classes.backButton}>
@@ -136,13 +129,16 @@ export default function TravelPage() {
             <h3>{day.dayNumber}일차</h3>
             <div className={classes.dayTravelLocation}>{day.dayRegion}</div>
             <div className={classes.dayTravelPhoto}>
-              {day.photos.map((photo, index) => (
-                <img
-                  key={`${photo.id}-${index}`}
-                  src={photo.url}
-                  alt={`여행 사진 ${index + 1}`}
-                />
-              ))}
+              {day.photos.map((photo, index) => {
+                const currentPhotoId = photo.photoId;
+                return (
+                  <img
+                    key={`${currentPhotoId}-${index}`}
+                    src={photo.url}
+                    alt={`여행 사진 ${index + 1}`}
+                  />
+                );
+              })}
             </div>
           </div>
         ))}
@@ -156,7 +152,7 @@ export default function TravelPage() {
         />
       )}
       {showShareModal && sharedUrlData && (
-        <ShareModal shareUrl={sharedUrlData.data[0].shareUrl} onCancel={handleCloseShareModal} />
+        <ShareModal shareUrl={sharedUrlData.data.shareUrl} onCancel={handleCloseShareModal} />
       )}
     </div>
   );
