@@ -44,5 +44,5 @@ export interface SharedTravelUrl {
   data: {
     travelId: number;
     shareUrl: string;
-  }[];
+  };
 }
