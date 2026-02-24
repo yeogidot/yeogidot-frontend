@@ -41,25 +41,21 @@ export default function TravelPhotoComment() {
     request: writeComment
   } = useApi(photoService.writePhotoComment);
 
-  const {
-    request: updateComment
-  } = useApi(photoService.updatePhotoComment);
-
-  const {
-    request: deleteComment
-  } = useApi(photoService.deletePhotoComment);
+  // const {
+  //   request: updateComment
+  // } = useApi(photoService.updatePhotoComment);
 
   // const {
-  //     request: deletePhoto
-  // } = useApi(photoService.deletePhoto);
+  //   request: deleteComment
+  // } = useApi(photoService.deletePhotoComment);
+
+  const {
+    request: deletePhoto
+  } = useApi(photoService.deletePhoto);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-      return;
-    }
-    if (photoId) {
+    const token = localStorage.getItem('accessToken');
+    if (photoId && token) {
       fetchPhoto(Number(photoId), token);
     }
   }, [photoId]);
@@ -94,36 +90,36 @@ export default function TravelPhotoComment() {
   const handleCloseModal = () => setShowDeleteModal(false);
 
   const handleConfirmDelete = async () => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      if (photo.comment) {
-        // If deleting comment
-        await deleteComment(photo.comment.id, token);
-        setCommentText('');
-        if (divRef.current) divRef.current.innerText = '';
-        setIsEditing(false);
-        // Optionally refresh photo to sync state
-        await fetchPhoto(Number(photoId), token);
-      }
+    const token = localStorage.getItem('accessToken');
+    if (token && photoId) {
+      // 사진 자체를 삭제
+      await deletePhoto(Number(photoId), token);
+      navigate(-1);
     }
     setShowDeleteModal(false);
   };
 
   const handleFinishClick = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (!token || !photoId) return;
 
     const content = divRef.current?.innerText || '';
     if (!content.trim()) return;
 
-    if (isEditing && photo.comment) {
-      // Update
-      await updateComment(photo.comment.id, content, token);
-      navigate(-1);
-    } else {
-      // Create
-      await writeComment(Number(photoId), content, token);
-      navigate(-1);
+    try {
+      if (isEditing && photo.comment) {
+        // Update: photo.ts를 수정하지 못하므로 여기서 직접 http.put 호출 또는 로직 처리
+        // 만약 photoService.updatePhotoComment가 content를 안 받는다면, 
+        // 직접 http 요청을 보내 인수를 해결함.
+        const { http } = await import('src/apis/http');
+        await http.put(`/api/comments/${photo.comment.id}`, { content }, token);
+      } else {
+        // Create
+        await writeComment(Number(photoId), content, token);
+      }
+    } catch (error) {
+      console.error('코멘트 저장 실패:', error);
+      alert('코멘트 저장 중 오류가 발생했습니다.');
     }
   };
 
@@ -136,12 +132,9 @@ export default function TravelPhotoComment() {
   };
 
   const datedPhotoData: DatedPhotoData = {
-    id: Number(photoId),
-    url: photo.url,
-    date: photo.createdDate ?? new Date().toISOString(), // Fallback
-    // Dummy data
-    size: 0,
-    name: photo.originalName ?? 'photo',
+    id: photo.photoId ?? Number(photoId),
+    url: photo.url || '',
+    date: photo.createdDate || new Date().toISOString(),
     file: new File([], photo.originalName ?? 'photo'),
     isThumbnail: false
   };
@@ -189,8 +182,8 @@ export default function TravelPhotoComment() {
            */}
           <a>{formatDate(photo.takenAt)}</a>
           <br />
-          {/* Location? photo metadata */}
-          {photo.latitude && photo.longitude ? `${photo.latitude}, ${photo.longitude}` : ''}
+          {/* Location? photo metadata region or coordinates */}
+          {photo.region ? photo.region : (photo.latitude && photo.longitude ? `${photo.latitude}, ${photo.longitude}` : '')}
         </div>
         <div
           className={`${classes.textAreaWrapper} ${!commentText ? classes.placeholder : ''}`}

@@ -9,7 +9,7 @@ import type { FullPhoto } from '../../types/photo.type';
 import classes from './MapPage.module.css';
 
 // Default center (Seoul or user's default)
-const DEFAULT_CENTER: [number, number] = [37.5665, 126.9780];
+const DEFAULT_CENTER: [number, number] = [37.5665, 126.978];
 
 export default function MapPage() {
     const navigate = useNavigate();
@@ -25,7 +25,7 @@ export default function MapPage() {
 
                 if (response.data) {
                     const validPhotos = response.data.filter(
-                        (photo) => photo.latitude && photo.longitude
+                        photo => photo.latitude && photo.longitude
                     );
 
                     // Sort photos by date (latest first)
@@ -38,7 +38,11 @@ export default function MapPage() {
                     setPhotos(validPhotos);
 
                     // If there are photos, center the map on the latest one (first in sorted list)
-                    if (validPhotos.length > 0 && validPhotos[0].latitude && validPhotos[0].longitude) {
+                    if (
+                        validPhotos.length > 0 &&
+                        validPhotos[0].latitude &&
+                        validPhotos[0].longitude
+                    ) {
                         setMapCenter([validPhotos[0].latitude, validPhotos[0].longitude]);
                     }
                 }
@@ -61,15 +65,15 @@ export default function MapPage() {
             </div>
 
             <BackgroundMap className={classes.map} position={mapCenter}>
-                {photos.map((photo) => (
+                {photos.map(photo =>
                     photo.latitude && photo.longitude && photo.url ? (
                         <PhotoMarker
-                            key={photo.id}
+                            key={photo.photoId}
                             position={[photo.latitude, photo.longitude]}
                             photoUrl={photo.url}
                         />
                     ) : null
-                ))}
+                )}
             </BackgroundMap>
 
             <NavigationBar nowTab="map" />
