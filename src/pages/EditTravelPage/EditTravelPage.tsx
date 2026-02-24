@@ -26,6 +26,7 @@ export default function EditTravelPage() {
               : null,
           url: url as string,
           link: 'photo',
+          file: new File([], ''),
         };
       }),
     thumbnailPhotoId: mockTravelData.representativePhotoId,

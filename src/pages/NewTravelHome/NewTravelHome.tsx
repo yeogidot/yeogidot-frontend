@@ -76,6 +76,7 @@ export default function NewTravelHome() {
         return {
           id: Date.now(),
           url: URL.createObjectURL(file),
+          file,
           name: file.name,
           size: file.size,
           date: await getCreatedDateTime(file),
