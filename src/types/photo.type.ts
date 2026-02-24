@@ -1,7 +1,7 @@
 export interface PhotoData {
   id: number;
   url: string;
-  file?: File;
+  file: File;
   warning?: boolean;
   isThumbnail?: boolean;
   link?: string;
@@ -21,11 +21,18 @@ export interface Photo {
   modifiedDate?: string;
   comments: Comment[];
 }
-export interface PhotoMetadata {
-  originalName: string;
-  takenAt: string | null;
+
+export interface PhotoGeoData {
   latitude: number | null;
   longitude: number | null;
+}
+export interface PhotoMarkerData extends PhotoGeoData {
+  photoId: number;
+  thumbnailUrl: string;
+}
+export interface PhotoMetadata extends PhotoGeoData {
+  originalName: string;
+  takenAt: string | null;
 }
 
 export interface DatedPhoto extends Photo {
