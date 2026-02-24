@@ -10,6 +10,8 @@ import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
 import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
 
+const PHOTO_MARKER_LATITUDE_OFFSET = 0.007;
+
 export default function DayTravelPage() {
   const navigate = useNavigate();
   // day is dayNumber
@@ -50,7 +52,7 @@ export default function DayTravelPage() {
   const validPhotos = safePhotos.filter(p => p.url && p.latitude !== undefined && p.longitude !== undefined);
   const latestPhoto = validPhotos.length > 0 ? validPhotos[0] : null;
 
-  const dailyComment = dayTravel.diary?.content || (dayTravel as any).diaryContent || (dayTravel as any).content || (typeof dayTravel.diary === 'string' ? dayTravel.diary : undefined); // 일일 코멘트
+  const dailyComment = dayTravel.diary?.content || dayTravel.diaryContent || (typeof dayTravel.diary === 'string' ? dayTravel.diary : undefined); // 일일 코멘트
   const noComment = String('아직 여행일기가 없습니다.');
 
   const handleDeleteClick = () => setShowDeleteModal(true);
@@ -81,7 +83,7 @@ export default function DayTravelPage() {
           <PhotoMarker
             key={idx}
             photoUrl={p.url!}
-            position={[p.latitude! + 0.007, p.longitude!]}
+            position={[p.latitude! + PHOTO_MARKER_LATITUDE_OFFSET, p.longitude!]}
           />
         ))}
       </BackgroundMap>
@@ -111,7 +113,7 @@ export default function DayTravelPage() {
             <div className={classes.dayTravelLocation}><h3>{dayTravel.dayRegion}</h3></div>
             <div className={classes.dayTravelPhoto}>
               {safePhotos.map((photo, index) => {
-                const currentPhotoId = photo.photoId ?? (photo as any).id;
+                const currentPhotoId = photo.photoId ?? photo.id;
                 return (
                   <img
                     key={`${currentPhotoId}-${index}`}

@@ -32,7 +32,7 @@ export default function TravelDiaryEditPage() {
   const dayTravel = travel?.days.find(d => d.dayNumber === Number(day));
 
   useEffect(() => {
-    const rawContent = dayTravel?.diary?.content || (dayTravel as any)?.diaryContent || (dayTravel as any)?.content || (typeof dayTravel?.diary === 'string' ? dayTravel.diary : undefined);
+    const rawContent = dayTravel?.diary?.content || dayTravel?.diaryContent || (typeof dayTravel?.diary === 'string' ? dayTravel.diary : undefined);
     if (rawContent) {
       setDiaryText(rawContent);
     }
@@ -43,7 +43,7 @@ export default function TravelDiaryEditPage() {
   // ✅ 작성 버튼 클릭 시
   const handleSave = async () => {
     const token = localStorage.getItem('accessToken');
-    const logId = dayTravel?.diary?.logId || (dayTravel as any)?.logId;
+    const logId = dayTravel?.diary?.logId || dayTravel?.logId;
     if (logId && token && diaryText.trim()) {
       await updateLog(logId, diaryText, token);
       navigate(-1);

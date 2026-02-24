@@ -11,7 +11,11 @@ import ShareModal from '../../components/Modal/ShareModal.tsx';
 import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
 import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
+
+
 // import type { FullTravel } from 'src/types/travel.type'; // inferred from service
+
+const PHOTO_MARKER_LATITUDE_OFFSET = 0.007;
 
 export default function TravelPage() {
   const navigate = useNavigate();
@@ -48,10 +52,10 @@ export default function TravelPage() {
   if (!travel) return <div>No travel data found.</div>;
 
   const allPhotos = travel.days.flatMap(day =>
-    (day.photos || []).filter(p => p.url && p.latitude !== undefined && p.longitude !== undefined)
+    (day.photos || []).filter(p => p.url && p.latitude !== null && p.longitude !== null && p.latitude !== undefined && p.longitude !== undefined)
   );
 
-  const mapCenter = allPhotos.length > 0 && allPhotos[0].latitude !== undefined && allPhotos[0].longitude !== undefined
+  const mapCenter = allPhotos.length > 0 && allPhotos[0].latitude !== null && allPhotos[0].longitude !== null && allPhotos[0].latitude !== undefined && allPhotos[0].longitude !== undefined
     ? { lat: allPhotos[0].latitude, lng: allPhotos[0].longitude }
     : undefined;
 
@@ -86,13 +90,13 @@ export default function TravelPage() {
   return (
     <div className={classes.container}>
 
-      <BackgroundMap position={mapCenter ? [mapCenter.lat, mapCenter.lng] : undefined}>
+      <BackgroundMap position={mapCenter ? [mapCenter.lat as number, mapCenter.lng as number] : undefined}>
         {allPhotos.map((photo, index) => {
           const currentPhotoId = photo.photoId ?? (photo as any).id;
           return (
             <PhotoMarker
               key={`${currentPhotoId}-${index}`}
-              position={[photo.latitude! + 0.007, photo.longitude!]}
+              position={[photo.latitude! + PHOTO_MARKER_LATITUDE_OFFSET, photo.longitude!]}
               photoUrl={photo.url!}
             />
           );
