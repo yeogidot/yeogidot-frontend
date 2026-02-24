@@ -64,13 +64,15 @@ export const travelService = {
     if (uploadedRepresentativePhoto === undefined) {
       throw new Error('업로드 된 대표 이미지를 알 수 없습니다.');
     }
-    const photoIdArray = uploadedData.data.uploadedPhotos.map(({ id }) => id);
+    const photoIdArray = uploadedData.data.uploadedPhotos.map(
+      ({ photoId }) => photoId
+    );
     return http.post<number>(
       `/api/travels`,
       {
         title: travel.title,
         photoIds: photoIdArray,
-        representativePhotoId: uploadedRepresentativePhoto.id,
+        representativePhotoId: uploadedRepresentativePhoto.photoId,
       },
       token
     );
