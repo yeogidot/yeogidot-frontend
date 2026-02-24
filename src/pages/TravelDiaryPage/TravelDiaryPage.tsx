@@ -22,7 +22,7 @@ export default function TravelDiaryPage() {
   } = useApi(travelService.createNewTravelLog);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (!token) {
       navigate('/login');
       return;
@@ -36,7 +36,7 @@ export default function TravelDiaryPage() {
 
   // ✅ 작성 버튼 클릭 시
   const handleSave = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (dayTravel && token && content.trim()) {
       await createLog(dayTravel.dayId, content, token);
       navigate(-1);

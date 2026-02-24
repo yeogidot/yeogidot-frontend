@@ -12,10 +12,10 @@ export default function TravelDiaryEditPage() {
   const [diaryText, setDiaryText] = useState('');
 
   const {
-    data: dayTravel,
-    loading: dayTravelLoading,
-    request: fetchDayTravel,
-  } = useApi(travelService.getTravelDay);
+    data: travel,
+    loading: travelLoading,
+    request: fetchTravel,
+  } = useApi(travelService.getTravel);
 
   const {
     request: updateLog,
@@ -23,19 +23,18 @@ export default function TravelDiaryEditPage() {
   } = useApi(travelService.updateTravelLog);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-      return;
+    const token = localStorage.getItem('accessToken');
+    if (travelId && token) {
+      fetchTravel(Number(travelId), token);
     }
-    if (travelId && day) {
-      fetchDayTravel(Number(travelId), Number(day), token);
-    }
-  }, [travelId, day]);
+  }, [travelId]);
+
+  const dayTravel = travel?.days.find(d => d.dayNumber === Number(day));
 
   useEffect(() => {
-    if (dayTravel?.diary) {
-      setDiaryText(dayTravel.diary.content);
+    const rawContent = dayTravel?.diary?.content || (dayTravel as any)?.diaryContent || (dayTravel as any)?.content || (typeof dayTravel?.diary === 'string' ? dayTravel.diary : undefined);
+    if (rawContent) {
+      setDiaryText(rawContent);
     }
   }, [dayTravel]);
 
@@ -43,14 +42,15 @@ export default function TravelDiaryEditPage() {
 
   // ✅ 작성 버튼 클릭 시
   const handleSave = async () => {
-    const token = localStorage.getItem('token');
-    if (dayTravel?.diary && token && diaryText.trim()) {
-      await updateLog(dayTravel.diary.logId, diaryText, token);
+    const token = localStorage.getItem('accessToken');
+    const logId = dayTravel?.diary?.logId || (dayTravel as any)?.logId;
+    if (logId && token && diaryText.trim()) {
+      await updateLog(logId, diaryText, token);
       navigate(-1);
     }
   };
 
-  if (dayTravelLoading) return <div>Loading...</div>;
+  if (travelLoading) return <div>Loading...</div>;
 
   return (
     <div className={classes.container}>
