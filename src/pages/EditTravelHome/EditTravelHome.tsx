@@ -6,10 +6,9 @@ import classes from './EditTravelHome.module.css';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import { useNavigate } from 'react-router-dom';
 import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
-import { useTravel } from '@hooks/travel';
+import { useEditTravel } from '@hooks/travel';
 import { dateCompare } from '@utils/date';
 import { useState } from 'react';
-
 const checkFileExtension = (file: File, extensions: string[]) => {
   const fileExtension = file.name.split('.').pop()?.toLowerCase();
   if (fileExtension === undefined) {
@@ -19,7 +18,7 @@ const checkFileExtension = (file: File, extensions: string[]) => {
 };
 
 export default function EditTravelHome() {
-  const [travel, setTravel] = useTravel();
+  const { travel, setTravel, loading, error } = useEditTravel();
   const navigate = useNavigate();
 
   const [titleErrorText, setTitleErrorText] = useState('');
@@ -116,42 +115,48 @@ export default function EditTravelHome() {
         </button>
         <h1 className={classes.headerText}>여행 수정</h1>
       </header>
-      <section className={classes.inputSection}>
-        <h3 className={classes.inputHeader}>여행 이름</h3>
-        <input
-          className={`${classes.textInput} ${titleErrorText !== '' ? classes.textInputError : ''}`}
-          onChange={handleTravelTitleInputChange}
-          value={travel.title}
-          type="text"
-          id="travel-name"
-          autoComplete="off"
-        />
-        {titleErrorText !== '' && (
-          <p className={classes.titleErrorHelperText}>{titleErrorText}</p>
-        )}
-      </section>
-      <section className={classes.inputSection}>
-        <h3 className={classes.inputHeader}>여행 사진</h3>
-        <FileSelectButton
-          className={classes.photoSelectButton}
-          onChange={handleFileChange}
-        >
-          사진 업로드
-        </FileSelectButton>
-        {photoErrorText !== '' && (
-          <p className={classes.photoErrorHelperText}>{photoErrorText}</p>
-        )}
-      </section>
-      <p className={classes.uploadDescription}>
-        사진 위치 정보가 없으면 위치가 표시 되지 않습니다.
-        <br />
-        (카카오톡 사진 전송시, 원본 사진 요망)
-      </p>
+      {loading ? (
+        <p className={classes.loadingText}>여행 정보를 불러오는 중입니다...</p>
+      ) : (
+        <>
+          <section className={classes.inputSection}>
+            <h3 className={classes.inputHeader}>여행 이름</h3>
+            <input
+              className={`${classes.textInput} ${titleErrorText !== '' ? classes.textInputError : ''}`}
+              onChange={handleTravelTitleInputChange}
+              value={travel ? travel.title : ''}
+              type="text"
+              id="travel-name"
+              autoComplete="off"
+            />
+            {titleErrorText !== '' && (
+              <p className={classes.titleErrorHelperText}>{titleErrorText}</p>
+            )}
+          </section>
+          <section className={classes.inputSection}>
+            <h3 className={classes.inputHeader}>여행 사진</h3>
+            <FileSelectButton
+              className={classes.photoSelectButton}
+              onChange={handleFileChange}
+            >
+              사진 업로드
+            </FileSelectButton>
+            {photoErrorText !== '' && (
+              <p className={classes.photoErrorHelperText}>{photoErrorText}</p>
+            )}
+          </section>
+          <p className={classes.uploadDescription}>
+            사진 위치 정보가 없으면 위치가 표시 되지 않습니다.
+            <br />
+            (카카오톡 사진 전송시, 원본 사진 요망)
+          </p>
 
-      <DatePhotoGrid photos={travel.photos} />
-      <Button className={classes.button} onClick={handleClickNextButton}>
-        다음
-      </Button>
+          <DatePhotoGrid photos={travel ? travel.photos : []} />
+          <Button className={classes.button} onClick={handleClickNextButton}>
+            다음
+          </Button>
+        </>
+      )}
     </div>
   );
 }
