@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import classes from './TravelPhotoComment.module.css'
-import BackButton from 'src/components/Buttons/BackButton/GrayBackButton/GrayBackButton'
-import DeleteButton from 'src/components/Buttons/DeleteButton/DeleteButton'
-import { samplePhotoComments } from '../../data/sampleTravelData.ts'
+import classes from './TravelPhotoComment.module.css';
+import BackButton from 'src/components/Buttons/BackButton/GrayBackButton/GrayBackButton';
+import DeleteButton from 'src/components/Buttons/DeleteButton/DeleteButton';
+import { samplePhotoComments } from '../../data/sampleTravelData.ts';
 import DeleteConfirmModal from '../../components/Modal/DeleteConfirmModal.tsx';
 import Button from '@components/Buttons/Button/Button';
 import FullPhotoLayout from '@components/FullPhotoLayout/FullPhotoLayout';
@@ -15,15 +15,15 @@ export default function TravelPhotoComment() {
   const [isFullPhoto, setIsFullPhoto] = useState(false);
 
   // 해당 사진에 맞는 코멘트 데이터 찾기
-  const photoComment = samplePhotoComments.find(
-    comment => comment.photoId === photoId
-  ) || samplePhotoComments[0]; // 기본값으로 첫 번째 항목 사용
+  const photoComment =
+    samplePhotoComments.find(comment => comment.photoId === photoId) ||
+    samplePhotoComments[0]; // 기본값으로 첫 번째 항목 사용
 
   // 날짜 포맷팅 함수
   const formatDate = (date: Date): string => {
     return date.toISOString().split('T')[0];
   };
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleBackClick = () => navigate(-1);
   const handleDeleteClick = () => setShowDeleteModal(true);
   const handleCloseModal = () => setShowDeleteModal(false);
@@ -42,12 +42,9 @@ export default function TravelPhotoComment() {
     url: photoComment.photo.url,
     date: photoComment.photo.timestamp.toISOString(),
     // Dummy data to satisfy DatedPhotoData interface
-    size: 0,
-    name: 'photo',
     file: new File([], 'photo'),
-    isThumbnail: false
+    isThumbnail: false,
   };
-
 
   if (isFullPhoto) {
     return (
@@ -93,16 +90,19 @@ export default function TravelPhotoComment() {
           부산광역시 부산진구
         </div>
         <div
-          className={`${classes.textAreaWrapper} ${!photoComment.existingComment ? classes.placeholder : ''
-            }`}
+          className={`${classes.textAreaWrapper} ${
+            !photoComment.existingComment ? classes.placeholder : ''
+          }`}
           contentEditable
-          suppressContentEditableWarning>
+          suppressContentEditableWarning
+        >
           {photoComment.existingComment || photoComment.placeholder}
         </div>
 
-
         <div className={classes.finishButton}>
-          <Button onClick={handleFinishClick}>{photoComment.existingComment ? '수정' : '작성'}</Button>
+          <Button onClick={handleFinishClick}>
+            {photoComment.existingComment ? '수정' : '작성'}
+          </Button>
         </div>
       </div>
 

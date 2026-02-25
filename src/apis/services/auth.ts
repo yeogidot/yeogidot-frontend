@@ -1,5 +1,5 @@
 import { http } from '../http';
-import type { SignUpInput, LoginInput, Token } from 'src/types/auth';
+import type { SignUpInput, LoginInput, Token } from 'src/types/auth.type';
 
 export const authService = {
   signUp: (input: SignUpInput) => {

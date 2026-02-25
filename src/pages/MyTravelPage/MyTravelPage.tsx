@@ -14,15 +14,16 @@ export default function MyTravelPage() {
   );
 
   useEffect(() => {
-    if (!token) {
+    if (token) {
+      request(token);
+    }
+  }, [token, request]);
+
+  useEffect(() => {
+    if (!token || status === 401) {
       alert('로그인이 필요한 서비스입니다.');
       navigate('/login');
       return;
-    }
-    request(token);
-    if (status === 403) {
-      alert('로그인이 필요한 서비스입니다.');
-      navigate('/login');
     }
   }, [token, status, navigate]);
 

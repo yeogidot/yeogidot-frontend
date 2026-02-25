@@ -1,5 +1,9 @@
 import { http } from '../http';
-import type { FullPhoto, PhotoMetadata } from '../../types/photo.type';
+import type {
+  FullPhoto,
+  PhotoMarkerData,
+  PhotoMetadata,
+} from '../../types/photo.type';
 export const photoService = {
   uploadPhoto: (
     photoFileArray: File[],
@@ -24,7 +28,7 @@ export const photoService = {
     return http.get<FullPhoto>(`/api/photos/${id}`, token);
   },
   getPhotosForMarker: (token: string) => {
-    return http.get<Partial<FullPhoto[]>>(`/api/photos/map-marker`, token);
+    return http.get<PhotoMarkerData[]>(`/api/map-photos`, token);
   },
   updatePhotoTakenTime: (id: number, newTakenTime: string, token: string) => {
     return http.put(
