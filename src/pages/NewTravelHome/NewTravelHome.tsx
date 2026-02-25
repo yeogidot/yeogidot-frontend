@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
 import { useTravel } from '@hooks/travel';
 import { useState } from 'react';
-
+import { dateCompare } from '@utils/date';
 const checkFileExtension = (file: File, extensions: string[]) => {
   const fileExtension = file.name.split('.').pop()?.toLowerCase();
   if (fileExtension === undefined) {
@@ -30,6 +30,11 @@ export default function NewTravelHome() {
     });
   };
 
+  const setThumbnailPhotoId = (id: number) => {
+    setTravel(travel => {
+      return { ...travel, thumbnailPhotoId: id };
+    });
+  };
   const setTravelTitle = (title: string) => {
     setTravel(travel => {
       return { ...travel, title: title };
@@ -51,6 +56,20 @@ export default function NewTravelHome() {
     if (travel.photos.length === 0) {
       setPhotoErrorText('사진을 업로드 해주세요.');
       return;
+    }
+
+    if (
+      travel.thumbnailPhotoId === null ||
+      !travel.photos.find(({ id }) => {
+        travel.thumbnailPhotoId === id;
+      })
+    ) {
+      const earliestPhoto = [...travel.photos]
+        .sort(dateCompare)
+        .find(({ date }) => date);
+      setThumbnailPhotoId(
+        earliestPhoto ? earliestPhoto.id : travel.photos[0].id
+      );
     }
     navigate('select-thumbnail');
   };
