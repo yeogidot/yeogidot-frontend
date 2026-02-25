@@ -18,7 +18,7 @@ const checkFileExtension = (file: File, extensions: string[]) => {
 };
 
 export default function NewTravelHome() {
-  const [travel, setTravel] = useTravel();
+  const { travel, setTravel } = useTravel();
   const navigate = useNavigate();
 
   const [titleErrorText, setTitleErrorText] = useState('');

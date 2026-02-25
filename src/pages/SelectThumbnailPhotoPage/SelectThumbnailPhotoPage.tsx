@@ -6,7 +6,7 @@ import GrayBackButton from '@components/Buttons/BackButton/GrayBackButton/GrayBa
 import Button from '@components/Buttons/Button/Button';
 import { useTravel } from '@hooks/travel';
 export default function SelectThumbnailPhotoPage() {
-  const [_, setTravel] = useTravel();
+  const { setTravel } = useTravel();
   const photo: DatedPhotoData = useLocation().state;
   const navigate = useNavigate();
   const handleClickSetThumbnailButton = () => {

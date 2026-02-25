@@ -6,7 +6,7 @@ import Button from '@components/Buttons/Button/Button';
 import { useTravel } from '@hooks/travel';
 import { dateCompare } from '@utils/date';
 export default function SelectThumbnailPage() {
-  const [travel, setTravel] = useTravel();
+  const { travel, setTravel } = useTravel();
 
   const thumbnail = travel.photos.find(
     ({ id }) => id === travel.thumbnailPhotoId

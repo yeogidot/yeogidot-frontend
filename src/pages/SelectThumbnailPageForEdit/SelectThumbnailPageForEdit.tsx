@@ -5,7 +5,7 @@ import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import Button from '@components/Buttons/Button/Button';
 import { useTravel } from '@hooks/travel';
 export default function SelectThumbnailPageForEdit() {
-  const [travel, _] = useTravel();
+  const { travel } = useTravel();
 
   const thumbnailCheckedPhotos = travel.photos.map(photo => {
     return {
