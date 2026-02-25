@@ -1,5 +1,5 @@
 export interface PhotoData {
-  id: number;
+  id: string | number;
   url: string;
   file: File;
   warning?: boolean;
