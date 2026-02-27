@@ -1,7 +1,8 @@
 .button {
   display: flex;
   background-color: #0d9eff;
-  width: 130px;
+  min-width: 130px;
+  padding-inline: 10px;
   height: 52px;
   font-weight: bold;
   font-size: 20px;
@@ -10,4 +11,9 @@
   justify-content: center;
   align-items: center;
   border-style: none;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
