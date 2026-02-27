@@ -68,7 +68,7 @@ export default function MapPage() {
         {photos.map(photo =>
           photo.latitude && photo.longitude && photo.url ? (
             <PhotoMarker
-              key={photo.id}
+              key={photo.photoId}
               position={[photo.latitude, photo.longitude]}
               photoUrl={photo.url}
             />

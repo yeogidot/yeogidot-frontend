@@ -150,8 +150,6 @@ export const travelService = {
       ...oldPhotos.map(({ id }) => id),
       ...uploadedData.data.uploadedPhotos.map(({ id }) => id),
     ];
-    console.log(photoIdArray);
-
     return http.patch<{ status: number; message: string }>(
       `/api/travels/${travelId}`,
       {
