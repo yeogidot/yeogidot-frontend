@@ -142,7 +142,9 @@ export const travelService = {
 
     if (
       uploadedRepresentativePhoto === undefined &&
-      newPhotos.includes(localRepresentativePhoto as FullPhotoData)
+      newPhotos.some(
+        ({ id }) => id == (localRepresentativePhoto as FullPhotoData).id
+      )
     ) {
       throw new Error('업로드 된 대표 이미지를 알 수 없습니다.');
     }
