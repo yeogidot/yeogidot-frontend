@@ -9,7 +9,7 @@ import { travelService } from 'src/apis/services/travel';
 import { useEffect } from 'react';
 export default function SelectThumbnailPage() {
   const token = localStorage.getItem('accessToken');
-  const [travel, setTravel] = useTravel();
+  const [travel, _] = useTravel();
   const { error, data, loading, request } = useApi(travelService.createTravel);
   const handleClickButton = () => {
     if (!token) {
