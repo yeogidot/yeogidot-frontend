@@ -4,7 +4,7 @@ import Button from '@components/Buttons/Button/Button';
 import type { FullPhotoData } from 'src/types/photo.type';
 import classes from './EditTravelHome.module.css';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
 import { useEditTravel } from '@hooks/travel';
 import { dateCompare } from '@utils/date';
@@ -19,6 +19,7 @@ const checkFileExtension = (file: File, extensions: string[]) => {
 
 export default function EditTravelHome() {
   const { travel, setTravel, loading } = useEditTravel();
+  const { state } = useLocation();
   const navigate = useNavigate();
 
   const [titleErrorText, setTitleErrorText] = useState('');
@@ -70,7 +71,7 @@ export default function EditTravelHome() {
         earliestPhoto ? earliestPhoto.id : travel.photos[0].id
       );
     }
-    navigate('select-thumbnail');
+    navigate('select-thumbnail', { state });
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
