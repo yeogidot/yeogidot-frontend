@@ -35,7 +35,7 @@ export default function SelectThumbnailPageForEdit() {
       alert(`성공적으로 여행을 수정했습니다.${'\n'}여행페이지로 이동합니다.`);
       navigate(`/travel/${state.travelId}`);
     }
-  });
+  }, [loading, error, data, navigate, state.travelId]);
   const thumbnailCheckedPhotos = travel.photos.map(photo => {
     return {
       ...photo,
