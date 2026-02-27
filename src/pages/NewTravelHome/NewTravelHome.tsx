@@ -60,9 +60,7 @@ export default function NewTravelHome() {
 
     if (
       travel.thumbnailPhotoId === null ||
-      !travel.photos.find(({ id }) => {
-        travel.thumbnailPhotoId === id;
-      })
+      !travel.photos.find(({ id }) => travel.thumbnailPhotoId === id)
     ) {
       const earliestPhoto = [...travel.photos]
         .sort(dateCompare)
