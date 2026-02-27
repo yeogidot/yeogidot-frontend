@@ -15,7 +15,7 @@ export interface FullPhotoData extends DatedPhotoData {
 }
 
 export interface Photo {
-  photoId: number;
+  id: number;
   url: string;
   createdDate?: string;
   modifiedDate?: string;

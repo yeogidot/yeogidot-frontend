@@ -12,9 +12,9 @@ const convertTravelToTravelInfo = (travel: FullTravel) => {
         return photos;
       })
       .flat()
-      .map(({ photoId, takenAt, longitude, latitude, url }) => {
+      .map(({ id, takenAt, longitude, latitude, url }) => {
         return {
-          id: photoId as number,
+          id: id as number,
           date: takenAt ?? null,
           GPSCoordinates:
             latitude && longitude
