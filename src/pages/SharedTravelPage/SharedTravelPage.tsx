@@ -1,55 +1,34 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import classes from './TravelPage.module.css';
-import EditButton from '../../components/Buttons/EditButton/EditButton.tsx';
-import ShareButton from '../../components/Buttons/ShareButton/ShareButton.tsx';
-import DeleteButton from '../../components/Buttons/DeleteButton/DeleteButton.tsx';
+import classes from './SharedTravelPage.module.css';
 import BackButton from '../../components/Buttons/BackButton/GrayBackButton/GrayBackButton.tsx';
 import BackgroundMap from '../../components/Map/Map.tsx';
-import DeleteConfirmModal from '../../components/Modal/DeleteConfirmModal.tsx';
-import ShareModal from '../../components/Modal/ShareModal.tsx';
 import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
 import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
 
-
-// import type { FullTravel } from 'src/types/travel.type'; // inferred from service
-
 const PHOTO_MARKER_LATITUDE_OFFSET = 0.007;
 
-export default function TravelPage() {
+export default function SharedTravelPage() {
   const navigate = useNavigate();
-  const { travelId } = useParams<{ travelId: string }>();
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showShareModal, setShowShareModal] = useState(false);
+  const {shareToken } = useParams<{ shareToken: string }>();
 
-  // API Hooks
   const {
     data: travel,
     loading: travelLoading,
     error: travelError,
-    request: fetchTravel,
-  } = useApi(travelService.getTravel);
-
-  const {
-    request: deleteTravel,
-  } = useApi(travelService.deleteTravel);
-
-  const {
-    data: sharedUrlData,
-    request: fetchSharedUrl,
-  } = useApi(travelService.getSharedUrl);
+    request: fetchSharedTravel,
+  } = useApi(travelService.getSharedTravel);
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (travelId && token) {
-      fetchTravel(Number(travelId), token);
+    if (shareToken) {
+      fetchSharedTravel(shareToken);
     }
-  }, [travelId]);
+  }, [shareToken, fetchSharedTravel]);
 
   if (travelLoading) return <div>Loading...</div>;
   if (travelError) return <div>Error: {travelError}</div>;
-  if (!travel) return <div>No travel data found.</div>;
+  if (!travel) return <div>여행 데이터를 찾을 수 없습니다.</div>;
 
   const allPhotos = travel.days.flatMap(day =>
     (day.photos || []).filter(p => p.url && p.latitude !== null && p.longitude !== null && p.latitude !== undefined && p.longitude !== undefined)
@@ -59,37 +38,14 @@ export default function TravelPage() {
     ? { lat: allPhotos[0].latitude, lng: allPhotos[0].longitude }
     : undefined;
 
-  const handleDeleteClick = () => setShowDeleteModal(true);
-  const handleCloseModal = () => setShowDeleteModal(false);
-
-  const handleConfirmDelete = async () => {
-    const token = localStorage.getItem('accessToken');
-    if (travelId && token) {
-      await deleteTravel(Number(travelId), token);
-      navigate('/my-travel'); // Go back to list after delete
-    }
-    setShowDeleteModal(false);
-  };
-
-  const handleShareClick = async () => {
-    const token = localStorage.getItem('accessToken');
-    if (travelId && token) {
-      await fetchSharedUrl(Number(travelId), token);
-      setShowShareModal(true);
-    }
-  };
-
-  const handleCloseShareModal = () => setShowShareModal(false);
-
   const handleDayClick = (dayNumber: number) => {
     navigate(`./${dayNumber}`);
   };
 
-  const handleBackClick = () => navigate('/my-travel');
+  const handleBackClick = () => navigate(-1);
 
   return (
     <div className={classes.container}>
-
       <BackgroundMap position={mapCenter ? [mapCenter.lat as number, mapCenter.lng as number] : undefined}>
         {allPhotos.map((photo, index) => {
           const currentPhotoId = photo.photoId ?? (photo as any).id;
@@ -106,23 +62,16 @@ export default function TravelPage() {
       <div className={classes.backButton}>
         <BackButton onClick={handleBackClick} />
       </div>
-      <div className={classes.panel}>
 
+      <div className={classes.panel}>
         <div className={classes.headerRow}>
           <div className={classes.header}>
             {travel.title.length > 10 ? travel.title.slice(0, 10) + '...' : travel.title}
-          </div>
-
-          <div className={classes.buttonGroup}>
-            <EditButton />
-            <ShareButton onClick={handleShareClick} />
-            <DeleteButton onClick={handleDeleteClick} />
           </div>
         </div>
 
         <div className={classes.travelInformation}>
           <div>{travel.startDate} ~ {travel.endDate}</div>
-          {/* City isn't explicitly in FullTravel root, might need to derive from days or it's missing in type */}
         </div>
 
         {travel.days.map((day) => (
@@ -149,17 +98,6 @@ export default function TravelPage() {
           </div>
         ))}
       </div>
-
-      {showDeleteModal && (
-        <DeleteConfirmModal
-          message="여행을 정말로 삭제하시겠습니까?"
-          onCancel={handleCloseModal}
-          onConfirm={handleConfirmDelete}
-        />
-      )}
-      {showShareModal && sharedUrlData && (
-        <ShareModal shareUrl={sharedUrlData.data.shareUrl} onCancel={handleCloseShareModal} />
-      )}
     </div>
   );
 }

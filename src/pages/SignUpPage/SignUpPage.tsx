@@ -20,6 +20,7 @@ export default function SignUpPage() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors }
   } = useForm<SignUpForm>({
     resolver: zodResolver(SignUpSchema),
@@ -43,11 +44,16 @@ export default function SignUpPage() {
 
     } catch (error: any) {
       console.error('회원가입 에러:', error);
-      
-      // 에러 메시지 상세 출력
-      const errorMsg = error.responseBody || error.message || "알 수 없는 에러";
-      const statusCode = error.statusCode || error.status || "";
-      alert(`회원가입 실패 (${statusCode}):\n${errorMsg}`);
+
+      const status = error.statusCode || error.status || error.response?.status;
+
+      if (status === 400) {
+        setError('email', { message: '중복된 이메일입니다.' });
+      } else {
+        const errorMsg = error.responseBody || error.message || "알 수 없는 에러";
+        const statusCode = status || "";
+        alert(`회원가입 실패 (${statusCode}):\n${errorMsg}`);
+      }
     }
   };
 
@@ -55,22 +61,21 @@ export default function SignUpPage() {
     <div className={classes.container}>
       <Link to='/login'>
         <div className={classes.backButton}>
-          <BackButton/>
+          <BackButton />
         </div>
       </Link>
 
-      <img src={LogoImg} className={classes.logo} alt="Logo"/>
-        
+      <img src={LogoImg} className={classes.logo} alt="Logo" />
+
       {/* 폼 제출 핸들러 연결 */}
       <form onSubmit={handleSubmit(onSubmit)} className={classes.signUpForm}>
-        
+
         {/* 이메일 */}
         <div className={classes.idForm}>
           <h3>이메일</h3>
-          <input 
-            {...register('email')} 
-            className={classes.idInput} 
-            placeholder="이메일을 입력해주세요"
+          <input
+            {...register('email')}
+            className={classes.idInput}
           />
           {errors.email && (
             <span className={classes.errorMessage}>
@@ -86,7 +91,6 @@ export default function SignUpPage() {
             {...register('password')}
             type="password"
             className={classes.passwordInput}
-            placeholder="영문, 숫자 포함 8자 이상"
           />
           {errors.password && (
             <span className={classes.errorMessage}>
@@ -102,7 +106,6 @@ export default function SignUpPage() {
             {...register('passwordCheck')}
             type="password"
             className={classes.passwordCheckInput}
-            placeholder="비밀번호를 다시 입력해주세요"
           />
           {errors.passwordCheck && (
             <span className={classes.errorMessage}>
@@ -114,16 +117,16 @@ export default function SignUpPage() {
         {/* 약관 동의 (체크박스 버전) */}
         <div className={classes.privacyPolicyContainer}>
           <label className={classes.checkPrivacyPolicy}>
-            <input 
-              {...register('agree')} 
-              type="checkbox" 
+            <input
+              {...register('agree')}
+              type="checkbox"
               className={classes.checkboxInput}
             />
             <span>
               <a href="https://lilac-crystal-fca.notion.site/2fdc68016f76806b90b0ec82a710b7c9">개인정보약관</a>에 동의하시겠습니까?
             </span>
           </label>
-          
+
           {errors.agree && (
             <span className={classes.errorMessage}>
               {errors.agree.message}

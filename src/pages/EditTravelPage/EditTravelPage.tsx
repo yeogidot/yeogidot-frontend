@@ -20,9 +20,9 @@ export default function EditTravelPage() {
           GPSCoordinates:
             latitude && longitude
               ? {
-                  longitude: longitude,
-                  latitude: latitude,
-                }
+                longitude: longitude,
+                latitude: latitude,
+              }
               : null,
           url: url as string,
           link: 'photo',

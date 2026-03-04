@@ -16,17 +16,17 @@ export default function MapPage() {
   const [photos, setPhotos] = useState<Partial<FullPhoto>[]>([]);
   const [mapCenter, setMapCenter] = useState<[number, number]>(DEFAULT_CENTER);
 
-  useEffect(() => {
-    const fetchPhotos = async () => {
-      try {
-        // TODO: Replace with actual token management
-        const token = localStorage.getItem('accessToken') || '';
-        const response = await photoService.getPhotos(token);
+    useEffect(() => {
+        const fetchPhotos = async () => {
+            try {
+                // TODO: Replace with actual token management
+                const token = localStorage.getItem('accessToken') || '';
+                const response = await photoService.getPhotos(token);
 
-        if (response.data) {
-          const validPhotos = response.data.filter(
-            photo => photo.latitude && photo.longitude
-          );
+                if (response.data) {
+                    const validPhotos = response.data.filter(
+                        photo => photo.latitude && photo.longitude
+                    );
 
           // Sort photos by date (latest first)
           validPhotos.sort((a, b) => {
@@ -37,19 +37,19 @@ export default function MapPage() {
 
           setPhotos(validPhotos);
 
-          // If there are photos, center the map on the latest one (first in sorted list)
-          if (
-            validPhotos.length > 0 &&
-            validPhotos[0].latitude &&
-            validPhotos[0].longitude
-          ) {
-            setMapCenter([validPhotos[0].latitude, validPhotos[0].longitude]);
-          }
-        }
-      } catch (error) {
-        console.error('Failed to fetch photos for map:', error);
-      }
-    };
+                    // If there are photos, center the map on the latest one (first in sorted list)
+                    if (
+                        validPhotos.length > 0 &&
+                        validPhotos[0].latitude &&
+                        validPhotos[0].longitude
+                    ) {
+                        setMapCenter([validPhotos[0].latitude, validPhotos[0].longitude]);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to fetch photos for map:', error);
+            }
+        };
 
     fetchPhotos();
   }, []);
@@ -64,19 +64,19 @@ export default function MapPage() {
         <BackButton onClick={handleBackClick} />
       </div>
 
-      <BackgroundMap className={classes.map} position={mapCenter}>
-        {photos.map(photo =>
-          photo.latitude && photo.longitude && photo.url ? (
-            <PhotoMarker
-              key={photo.photoId}
-              position={[photo.latitude, photo.longitude]}
-              photoUrl={photo.url}
-            />
-          ) : null
-        )}
-      </BackgroundMap>
+            <BackgroundMap className={classes.map} position={mapCenter}>
+                {photos.map(photo =>
+                    photo.latitude && photo.longitude && photo.url ? (
+                        <PhotoMarker
+                            key={photo.photoId}
+                            position={[photo.latitude, photo.longitude]}
+                            photoUrl={photo.url}
+                        />
+                    ) : null
+                )}
+            </BackgroundMap>
 
-      <NavigationBar nowTab="map" />
-    </div>
-  );
+            <NavigationBar nowTab="map" />
+        </div>
+    );
 }
