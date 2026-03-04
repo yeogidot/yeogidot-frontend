@@ -8,15 +8,16 @@ import { useApi } from '@hooks/api';
 import { travelService } from 'src/apis/services/travel';
 import { useEffect } from 'react';
 export default function SelectThumbnailPage() {
-  const { travel, setTravel } = useTravel();
-
-  const thumbnail = travel.photos.find(
-    ({ id }) => id === travel.thumbnailPhotoId
-  );
-  const setThumbnailPhotoId = (id: number) => {
-    setTravel(travel => {
-      return { ...travel, thumbnailPhotoId: id };
-    });
+  const token = localStorage.getItem('accessToken');
+  const { travel } = useTravel();
+  const { loading, data, error, request } = useApi(travelService.createTravel);
+  const handleClickButton = () => {
+    if (!token) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/login');
+      return;
+    }
+    request(travel, token);
   };
   useEffect(() => {
     if (loading) {

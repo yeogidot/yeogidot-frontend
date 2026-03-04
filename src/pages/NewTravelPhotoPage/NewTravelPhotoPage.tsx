@@ -14,7 +14,7 @@ import { useTravel } from '@hooks/travel';
 
 export default function FullPhotoPage() {
   const { travel, setTravel } = useTravel();
-  const setPhotoDate = (photoId: number, ISODateString: string) => {
+  const setPhotoDate = (photoId: number | string, ISODateString: string) => {
     setTravel(travel => {
       const currentPhoto = travel.photos.find(({ id }) => id === photoId);
       return currentPhoto
