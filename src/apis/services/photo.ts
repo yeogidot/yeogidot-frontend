@@ -1,5 +1,9 @@
 import { http } from '../http';
-import type { FullPhoto, PhotoMetadata } from '../../types/photo.type';
+import type {
+  FullPhoto,
+  PhotoMarkerData,
+  PhotoMetadata,
+} from '../../types/photo.type';
 export const photoService = {
   uploadPhoto: (
     photoFileArray: File[],

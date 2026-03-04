@@ -26,7 +26,7 @@ export default function Photo({ photo }: Props) {
       <img
         className={`${classes.photo} ${photo.warning ? classes.warning : ''} ${photo.isThumbnail ? classes.thumbnail : ''}`}
         src={photo.url}
-        alt={photo.name}
+        alt={photo.file.name}
         loading="lazy"
       />
     </Link>

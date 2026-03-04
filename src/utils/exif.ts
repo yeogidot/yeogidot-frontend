@@ -14,7 +14,7 @@ export async function getCreatedDateTime(photoFile: File) {
   if (tags['DateTimeOriginal']) {
     const [dateString, timeString] =
       tags['DateTimeOriginal'].description.split(' ');
-    return `${dateString.replaceAll(':', '-')}T${timeString}+09:00`;
+    return `${dateString.replaceAll(':', '-')}T${timeString}`;
   }
   return null;
 }
