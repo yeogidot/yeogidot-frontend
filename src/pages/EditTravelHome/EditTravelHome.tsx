@@ -25,7 +25,7 @@ export default function EditTravelHome() {
   const [titleErrorText, setTitleErrorText] = useState('');
   const [photoErrorText, setPhotoErrorText] = useState('');
 
-  const setThumbnailPhotoId = (id: number) => {
+  const setThumbnailPhotoId = (id: number | string) => {
     setTravel(travel => {
       return { ...travel, thumbnailPhotoId: id };
     });

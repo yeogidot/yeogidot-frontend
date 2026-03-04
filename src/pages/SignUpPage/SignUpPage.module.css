@@ -21,10 +21,11 @@
 
 .signUpForm {
   position: relative;
-  padding: 59px 55px 0;
+  padding: 59px 46px 0;
   /* 내용이 많아지면 스크롤 */
   overflow-y: auto;
-  height: calc(100% - 283px); /* 로고 영역 제외한 나머지 높이 활용 */
+  height: calc(100% - 283px);
+  /* 로고 영역 제외한 나머지 높이 활용 */
 }
 
 /* --- 공통 스타일 (입력 폼 래퍼) --- */
@@ -35,8 +36,10 @@
 .passwordForm,
 .passwordCheckForm {
   position: relative;
-  margin-top: 20px;     /* 위쪽 간격 */
-  margin-bottom: 30px;  /* 아래쪽 간격 (에러 메시지 공간 확보) */
+  margin-top: 20px;
+  /* 위쪽 간격 */
+  margin-bottom: 30px;
+  /* 아래쪽 간격 (에러 메시지 공간 확보) */
 }
 
 .idInput,
@@ -48,20 +51,23 @@
   border-radius: 5px;
   border-color: #A9A9A9;
   border-style: solid;
-  box-sizing: border-box; /* 패딩 포함 크기 계산 */
+  box-sizing: border-box;
+  /* 패딩 포함 크기 계산 */
 }
 
 /* --- 약관 동의 (체크박스) --- */
 .privacyPolicyContainer {
   position: relative;
   margin-top: 20px;
-  margin-bottom: 40px; /* 버튼과의 간격을 위해 넉넉히 확보 */
+  margin-bottom: 40px;
+  /* 버튼과의 간격을 위해 넉넉히 확보 */
 }
 
 /* 텍스트 스타일 */
 .checkPrivacyPolicy {
   display: flex;
-  align-items: center; /* 체크박스와 텍스트 수직 중앙 정렬 */
+  align-items: center;
+  /* 체크박스와 텍스트 수직 중앙 정렬 */
   gap: 8px;
   font-size: 15px;
   color: #626161;
@@ -82,8 +88,10 @@
 
 /* --- 버튼 --- */
 .signUpButton {
-  display: block;      /* 가운데 정렬을 위해 block 처리 */
-  margin: 0 auto;      /* 좌우 auto로 중앙 정렬 */
+  display: block;
+  /* 가운데 정렬을 위해 block 처리 */
+  margin: 0 auto;
+  /* 좌우 auto로 중앙 정렬 */
   width: 108px;
   height: 55px;
   font-size: 20px;
@@ -93,13 +101,17 @@
 
 /* --- 에러 메시지 (핵심) --- */
 .errorMessage {
-  position: absolute;  /* 자리를 차지하지 않고 공중에 뜸 -> 레이아웃 밀림 방지 */
+  position: absolute;
+  /* 자리를 차지하지 않고 공중에 뜸 -> 레이아웃 밀림 방지 */
   left: 0;
-  top: 100%;           /* input의 바로 밑바닥 */
-  margin-top: 6px;     /* input과 살짝 띄우기 */
-  
+  top: 100%;
+  /* input의 바로 밑바닥 */
+  margin-top: 6px;
+  /* input과 살짝 띄우기 */
+
   font-size: 15px;
   color: #e53935;
   line-height: 1.2;
-  white-space: nowrap; /* 줄바꿈 방지 */
+  white-space: nowrap;
+  /* 줄바꿈 방지 */
 }

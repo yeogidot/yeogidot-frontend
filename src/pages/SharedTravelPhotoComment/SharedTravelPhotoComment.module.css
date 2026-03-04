@@ -58,33 +58,22 @@
 }
 
 .textAreaContainer {
+
   width: 100%;
   min-height: 140px;
   border-radius: 8px;
-  background-color: #F6F6F6;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-sizing: border-box;
-  padding: 16px;
-}
 
-.textAreaWrapper {
-  width: 100%;
-  background: transparent;
-  border: none;
+  background-color: #F6F6F6;
+  text-align: center;
   outline: none;
-  font-family: 'Regular';
+  padding: 16px;
+
   font-size: 15px;
   line-height: 1.5;
-  text-align: center;
-  resize: none;
-  padding: 0;
-  display: block;
-}
-
-.textAreaWrapper::placeholder {
-  text-align: center;
 }
 
 

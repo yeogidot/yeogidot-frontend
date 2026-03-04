@@ -30,7 +30,7 @@ export default function NewTravelHome() {
     });
   };
 
-  const setThumbnailPhotoId = (id: number) => {
+  const setThumbnailPhotoId = (id: number | string) => {
     setTravel(travel => {
       return { ...travel, thumbnailPhotoId: id };
     });
@@ -90,15 +90,15 @@ export default function NewTravelHome() {
 
     const addedPhotos = await Promise.all(
       fileArray.map(async file => {
+        const fileUrl = URL.createObjectURL(file);
+        const blobId = new URL(fileUrl.slice(5)).pathname.slice(1);
         return {
-          id: Date.now(),
-          url: URL.createObjectURL(file),
-          file,
-          name: file.name,
-          size: file.size,
+          id: blobId,
+          url: fileUrl,
           date: await getCreatedDateTime(file),
           GPSCoordinates: await getGPSCoordinates(file),
           link: 'photo',
+          file,
         };
       })
     );
