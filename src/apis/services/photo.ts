@@ -3,6 +3,7 @@ import type {
   FullPhoto,
   PhotoMarkerData,
   PhotoMetadata,
+  UploadedFullPhoto,
 } from '../../types/photo.type';
 export const photoService = {
   uploadPhoto: (
@@ -14,7 +15,7 @@ export const photoService = {
     photoFileArray.forEach(file => formData.append('files', file));
 
     const encodedMetadata = encodeURIComponent(JSON.stringify(metadataArray));
-    return http.post<{ uploadedPhotos: FullPhoto[] }>(
+    return http.post<{ uploadedPhotos: UploadedFullPhoto[] }>(
       `/api/photos/upload?metadata=${encodedMetadata}`,
       formData,
       token,

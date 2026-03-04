@@ -13,8 +13,8 @@ import DeleteConfirmModal from '@components/Modal/DeleteConfirmModal';
 import { useTravel } from '@hooks/travel';
 
 export default function FullPhotoPage() {
-  const [travel, setTravel] = useTravel();
-  const setPhotoDate = (photoId: number | string, ISODateString: string) => {
+  const { travel, setTravel } = useTravel();
+  const setPhotoDate = (photoId: number, ISODateString: string) => {
     setTravel(travel => {
       const currentPhoto = travel.photos.find(({ id }) => id === photoId);
       return currentPhoto

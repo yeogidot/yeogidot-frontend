@@ -30,7 +30,7 @@ export default function TravelItem({ travel }: Props) {
       </Link>
       <Link
         to={`/edit-travel`}
-        state={{ travel: travel.travelId }}
+        state={{ travelId: travel.travelId }}
         className={classes.editButton}
       >
         <EditIcon />
