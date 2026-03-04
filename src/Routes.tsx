@@ -106,6 +106,33 @@ const router = createBrowserRouter([
           },
         ],
       },
+      // ✅ 공유 전용 경로 (비로그인 접근 가능)
+      {
+        path: '/share/:shareToken',
+        children: [
+          {
+            index: true,
+            async lazy() {
+              const { default: SharedTravelPage } = await import('./pages/SharedTravelPage/SharedTravelPage');
+              return { Component: SharedTravelPage };
+            }
+          },
+          {
+            path: ':day',
+            async lazy() {
+              const { default: SharedDayTravelPage } = await import('./pages/SharedDayTravelPage/SharedDayTravelPage');
+              return { Component: SharedDayTravelPage };
+            }
+          },
+          {
+            path: 'photos/:photoId/comment',
+            async lazy() {
+              const { default: SharedTravelPhotoComment } = await import('./pages/SharedTravelPhotoComment/SharedTravelPhotoComment');
+              return { Component: SharedTravelPhotoComment };
+            }
+          }
+        ]
+      },
       {
         path: '*',
         element: <Navigate to="/my-travel" replace={true} />,

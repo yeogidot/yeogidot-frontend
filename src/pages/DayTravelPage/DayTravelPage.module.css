@@ -17,6 +17,7 @@
   background: rgba(255, 255, 255);
   z-index: 1;
   overflow-y: auto;
+  border-radius: 5px 5px 0 0;
 }
 
 /* 제목 + 버튼 일렬 배치 */
@@ -108,15 +109,9 @@ h3 {
   font-size: 16px;
   color: #5B5B5B;
   text-align: center;
-}
-
-.dailyCommentBox.hasComment {
   background: #F6F6F6;
 }
 
-.dailyCommentBox.noComment {
-  background: #F6F6F6;
-}
 
 .mapPhoto img {
   width: 50px;

@@ -24,8 +24,8 @@ export const travelService = {
   getSharedUrl: (travelId: number, token: string) => {
     return http.get<SharedTravelUrl>(`/api/travels/${travelId}/share`, token);
   },
-  getSharedTravel: (travelId: number, shareToken: string) => {
-    return http.get<FullTravel>(`/api/travels/${travelId}/share/${shareToken}`);
+  getSharedTravel: (shareToken: string) => {
+    return http.get<FullTravel>(`/api/travels/share/${shareToken}`);
   },
 
   createTravel: async (travel: NewTravelInfo, token: string) => {

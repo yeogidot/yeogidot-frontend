@@ -100,10 +100,6 @@ export default function TravelPhotoComment() {
     }
   }, [photo]);
 
-  if (travelLoading) return <div>Loading...</div>;
-  if (travelError) return <div>Error: {travelError}</div>;
-  if (!travel || !photo) return <div>No data found.</div>;
-
   const formatDate = (dateString?: string | null): string => {
     if (!dateString) return '';
     return dateString.split('T')[0];
@@ -149,7 +145,22 @@ export default function TravelPhotoComment() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCommentText(e.target.value);
+    // Auto-resize
+    e.target.style.height = 'auto';
+    e.target.style.height = `${e.target.scrollHeight}px`;
   };
+
+  useEffect(() => {
+    const textarea = document.querySelector(`.${classes.textAreaWrapper}`) as HTMLTextAreaElement;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  }, [commentText]);
+
+  if (travelLoading) return <div>Loading...</div>;
+  if (travelError) return <div>Error: {travelError}</div>;
+  if (!travel || !photo) return <div>No data found.</div>;
 
   const datedPhotoData: DatedPhotoData = {
     id: photo.photoId ?? Number(photoId),
