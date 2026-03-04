@@ -34,7 +34,7 @@ export default function DayTravelPage() {
     if (travelId && token) {
       fetchTravel(Number(travelId), token);
     }
-  }, [travelId]);
+  }, [travelId, fetchTravel]);
 
   if (travelLoading) return <div>Loading...</div>;
   if (travelError) return <div>Error: {travelError}</div>;
@@ -52,7 +52,8 @@ export default function DayTravelPage() {
   const validPhotos = safePhotos.filter(p => p.url && p.latitude !== undefined && p.longitude !== undefined);
   const latestPhoto = validPhotos.length > 0 ? validPhotos[0] : null;
 
-  const dailyComment = dayTravel.diary?.content || dayTravel.diaryContent || (typeof dayTravel.diary === 'string' ? dayTravel.diary : undefined); // 일일 코멘트
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dailyComment = dayTravel.diary?.content || (dayTravel as any).diaryContent || (typeof dayTravel.diary === 'string' ? dayTravel.diary : undefined); // 일일 코멘트
   const noComment = String('아직 여행일기가 없습니다.');
 
   const handleDeleteClick = () => setShowDeleteModal(true);
@@ -72,7 +73,7 @@ export default function DayTravelPage() {
   };
   const handleBackClick = () => navigate(-1);
   const handlePhotoClick = (photoId: string | number) => {
-    navigate(`/photos/${photoId}/travel-photo-comment`);
+    navigate(`/travel/${travelId}/photos/${photoId}/travel-photo-comment`);
   };
 
   return (
@@ -95,7 +96,8 @@ export default function DayTravelPage() {
 
         <div className={classes.headerRow}>
           <div className={classes.header}>
-            <h1>{day}일차</h1>
+            <h1>{travel.title.length > 10 ? travel.title.slice(0, 10) + '...' : travel.title}</h1>
+            <h2>{day}일차</h2>
           </div>
           <div className={classes.buttonGroup}>
             <EditButton />
@@ -113,7 +115,8 @@ export default function DayTravelPage() {
             <div className={classes.dayTravelLocation}><h3>{dayTravel.dayRegion}</h3></div>
             <div className={classes.dayTravelPhoto}>
               {safePhotos.map((photo, index) => {
-                const currentPhotoId = photo.photoId ?? photo.id;
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const currentPhotoId = photo.photoId ?? (photo as any).id;
                 return (
                   <img
                     key={`${currentPhotoId}-${index}`}

@@ -1,7 +1,7 @@
 .container {
   position: relative;
   width: 100%;
-  height: 852px;
+  height: 952px;
   overflow: scroll;
   font-family: sans-serif;
 }
@@ -23,17 +23,30 @@
 .headerRow {
   display: flex;
   justify-content: space-between;
-  /* 좌: 제목 / 우: 버튼 */
   align-items: center;
   width: 100%;
   height: 39px;
+}
+
+.header {
+  margin: 0;
+  font-size: 32px;
+  font-weight: bold;
+  word-wrap: break-word;
+  word-break: keep-all;
+  flex: 1;
+  min-width: 0;
+  /* flex container 내부에서 줄바꿈이 정상적으로 일어나게 함 */
 }
 
 /* 버튼 3개를 가로로 나란히 */
 .buttonGroup {
   display: flex;
   gap: 13px;
-  /* 버튼 사이 간격 */
+  flex-shrink: 0;
+  /* 버튼 그룹이 눌리지 않게 고정 */
+  margin-top: 4px;
+  /* 제목과 시각적 정렬 조정 */
 }
 
 .travelInformation {

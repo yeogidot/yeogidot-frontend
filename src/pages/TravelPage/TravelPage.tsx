@@ -109,7 +109,9 @@ export default function TravelPage() {
       <div className={classes.panel}>
 
         <div className={classes.headerRow}>
-          <h1 className={classes.header}>{travel.title}</h1>
+          <div className={classes.header}>
+            {travel.title.length > 10 ? travel.title.slice(0, 10) + '...' : travel.title}
+          </div>
 
           <div className={classes.buttonGroup}>
             <EditButton />
