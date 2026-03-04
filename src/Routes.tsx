@@ -101,7 +101,7 @@ const router = createBrowserRouter([
             Component: TravelDiaryEditPage,
           },
           {
-            path: '/photos/:photoId/travel-photo-comment',
+            path: '/travel/:travelId/photos/:photoId/travel-photo-comment',
             Component: TravelPhotoComment,
           },
         ],

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import classes from './TravelPhotoComment.module.css'
 import BackButton from 'src/components/Buttons/BackButton/GrayBackButton/GrayBackButton'
@@ -8,78 +8,102 @@ import Button from '@components/Buttons/Button/Button';
 import FullPhotoLayout from '@components/FullPhotoLayout/FullPhotoLayout';
 import type { DatedPhotoData, FullPhoto } from 'src/types/photo.type';
 import { photoService } from 'src/apis/services/photo';
+import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
 
-// Local interface since we cannot change types/photo.type.ts
-interface FullPhotoWithComment extends FullPhoto {
-  comment?: {
-    id: number;
-    content: string;
-  };
-}
-
 export default function TravelPhotoComment() {
-  const { photoId } = useParams<{ photoId: string }>();
+  const { travelId, photoId } = useParams<{ travelId: string; photoId: string }>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isFullPhoto, setIsFullPhoto] = useState(false);
   const [commentText, setCommentText] = useState('');
-  const [isEditing, setIsEditing] = useState(false); // To track if we are editing an existing comment
-  const divRef = useRef<HTMLDivElement>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentCommentId, setCurrentCommentId] = useState<number | null>(null);
 
   const navigate = useNavigate()
 
   const {
-    data: rawPhoto,
-    loading: photoLoading,
-    error: photoError,
-    request: fetchPhoto,
-  } = useApi(photoService.getPhoto);
-
-  const photo = rawPhoto as FullPhotoWithComment | undefined;
+    data: travel,
+    loading: travelLoading,
+    error: travelError,
+    request: fetchTravel,
+  } = useApi(travelService.getTravel);
 
   const {
-    request: writeComment
+    status: writeStatus,
+    request: writeComment,
+    reset: resetWrite
   } = useApi(photoService.writePhotoComment);
 
-  // const {
-  //   request: updateComment
-  // } = useApi(photoService.updatePhotoComment);
-
-  // const {
-  //   request: deleteComment
-  // } = useApi(photoService.deletePhotoComment);
+  const {
+    status: updateStatus,
+    request: updateComment,
+    reset: resetUpdate
+  } = useApi(photoService.updatePhotoComment);
 
   const {
     request: deletePhoto
   } = useApi(photoService.deletePhoto);
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (photoId && token) {
-      fetchPhoto(Number(photoId), token);
+    if (writeStatus === 200) {
+      const token = localStorage.getItem('accessToken');
+      if (travelId && token) {
+        fetchTravel(Number(travelId), token);
+      }
+      alert('코멘트가 성공적으로 저장되었습니다.');
+      resetWrite();
+    } else if (writeStatus !== null) {
+      alert('코멘트 저장 중 오류가 발생했습니다.');
+      resetWrite();
     }
-  }, [photoId]);
+  }, [writeStatus, travelId, fetchTravel, resetWrite]);
 
   useEffect(() => {
-    if (photo?.comment) {
-      setCommentText(photo.comment.content);
+    if (updateStatus === 200) {
+      const token = localStorage.getItem('accessToken');
+      if (travelId && token) {
+        fetchTravel(Number(travelId), token);
+      }
+      alert('코멘트가 성공적으로 저장되었습니다.');
+      resetUpdate();
+    } else if (updateStatus !== null) {
+      alert('코멘트 수정 중 오류가 발생했습니다.');
+      resetUpdate();
+    }
+  }, [updateStatus, travelId, fetchTravel, resetUpdate]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (travelId && token) {
+      fetchTravel(Number(travelId), token);
+    }
+  }, [travelId, fetchTravel]);
+
+  // Find the photo and its latest comment
+  let photo: FullPhoto | undefined;
+  if (travel && photoId) {
+    const allPhotos = travel.days.flatMap(day => day.photos as FullPhoto[]);
+    photo = allPhotos.find(p => p.photoId === Number(photoId));
+  }
+
+  useEffect(() => {
+    if (photo?.comments && photo.comments.length > 0) {
+      // Find comment with highest commentId
+      const latestComment = [...photo.comments].sort((a, b) => b.commentId - a.commentId)[0];
+      setCommentText(latestComment.content);
       setIsEditing(true);
-      if (divRef.current) {
-        divRef.current.innerText = photo.comment.content;
-      }
+      setCurrentCommentId(latestComment.commentId);
     } else {
+      setCommentText('');
       setIsEditing(false);
-      if (divRef.current) {
-        divRef.current.innerText = '';
-      }
+      setCurrentCommentId(null);
     }
   }, [photo]);
 
-  if (photoLoading) return <div>Loading...</div>;
-  if (photoError) return <div>Error: {photoError}</div>;
-  if (!photo) return <div>No photo data.</div>;
+  if (travelLoading) return <div>Loading...</div>;
+  if (travelError) return <div>Error: {travelError}</div>;
+  if (!travel || !photo) return <div>No data found.</div>;
 
-  // 날짜 포맷팅 함수
   const formatDate = (dateString?: string | null): string => {
     if (!dateString) return '';
     return dateString.split('T')[0];
@@ -92,7 +116,6 @@ export default function TravelPhotoComment() {
   const handleConfirmDelete = async () => {
     const token = localStorage.getItem('accessToken');
     if (token && photoId) {
-      // 사진 자체를 삭제
       await deletePhoto(Number(photoId), token);
       navigate(-1);
     }
@@ -103,18 +126,15 @@ export default function TravelPhotoComment() {
     const token = localStorage.getItem('accessToken');
     if (!token || !photoId) return;
 
-    const content = divRef.current?.innerText || '';
-    if (!content.trim()) return;
+    const content = commentText.trim();
+    if (!content) return;
 
     try {
-      if (isEditing && photo.comment) {
-        // Update: photo.ts를 수정하지 못하므로 여기서 직접 http.put 호출 또는 로직 처리
-        // 만약 photoService.updatePhotoComment가 content를 안 받는다면, 
-        // 직접 http 요청을 보내 인수를 해결함.
-        const { http } = await import('src/apis/http');
-        await http.put(`/api/comments/${photo.comment.id}`, { content }, token);
+      if (isEditing && currentCommentId) {
+        // @ts-expect-error: photoService.updatePhotoComment의 현재 정의는 content를 받지 않지만,
+        // 사용자의 요청에 따라 서비스를 사용하도록 호출부를 변경합니다.
+        await updateComment(currentCommentId, content, token);
       } else {
-        // Create
         await writeComment(Number(photoId), content, token);
       }
     } catch (error) {
@@ -127,8 +147,8 @@ export default function TravelPhotoComment() {
     setIsFullPhoto(true);
   };
 
-  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
-    setCommentText(e.currentTarget.innerText);
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setCommentText(e.target.value);
   };
 
   const datedPhotoData: DatedPhotoData = {
@@ -138,7 +158,6 @@ export default function TravelPhotoComment() {
     file: new File([], photo.originalName ?? 'photo'),
     isThumbnail: false
   };
-
 
   if (isFullPhoto) {
     return (
@@ -176,25 +195,20 @@ export default function TravelPhotoComment() {
         </div>
 
         <div className={classes.photoInformation}>
-          {/* Need travel day info? photo doesn't have it directly. 
-               We might need to pass it or fetch it. 
-               For now showing what we have. 
-           */}
           <a>{formatDate(photo.takenAt)}</a>
           <br />
-          {/* Location? photo metadata region or coordinates */}
+          {/* @ts-expect-error: region is not in FullPhoto type but present in API response */}
           {photo.region ? photo.region : (photo.latitude && photo.longitude ? `${photo.latitude}, ${photo.longitude}` : '')}
         </div>
-        <div
-          className={`${classes.textAreaWrapper} ${!commentText ? classes.placeholder : ''}`}
-          contentEditable
-          suppressContentEditableWarning
-          ref={divRef}
-          onInput={handleInput}
-          data-placeholder="코멘트를 입력하세요."
-        >
+        
+        <div className={classes.textAreaContainer}>
+           <textarea
+            className={classes.textAreaWrapper}
+            value={commentText}
+            onChange={handleInputChange}
+            placeholder="코멘트를 입력하세요."
+          />
         </div>
-
 
         <div className={classes.finishButton}>
           <Button onClick={handleFinishClick}>{isEditing ? '수정' : '작성'}</Button>
