@@ -25,7 +25,7 @@ export default function MapPage() {
 
         if (response.data) {
           const validPhotos = response.data.filter(
-            photo => photo.latitude && photo.longitude
+            photo => photo.latitude != null && photo.longitude != null
           );
 
           setPhotos(validPhotos);
@@ -33,8 +33,8 @@ export default function MapPage() {
           // If there are photos, center the map on the latest one (first in sorted list)
           if (
             validPhotos.length > 0 &&
-            validPhotos[0].latitude &&
-            validPhotos[0].longitude
+            validPhotos[0].latitude != null &&
+            validPhotos[0].longitude != null
           ) {
             setMapCenter([validPhotos[0].latitude, validPhotos[0].longitude]);
           }
@@ -59,7 +59,9 @@ export default function MapPage() {
 
       <BackgroundMap className={classes.map} position={mapCenter}>
         {photos.map(photo =>
-          photo.latitude && photo.longitude && photo.thumbnailUrl ? (
+          photo.latitude != null &&
+          photo.longitude != null &&
+          photo.thumbnailUrl ? (
             <PhotoMarker
               key={photo.photoId}
               position={[photo.latitude, photo.longitude]}
