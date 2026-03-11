@@ -54,11 +54,11 @@ export const photoService = {
   writePhotoComment: (photoId: number, content: string, token: string) => {
     return http.post(`/api/photos/${photoId}/comments`, { content }, token);
   },
-  updatePhotoComment: (commentId: number, token: string) => {
-    return http.put<{ content: string }>(`/api/comments/${commentId}`, token);
+  updatePhotoComment: (photoId: number, content: string, token: string) => {
+    return http.put<{ content: string }>(`/api/photos/${photoId}/comments`, { content }, token);
   },
-  deletePhotoComment: (commentId: number, token: string) => {
-    return http.delete(`/api/comments/${commentId}`, token);
+  deletePhotoComment: (photoId: number, token: string) => {
+    return http.delete(`/api/photos/${photoId}/comments`, token);
   },
   updatePhotoInfo: (
     photoId: number,

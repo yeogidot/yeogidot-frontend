@@ -129,7 +129,7 @@ export default function TravelPhotoComment() {
       if (isEditing && currentCommentId) {
         // @ts-expect-error: photoService.updatePhotoComment의 현재 정의는 content를 받지 않지만,
         // 사용자의 요청에 따라 서비스를 사용하도록 호출부를 변경합니다.
-        await updateComment(currentCommentId, content, token);
+        await updateComment(Number(photoId), content, token);
       } else {
         await writeComment(Number(photoId), content, token);
       }
