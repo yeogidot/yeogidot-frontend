@@ -12,9 +12,9 @@ import classes from './MapPage.module.css';
 const DEFAULT_CENTER: [number, number] = [37.5665, 126.978];
 
 export default function MapPage() {
-    const navigate = useNavigate();
-    const [photos, setPhotos] = useState<Partial<FullPhoto>[]>([]);
-    const [mapCenter, setMapCenter] = useState<[number, number]>(DEFAULT_CENTER);
+  const navigate = useNavigate();
+  const [photos, setPhotos] = useState<Partial<FullPhoto>[]>([]);
+  const [mapCenter, setMapCenter] = useState<[number, number]>(DEFAULT_CENTER);
 
     useEffect(() => {
         const fetchPhotos = async () => {
@@ -28,14 +28,14 @@ export default function MapPage() {
                         photo => photo.latitude && photo.longitude
                     );
 
-                    // Sort photos by date (latest first)
-                    validPhotos.sort((a, b) => {
-                        const dateA = new Date(a.takenAt || a.createdDate || 0).getTime();
-                        const dateB = new Date(b.takenAt || b.createdDate || 0).getTime();
-                        return dateB - dateA;
-                    });
+          // Sort photos by date (latest first)
+          validPhotos.sort((a, b) => {
+            const dateA = new Date(a.takenAt || a.createdDate || 0).getTime();
+            const dateB = new Date(b.takenAt || b.createdDate || 0).getTime();
+            return dateB - dateA;
+          });
 
-                    setPhotos(validPhotos);
+          setPhotos(validPhotos);
 
                     // If there are photos, center the map on the latest one (first in sorted list)
                     if (
@@ -51,18 +51,18 @@ export default function MapPage() {
             }
         };
 
-        fetchPhotos();
-    }, []);
+    fetchPhotos();
+  }, []);
 
-    const handleBackClick = () => {
-        navigate('/my-travel');
-    };
+  const handleBackClick = () => {
+    navigate('/my-travel');
+  };
 
-    return (
-        <div className={classes.container}>
-            <div className={classes.backButton}>
-                <BackButton onClick={handleBackClick} />
-            </div>
+  return (
+    <div className={classes.container}>
+      <div className={classes.backButton}>
+        <BackButton onClick={handleBackClick} />
+      </div>
 
             <BackgroundMap className={classes.map} position={mapCenter}>
                 {photos.map(photo =>

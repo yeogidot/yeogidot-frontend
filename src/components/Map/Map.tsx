@@ -2,7 +2,7 @@ import { type ReactNode, useEffect } from 'react';
 // 1. ZoomControl을 import에 추가합니다.
 import { MapContainer, TileLayer, ZoomControl, useMap } from 'react-leaflet';
 import type { LatLngExpression } from 'leaflet';
-import classes from './map.module.css';
+import classes from './Map.module.css';
 
 type MapProps = {
   className?: string;
@@ -16,7 +16,13 @@ const DEFAULT_CENTER: LatLngExpression = [35.1796, 129.0756];
 const DEFAULT_ZOOM = 15;
 
 // Component to handle map view changes dynamically
-function ChangeView({ center, zoom }: { center: LatLngExpression; zoom: number }) {
+function ChangeView({
+  center,
+  zoom,
+}: {
+  center: LatLngExpression;
+  zoom: number;
+}) {
   const map = useMap();
   useEffect(() => {
     map.setView(center, zoom);
