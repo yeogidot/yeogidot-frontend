@@ -32,7 +32,7 @@ export default function TravelDiaryEditPage() {
   const dayTravel = travel?.days.find(d => d.dayNumber === Number(day));
 
   useEffect(() => {
-    const rawContent = dayTravel?.diary?.content || dayTravel?.diaryContent || (typeof dayTravel?.diary === 'string' ? dayTravel.diary : undefined);
+    const rawContent = dayTravel?.diary?.content || (typeof dayTravel?.diary === 'string' ? dayTravel.diary : undefined);
     if (rawContent) {
       setDiaryText(rawContent);
     }
