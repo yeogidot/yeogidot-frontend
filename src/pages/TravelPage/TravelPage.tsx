@@ -114,7 +114,7 @@ export default function TravelPage() {
           </div>
 
           <div className={classes.buttonGroup}>
-            <EditButton />
+            <EditButton onClick={() => navigate('/edit-travel', { state: { travelId: Number(travelId) } })} />
             <ShareButton onClick={handleShareClick} />
             <DeleteButton onClick={handleDeleteClick} />
           </div>

@@ -49,7 +49,11 @@ export default function DayTravelPage() {
   // Safe check for photos
   const safePhotos = dayTravel.photos || [];
   // Use .latitude and .longitude if they exist and are numbers (including 0)
-  const validPhotos = safePhotos.filter(p => p.url && p.latitude !== undefined && p.longitude !== undefined);
+  const validPhotos = safePhotos.filter(p => 
+    p.url && 
+    typeof p.latitude === 'number' && 
+    typeof p.longitude === 'number'
+  );
   const latestPhoto = validPhotos.length > 0 ? validPhotos[0] : null;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -100,7 +104,7 @@ export default function DayTravelPage() {
             <h2>{day}일차</h2>
           </div>
           <div className={classes.buttonGroup}>
-            <EditButton />
+            <EditButton onClick={() => navigate('/edit-travel', { state: { travelId: Number(travelId) } })} />
             <DeleteButton onClick={handleDeleteClick} />
           </div>
         </div>
