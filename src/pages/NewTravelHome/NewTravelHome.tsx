@@ -18,7 +18,7 @@ const checkFileExtension = (file: File, extensions: string[]) => {
 };
 
 export default function NewTravelHome() {
-  const [travel, setTravel] = useTravel();
+  const { travel, setTravel } = useTravel();
   const navigate = useNavigate();
 
   const [titleErrorText, setTitleErrorText] = useState('');
@@ -57,7 +57,11 @@ export default function NewTravelHome() {
       setPhotoErrorText('사진을 업로드 해주세요.');
       return;
     }
-    if (travel.thumbnailPhotoId === null) {
+
+    if (
+      travel.thumbnailPhotoId === null ||
+      !travel.photos.find(({ id }) => travel.thumbnailPhotoId === id)
+    ) {
       const earliestPhoto = [...travel.photos]
         .sort(dateCompare)
         .find(({ date }) => date);

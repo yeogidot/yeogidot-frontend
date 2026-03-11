@@ -1,12 +1,41 @@
 import classes from './SelectThumbnailPageForEdit.module.css';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import BlackBackIcon from '@assets/icons/back-black.svg';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import Button from '@components/Buttons/Button/Button';
-import { useTravel } from '@hooks/travel';
+import { useEditTravel } from '@hooks/travel';
+import { useApi } from '@hooks/api';
+import { travelService } from 'src/apis/services/travel';
+import { useEffect } from 'react';
 export default function SelectThumbnailPageForEdit() {
-  const [travel, _] = useTravel();
-
+  const token = localStorage.getItem('accessToken');
+  const { state } = useLocation();
+  const { travel } = useEditTravel();
+  const navigate = useNavigate();
+  const { error, data, loading, request } = useApi(
+    travelService.updateTravelInfo
+  );
+  const handleClickButton = () => {
+    if (!token) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/login');
+      return;
+    }
+    request(state.travelId, travel, token);
+  };
+  useEffect(() => {
+    if (loading) {
+      return;
+    }
+    if (error) {
+      alert(error);
+      return;
+    }
+    if (data) {
+      alert(`성공적으로 여행을 수정했습니다.${'\n'}여행페이지로 이동합니다.`);
+      navigate(`/travel/${state.travelId}`);
+    }
+  }, [loading, error, data, navigate, state.travelId]);
   const thumbnailCheckedPhotos = travel.photos.map(photo => {
     return {
       ...photo,
@@ -14,7 +43,6 @@ export default function SelectThumbnailPageForEdit() {
       isThumbnail: travel.thumbnailPhotoId === photo.id,
     };
   });
-  const navigate = useNavigate();
   return (
     <div className={classes.container}>
       <header className={classes.header}>
@@ -36,7 +64,19 @@ export default function SelectThumbnailPageForEdit() {
         className={classes.photoGrid}
         photos={thumbnailCheckedPhotos}
       />
-      <Button className={classes.button}>여행 수정</Button>
+      <Button
+        className={classes.button}
+        onClick={handleClickButton}
+        disabled={loading}
+        aria-busy={loading}
+      >
+        {loading ? '여행 수정 중...' : '여행 수정'}
+      </Button>
+      <p className={classes.loadingMessage} role="status" aria-live="polite">
+        {loading
+          ? '여행을 수정하고 있어요. 완료되면 자동으로 여행 페이지로 이동해요.'
+          : ''}
+      </p>
     </div>
   );
 }

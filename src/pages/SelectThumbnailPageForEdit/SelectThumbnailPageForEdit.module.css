@@ -34,3 +34,9 @@
   color: #787777;
   margin: 0px;
 }
+.loadingMessage {
+  min-height: 24px;
+  margin: 0 auto;
+  color: #5a5a5a;
+  font-size: 14px;
+}

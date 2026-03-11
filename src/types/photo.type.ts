@@ -14,6 +14,14 @@ export interface FullPhotoData extends DatedPhotoData {
   GPSCoordinates: { latitude: number; longitude: number } | null;
 }
 
+export interface uploadedPhoto {
+  id: number;
+  url: string;
+  createdDate?: string;
+  modifiedDate?: string;
+  comments: Comment[];
+}
+
 export interface Photo {
   photoId: number;
   url: string;
@@ -46,3 +54,5 @@ export interface Comment {
   content: string;
   createdAt: string;
 }
+
+export type UploadedFullPhoto = uploadedPhoto & PhotoMetadata;

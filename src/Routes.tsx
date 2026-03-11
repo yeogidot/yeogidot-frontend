@@ -12,6 +12,7 @@ import TravelDiaryPage from './pages/TravelDiaryPage/TravelDiaryPage';
 import TravelDiaryEditPage from './pages/TravelDiaryEditPage/TravelDiaryEditPage';
 import TravelPhotoComment from './pages/TravelPhotoComment/TravelPhotoComment';
 import NewTravelPage from './pages/NewTravelPage/NewTravelPage';
+import NewTravelPhotoPage from './pages/NewTravelPhotoPage/NewTravelPhotoPage';
 import EditTravelHome from './pages/EditTravelHome/EditTravelHome';
 import SelectThumbnailPageForEdit from './pages/SelectThumbnailPageForEdit/SelectThumbnailPageForEdit';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
@@ -64,7 +65,10 @@ const router = createBrowserRouter([
                 path: 'select-thumbnail',
                 Component: SelectThumbnailPage,
               },
-              { path: 'select-thumbnail/photo', Component: SelectThumbnailPhotoPage },
+              {
+                path: 'select-thumbnail/photo',
+                Component: SelectThumbnailPhotoPage,
+              },
             ],
           },
           {
@@ -112,25 +116,31 @@ const router = createBrowserRouter([
           {
             index: true,
             async lazy() {
-              const { default: SharedTravelPage } = await import('./pages/SharedTravelPage/SharedTravelPage');
+              const { default: SharedTravelPage } = await import(
+                './pages/SharedTravelPage/SharedTravelPage'
+              );
               return { Component: SharedTravelPage };
-            }
+            },
           },
           {
             path: ':day',
             async lazy() {
-              const { default: SharedDayTravelPage } = await import('./pages/SharedDayTravelPage/SharedDayTravelPage');
+              const { default: SharedDayTravelPage } = await import(
+                './pages/SharedDayTravelPage/SharedDayTravelPage'
+              );
               return { Component: SharedDayTravelPage };
-            }
+            },
           },
           {
             path: 'photos/:photoId/comment',
             async lazy() {
-              const { default: SharedTravelPhotoComment } = await import('./pages/SharedTravelPhotoComment/SharedTravelPhotoComment');
+              const { default: SharedTravelPhotoComment } = await import(
+                './pages/SharedTravelPhotoComment/SharedTravelPhotoComment'
+              );
               return { Component: SharedTravelPhotoComment };
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       {
         path: '*',

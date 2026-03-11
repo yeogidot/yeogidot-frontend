@@ -3,6 +3,7 @@ import type {
   FullPhoto,
   PhotoMarkerData,
   PhotoMetadata,
+  UploadedFullPhoto,
 } from '../../types/photo.type';
 export const photoService = {
   uploadPhoto: (
@@ -14,7 +15,7 @@ export const photoService = {
     photoFileArray.forEach(file => formData.append('files', file));
 
     const encodedMetadata = encodeURIComponent(JSON.stringify(metadataArray));
-    return http.post<{ uploadedPhotos: FullPhoto[] }>(
+    return http.post<{ uploadedPhotos: UploadedFullPhoto[] }>(
       `/api/photos/upload?metadata=${encodedMetadata}`,
       formData,
       token,
@@ -28,7 +29,10 @@ export const photoService = {
     return http.get<FullPhoto>(`/api/photos/${id}`, token);
   },
   getPhotosForMap: (token: string) => {
-    return http.get<Partial<FullPhoto>[]>(`/api/photos/map-photos`, token);
+    return http.get<Partial<PhotoMarkerData>[]>(
+      `/api/photos/map-markers`,
+      token
+    );
   },
   updatePhotoTakenTime: (id: number, newTakenTime: string, token: string) => {
     return http.put(
