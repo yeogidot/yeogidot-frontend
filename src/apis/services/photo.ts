@@ -5,14 +5,20 @@ import type {
   PhotoMetadata,
   UploadedFullPhoto,
 } from '../../types/photo.type';
+import { photoFileToWebp } from '@utils/photo';
 export const photoService = {
-  uploadPhoto: (
+  uploadPhoto: async (
     photoFileArray: File[],
     metadataArray: PhotoMetadata[],
     token: string
   ) => {
     const formData = new FormData();
-    photoFileArray.forEach(file => formData.append('files', file));
+    const webpBlobs = await Promise.all(
+      photoFileArray.map(async file => photoFileToWebp(file))
+    );
+    webpBlobs.forEach(blob => {
+      return formData.append('files', blob);
+    });
 
     const encodedMetadata = encodeURIComponent(JSON.stringify(metadataArray));
     return http.post<{ uploadedPhotos: UploadedFullPhoto[] }>(
@@ -55,7 +61,11 @@ export const photoService = {
     return http.post(`/api/photos/${photoId}/comments`, { content }, token);
   },
   updatePhotoComment: (photoId: number, content: string, token: string) => {
-    return http.put<{ content: string }>(`/api/photos/${photoId}/comments`, { content }, token);
+    return http.put<{ content: string }>(
+      `/api/photos/${photoId}/comments`,
+      { content },
+      token
+    );
   },
   deletePhotoComment: (photoId: number, token: string) => {
     return http.delete(`/api/photos/${photoId}/comments`, token);
