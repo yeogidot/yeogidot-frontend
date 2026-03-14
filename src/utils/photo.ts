@@ -1,5 +1,5 @@
 export async function photoFileToWebp(photoFile: File) {
-  return new Promise<Blob>((resolve, reject) => {
+  return new Promise<File>((resolve, reject) => {
     const imageURL = URL.createObjectURL(photoFile);
     const image = new Image();
     image.onerror = () => {
@@ -23,7 +23,9 @@ export async function photoFileToWebp(photoFile: File) {
       canvas.toBlob(
         blob => {
           if (blob) {
-            resolve(blob);
+            resolve(
+              new File([blob], photoFile.name.replace(/(\.[^/.]+)?$/, '.webp'))
+            );
           } else {
             reject(new Error('이미지 변환 실패'));
           }

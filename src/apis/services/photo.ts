@@ -13,11 +13,12 @@ export const photoService = {
     token: string
   ) => {
     const formData = new FormData();
-    const webpBlobs = await Promise.all(
+    const webpFiles = await Promise.all<File>(
       photoFileArray.map(async file => photoFileToWebp(file))
     );
-    webpBlobs.forEach(blob => {
-      return formData.append('files', blob);
+
+    webpFiles.forEach(file => {
+      formData.append('files', file);
     });
 
     const encodedMetadata = encodeURIComponent(JSON.stringify(metadataArray));
