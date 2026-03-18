@@ -9,6 +9,7 @@ import DeleteConfirmModal from '../../components/Modal/DeleteConfirmModal.tsx';
 import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
 import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
+import ErrorPage from '../ErrorPage/ErrorPage.tsx';
 
 const MAP_CENTER_LATITUDE_OFFSET = 0.007;
 
@@ -24,6 +25,7 @@ export default function DayTravelPage() {
     data: travel,
     loading: travelLoading,
     error: travelError,
+    status: travelStatus,
     request: fetchTravel,
   } = useApi(travelService.getTravel);
 
@@ -39,14 +41,14 @@ export default function DayTravelPage() {
   }, [travelId, fetchTravel]);
 
   if (travelLoading) return <div>Loading...</div>;
-  if (travelError) return <div>Error: {travelError}</div>;
-  if (!travel) return <div>No data found.</div>;
+  if (travelError) return <ErrorPage status={travelStatus} message={travelError} />;
+  if (!travel) return <ErrorPage status={404} message="No data found." />;
 
   // URL 파라미터로 받은 day에 해당하는 데이터 찾기
   const dayNumber = Number(day);
   const dayTravel = travel.days.find(d => d.dayNumber === dayNumber);
 
-  if (!dayTravel) return <div>해당 일차의 여행 데이터가 없습니다.</div>;
+  if (!dayTravel) return <ErrorPage status={404} message="해당 일차의 여행 데이터가 없습니다." />;
 
   // Safe check for photos
   const safePhotos = dayTravel.photos || [];

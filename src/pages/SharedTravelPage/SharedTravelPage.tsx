@@ -6,6 +6,7 @@ import BackgroundMap from '../../components/Map/Map.tsx';
 import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
 import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
+import ErrorPage from '../ErrorPage/ErrorPage.tsx';
 
 const MAP_CENTER_LATITUDE_OFFSET = 0.007;
 
@@ -19,6 +20,7 @@ export default function SharedTravelPage() {
     data: travel,
     loading: travelLoading,
     error: travelError,
+    status: travelStatus,
     request: fetchSharedTravel,
   } = useApi(travelService.getSharedTravel);
 
@@ -29,8 +31,8 @@ export default function SharedTravelPage() {
   }, [shareToken, fetchSharedTravel]);
 
   if (travelLoading) return <div>Loading...</div>;
-  if (travelError) return <div>Error: {travelError}</div>;
-  if (!travel) return <div>여행 데이터를 찾을 수 없습니다.</div>;
+  if (travelError) return <ErrorPage status={travelStatus} message={travelError} />;
+  if (!travel) return <ErrorPage status={404} message="여행 데이터를 찾을 수 없습니다." />;
 
   const allPhotos = travel.days.flatMap(day =>
     (day.photos || []).filter(p => p.url && p.latitude !== null && p.longitude !== null && p.latitude !== undefined && p.longitude !== undefined)

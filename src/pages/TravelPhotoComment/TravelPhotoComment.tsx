@@ -10,6 +10,7 @@ import type { DatedPhotoData, FullPhoto } from 'src/types/photo.type';
 import { photoService } from 'src/apis/services/photo';
 import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
+import ErrorPage from '../ErrorPage/ErrorPage.tsx';
 
 export default function TravelPhotoComment() {
   const { travelId, photoId } = useParams<{ travelId: string; photoId: string }>();
@@ -25,6 +26,7 @@ export default function TravelPhotoComment() {
     data: travel,
     loading: travelLoading,
     error: travelError,
+    status: travelStatus,
     request: fetchTravel,
   } = useApi(travelService.getTravel);
 
@@ -157,8 +159,8 @@ export default function TravelPhotoComment() {
   }, [commentText]);
 
   if (travelLoading) return <div>Loading...</div>;
-  if (travelError) return <div>Error: {travelError}</div>;
-  if (!travel || !photo) return <div>No data found.</div>;
+  if (travelError) return <ErrorPage status={travelStatus} message={travelError} />;
+  if (!travel || !photo) return <ErrorPage status={404} message="No data found." />;
 
   const datedPhotoData: DatedPhotoData = {
     id: photo.photoId ?? Number(photoId),
