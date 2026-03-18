@@ -57,7 +57,7 @@ export default function Map({
 
       {/* 3. ZoomControl 컴포넌트를 추가하고 위치를 지정합니다. */}
       {/* position 옵션: 'topright', 'bottomright', 'bottomleft', 'topleft' */}
-      <ZoomControl position="bottomright" />
+      <ZoomControl position="topright" />
 
       {children}
     </MapContainer>

@@ -11,11 +11,14 @@ import ShareModal from '../../components/Modal/ShareModal.tsx';
 import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
 import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
+import ErrorPage from '../ErrorPage/ErrorPage.tsx';
 
 
 // import type { FullTravel } from 'src/types/travel.type'; // inferred from service
 
-const PHOTO_MARKER_LATITUDE_OFFSET = 0.007;
+const MAP_CENTER_LATITUDE_OFFSET = 0.007;
+
+
 
 export default function TravelPage() {
   const navigate = useNavigate();
@@ -28,6 +31,7 @@ export default function TravelPage() {
     data: travel,
     loading: travelLoading,
     error: travelError,
+    status: travelStatus,
     request: fetchTravel,
   } = useApi(travelService.getTravel);
 
@@ -48,8 +52,8 @@ export default function TravelPage() {
   }, [travelId]);
 
   if (travelLoading) return <div>Loading...</div>;
-  if (travelError) return <div>Error: {travelError}</div>;
-  if (!travel) return <div>No travel data found.</div>;
+  if (travelError) return <ErrorPage status={travelStatus} message={travelError} />;
+  if (!travel) return <div>여행 데이터를 찾을 수 없습니다.</div>;
 
   const allPhotos = travel.days.flatMap(day =>
     (day.photos || []).filter(p => p.url && p.latitude !== null && p.longitude !== null && p.latitude !== undefined && p.longitude !== undefined)
@@ -85,19 +89,24 @@ export default function TravelPage() {
     navigate(`./${dayNumber}`);
   };
 
+  const handlePhotoClick = (photoId: string | number) => {
+    navigate(`/travel/${travelId}/photos/${photoId}/travel-photo-comment`);
+  };
+
   const handleBackClick = () => navigate('/my-travel');
 
   return (
     <div className={classes.container}>
 
-      <BackgroundMap position={mapCenter ? [mapCenter.lat as number, mapCenter.lng as number] : undefined}>
+      <BackgroundMap position={mapCenter ? [(mapCenter.lat as number) - MAP_CENTER_LATITUDE_OFFSET, mapCenter.lng as number] : undefined}>
         {allPhotos.map((photo, index) => {
           const currentPhotoId = photo.photoId ?? (photo as any).id;
           return (
             <PhotoMarker
               key={`${currentPhotoId}-${index}`}
-              position={[photo.latitude! + PHOTO_MARKER_LATITUDE_OFFSET, photo.longitude!]}
+              position={[photo.latitude!, photo.longitude!]}
               photoUrl={photo.url!}
+              onClick={() => currentPhotoId && handlePhotoClick(currentPhotoId)}
             />
           );
         })}

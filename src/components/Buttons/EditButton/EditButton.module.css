@@ -7,4 +7,5 @@
   width: 32px;  /* 지름 32px */
   height: 32px;
   background-color: #AEE6FF; /* 하늘색 */
+  display: flex;
 }
