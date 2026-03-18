@@ -32,12 +32,12 @@ export default function SharedDayTravelPage() {
 
   if (travelLoading) return <div>Loading...</div>;
   if (travelError) return <ErrorPage status={travelStatus} message={travelError} />;
-  if (!travel) return <ErrorPage status={404} message="여행 데이터를 찾을 수 없습니다." />;
+  if (!travel) return <div>여행 데이터를 찾을 수 없습니다.</div>;
 
   const dayNumber = Number(day);
   const dayTravel = travel.days.find(d => d.dayNumber === dayNumber);
 
-  if (!dayTravel) return <ErrorPage status={404} message="해당 일차의 여행 데이터가 없습니다." />;
+  if (!dayTravel) return <div>해당 일차의 여행 데이터가 없습니다.</div>;
 
   const safePhotos = dayTravel.photos || [];
   const validPhotos = safePhotos.filter(p => p.url && p.latitude !== undefined && p.longitude !== undefined);
