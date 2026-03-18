@@ -15,7 +15,9 @@ import { useApi } from 'src/hooks/api';
 
 // import type { FullTravel } from 'src/types/travel.type'; // inferred from service
 
-const PHOTO_MARKER_LATITUDE_OFFSET = 0.007;
+const MAP_CENTER_LATITUDE_OFFSET = 0.007;
+
+
 
 export default function TravelPage() {
   const navigate = useNavigate();
@@ -90,13 +92,13 @@ export default function TravelPage() {
   return (
     <div className={classes.container}>
 
-      <BackgroundMap position={mapCenter ? [mapCenter.lat as number, mapCenter.lng as number] : undefined}>
+      <BackgroundMap position={mapCenter ? [(mapCenter.lat as number) - MAP_CENTER_LATITUDE_OFFSET, mapCenter.lng as number] : undefined}>
         {allPhotos.map((photo, index) => {
           const currentPhotoId = photo.photoId ?? (photo as any).id;
           return (
             <PhotoMarker
               key={`${currentPhotoId}-${index}`}
-              position={[photo.latitude! + PHOTO_MARKER_LATITUDE_OFFSET, photo.longitude!]}
+              position={[photo.latitude!, photo.longitude!]}
               photoUrl={photo.url!}
             />
           );

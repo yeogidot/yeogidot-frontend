@@ -7,7 +7,9 @@ import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
 import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
 
-const PHOTO_MARKER_LATITUDE_OFFSET = 0.007;
+const MAP_CENTER_LATITUDE_OFFSET = 0.007;
+
+
 
 export default function SharedDayTravelPage() {
   const navigate = useNavigate();
@@ -50,12 +52,12 @@ export default function SharedDayTravelPage() {
 
   return (
     <div className={classes.container}>
-      <BackgroundMap position={latestPhoto?.latitude !== undefined && latestPhoto?.longitude !== undefined ? [latestPhoto.latitude as number, latestPhoto.longitude as number] : undefined}>
+      <BackgroundMap position={latestPhoto?.latitude !== undefined && latestPhoto?.longitude !== undefined ? [(latestPhoto.latitude as number) - MAP_CENTER_LATITUDE_OFFSET, latestPhoto.longitude as number] : undefined}>
         {validPhotos.map((p, idx) => (
           <PhotoMarker
             key={idx}
             photoUrl={p.url!}
-            position={[p.latitude! + PHOTO_MARKER_LATITUDE_OFFSET, p.longitude!]}
+            position={[p.latitude!, p.longitude!]}
           />
         ))}
       </BackgroundMap>
