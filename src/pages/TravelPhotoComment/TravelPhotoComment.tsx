@@ -45,7 +45,7 @@ export default function TravelPhotoComment() {
   } = useApi(photoService.deletePhoto);
 
   useEffect(() => {
-    if (writeStatus === 200) {
+    if (writeStatus === 201) {
       const token = localStorage.getItem('accessToken');
       if (travelId && token) {
         fetchTravel(Number(travelId), token);
