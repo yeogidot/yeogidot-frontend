@@ -87,6 +87,10 @@ export default function TravelPage() {
     navigate(`./${dayNumber}`);
   };
 
+  const handlePhotoClick = (photoId: string | number) => {
+    navigate(`/travel/${travelId}/photos/${photoId}/travel-photo-comment`);
+  };
+
   const handleBackClick = () => navigate('/my-travel');
 
   return (
@@ -100,6 +104,7 @@ export default function TravelPage() {
               key={`${currentPhotoId}-${index}`}
               position={[photo.latitude!, photo.longitude!]}
               photoUrl={photo.url!}
+              onClick={() => currentPhotoId && handlePhotoClick(currentPhotoId)}
             />
           );
         })}

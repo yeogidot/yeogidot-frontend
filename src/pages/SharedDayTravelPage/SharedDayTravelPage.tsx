@@ -58,6 +58,7 @@ export default function SharedDayTravelPage() {
             key={idx}
             photoUrl={p.url!}
             position={[p.latitude!, p.longitude!]}
+            onClick={() => p.photoId && handlePhotoClick(p.photoId)}
           />
         ))}
       </BackgroundMap>

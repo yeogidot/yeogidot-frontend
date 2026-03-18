@@ -44,6 +44,10 @@ export default function SharedTravelPage() {
     navigate(`./${dayNumber}`);
   };
 
+  const handlePhotoClick = (photoId: string | number) => {
+    navigate(`/share/${shareToken}/photos/${photoId}/comment`);
+  };
+
   const handleBackClick = () => navigate(-1);
 
   return (
@@ -56,6 +60,7 @@ export default function SharedTravelPage() {
               key={`${currentPhotoId}-${index}`}
               position={[photo.latitude!, photo.longitude!]}
               photoUrl={photo.url!}
+              onClick={() => currentPhotoId && handlePhotoClick(currentPhotoId)}
             />
           );
         })}
