@@ -22,10 +22,12 @@ import SelectThumbnailPhotoPage from './pages/SelectThumbnailPhotoPage/SelectThu
 import MapPage from './pages/MapPage/MapPage';
 
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import { Transition } from './pages/Transition/Transition';
 
 const router = createBrowserRouter([
   {
     path: '/',
+    Component: Transition,
     children: [
       {
         path: '/signup',

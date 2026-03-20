@@ -5,3 +5,41 @@
   margin: 0px auto;
   background-color: white;
 }
+
+:root::view-transition-old(root) {
+  animation: slide-out-right 0.4s ease-out;
+}
+:root::view-transition-new(root) {
+  animation: slide-in-left 0.4s ease-out;
+}
+
+:root[data-direction='forward']::view-transition-old(root) {
+  animation: slide-out-left 0.4s ease-out;
+}
+:root[data-direction='forward']::view-transition-new(root) {
+  animation: slide-in-right 0.4s ease-out;
+}
+
+@keyframes slide-out-left {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slide-out-right {
+  to {
+    transform: translateX(100%);
+  }
+}
