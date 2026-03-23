@@ -17,8 +17,6 @@ import ErrorPage from '../ErrorPage/ErrorPage.tsx';
 
 const MAP_CENTER_LATITUDE_OFFSET = 0.007;
 
-
-
 export default function TravelPage() {
   const navigate = useNavigate();
   const { travelId } = useParams<{ travelId: string }>();
@@ -48,7 +46,8 @@ export default function TravelPage() {
   }, [travelId]);
 
   if (travelLoading) return <div>Loading...</div>;
-  if (travelError) return <ErrorPage status={travelStatus} message={travelError} />;
+  if (travelError)
+    return <ErrorPage status={travelStatus} message={travelError} />;
   if (!travel) return <div>여행 데이터를 찾을 수 없습니다.</div>;
 
   const allPhotos = travel.days.flatMap(day =>
@@ -107,12 +106,20 @@ export default function TravelPage() {
     navigate(`/travel/${travelId}/photos/${photoId}/travel-photo-comment`);
   };
 
-  const handleBackClick = () => navigate('/my-travel');
+  const handleBackClick = () => navigate(-1);
 
   return (
     <div className={classes.container}>
-
-      <BackgroundMap position={mapCenter ? [(mapCenter.lat as number) - MAP_CENTER_LATITUDE_OFFSET, mapCenter.lng as number] : undefined}>
+      <BackgroundMap
+        position={
+          mapCenter
+            ? [
+                (mapCenter.lat as number) - MAP_CENTER_LATITUDE_OFFSET,
+                mapCenter.lng as number,
+              ]
+            : undefined
+        }
+      >
         {allPhotos.map((photo, index) => {
           const currentPhotoId = photo.photoId ?? (photo as any).id;
           return (
