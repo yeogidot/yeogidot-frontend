@@ -41,7 +41,7 @@ export default function TravelItem({ travel }: Props) {
       </Link>
       <Link
         to={`/edit-travel`}
-        state={{ travelId: travel.travelId, forward: true }}
+        state={{ travel: { travelId: travel.travelId }, forward: true }}
         className={classes.editButton}
         viewTransition
       >
