@@ -45,7 +45,10 @@ export default function SharedDayTravelPage() {
 
   const handleBackClick = () => navigate(-1);
   const handlePhotoClick = (photoId: string | number) => {
-    navigate(`/share/${shareToken}/photos/${photoId}/comment`);
+    navigate(`/share/${shareToken}/photos/${photoId}/comment`, {
+      viewTransition: true,
+      state: { forward: true },
+    });
   };
 
   return (

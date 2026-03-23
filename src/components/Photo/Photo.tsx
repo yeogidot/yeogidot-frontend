@@ -8,7 +8,12 @@ interface Props {
 }
 export default function Photo({ photo }: Props) {
   return (
-    <Link className={classes.photoLink} to={photo.link ?? ''} state={photo}>
+    <Link
+      className={classes.photoLink}
+      to={photo.link ?? ''}
+      state={{ photo, forward: true }}
+      viewTransition
+    >
       {photo.warning && (
         <img
           src={WarningIcon}

@@ -19,9 +19,9 @@ const convertTravelToTravelInfo = (travel: FullTravel) => {
           GPSCoordinates:
             latitude && longitude
               ? {
-                longitude: longitude,
-                latitude: latitude,
-              }
+                  longitude: longitude,
+                  latitude: latitude,
+                }
               : null,
           url: url as string,
           link: 'photo',
@@ -39,7 +39,7 @@ export default function EditTravelPage() {
 
   useEffect(() => {
     if (token && !data) {
-      request(state.travelId, token);
+      request(state.travel.travelId, token);
     }
   }, [token, request, data, state]);
 

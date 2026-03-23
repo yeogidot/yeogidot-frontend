@@ -39,7 +39,10 @@ export default function SharedTravelPage() {
     : undefined;
 
   const handleDayClick = (dayNumber: number) => {
-    navigate(`./${dayNumber}`);
+    navigate(`./${dayNumber}`, {
+      viewTransition: true,
+      state: { forward: true },
+    });
   };
 
   const handleBackClick = () => navigate(-1);

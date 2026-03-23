@@ -22,7 +22,10 @@ export default function MyTravelPage() {
   useEffect(() => {
     if (!token || status === 401) {
       alert('로그인이 필요한 서비스입니다.');
-      navigate('/login');
+      navigate('/login', {
+        viewTransition: true,
+        state: { forward: true },
+      });
       return;
     }
   }, [token, status, navigate]);
@@ -33,6 +36,8 @@ export default function MyTravelPage() {
         <h1 className={classes.headerText}>내 여행 목록</h1>
         <Link
           to="/login"
+          state={{ forward: true }}
+          viewTransition
           onClick={() => localStorage.removeItem('accessToken')}
           className={classes.logoutLink}
         >
