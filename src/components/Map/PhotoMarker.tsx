@@ -7,7 +7,11 @@ interface PhotoMarkerProps {
   onClick?: () => void;
 }
 
-export default function PhotoMarker({ photoUrl, position }: PhotoMarkerProps) {
+export default function PhotoMarker({
+  photoUrl,
+  position,
+  onClick,
+}: PhotoMarkerProps) {
   const icon = L.icon({
     iconUrl: photoUrl,
     className: classes.photoMarker,
@@ -15,5 +19,11 @@ export default function PhotoMarker({ photoUrl, position }: PhotoMarkerProps) {
     iconAnchor: [25, 25], // 마커 중앙 기준
   });
 
-  return <Marker position={position} icon={icon} eventHandlers={{ click: onClick }} />;
+  return (
+    <Marker
+      position={position}
+      icon={icon}
+      eventHandlers={{ click: onClick }}
+    />
+  );
 }
