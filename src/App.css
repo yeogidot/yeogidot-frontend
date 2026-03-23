@@ -45,3 +45,31 @@
     opacity: 0;
   }
 }
+
+@media (min-width: 440px) {
+  @keyframes slide-out-left {
+    to {
+      transform: translateX(-110px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(110px);
+    }
+  }
+
+  @keyframes slide-in-left {
+    from {
+      transform: translateX(-110px);
+    }
+  }
+
+  @keyframes slide-out-right {
+    to {
+      transform: translateX(110px);
+      opacity: 0;
+    }
+  }
+}
