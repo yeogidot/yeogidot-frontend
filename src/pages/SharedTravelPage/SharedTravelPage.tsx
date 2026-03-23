@@ -6,8 +6,11 @@ import BackgroundMap from '../../components/Map/Map.tsx';
 import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
 import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
+import ErrorPage from '../ErrorPage/ErrorPage.tsx';
 
-const PHOTO_MARKER_LATITUDE_OFFSET = 0.007;
+const MAP_CENTER_LATITUDE_OFFSET = 0.007;
+
+
 
 export default function SharedTravelPage() {
   const navigate = useNavigate();
@@ -17,6 +20,7 @@ export default function SharedTravelPage() {
     data: travel,
     loading: travelLoading,
     error: travelError,
+    status: travelStatus,
     request: fetchSharedTravel,
   } = useApi(travelService.getSharedTravel);
 
@@ -27,7 +31,7 @@ export default function SharedTravelPage() {
   }, [shareToken, fetchSharedTravel]);
 
   if (travelLoading) return <div>Loading...</div>;
-  if (travelError) return <div>Error: {travelError}</div>;
+  if (travelError) return <ErrorPage status={travelStatus} message={travelError} />;
   if (!travel) return <div>여행 데이터를 찾을 수 없습니다.</div>;
 
   const allPhotos = travel.days.flatMap(day =>
@@ -45,18 +49,23 @@ export default function SharedTravelPage() {
     });
   };
 
+  const handlePhotoClick = (photoId: string | number) => {
+    navigate(`/share/${shareToken}/photos/${photoId}/comment`);
+  };
+
   const handleBackClick = () => navigate(-1);
 
   return (
     <div className={classes.container}>
-      <BackgroundMap position={mapCenter ? [mapCenter.lat as number, mapCenter.lng as number] : undefined}>
+      <BackgroundMap position={mapCenter ? [(mapCenter.lat as number) - MAP_CENTER_LATITUDE_OFFSET, mapCenter.lng as number] : undefined}>
         {allPhotos.map((photo, index) => {
           const currentPhotoId = photo.photoId ?? (photo as any).id;
           return (
             <PhotoMarker
               key={`${currentPhotoId}-${index}`}
-              position={[photo.latitude! + PHOTO_MARKER_LATITUDE_OFFSET, photo.longitude!]}
+              position={[photo.latitude!, photo.longitude!]}
               photoUrl={photo.url!}
+              onClick={() => currentPhotoId && handlePhotoClick(currentPhotoId)}
             />
           );
         })}

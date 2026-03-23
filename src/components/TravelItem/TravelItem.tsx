@@ -26,6 +26,7 @@ export default function TravelItem({ travel }: Props) {
             currentTarget.onerror = null;
             currentTarget.src = FallbackImage;
           }}
+          fetchPriority="high"
         />
       </Link>
       <Link

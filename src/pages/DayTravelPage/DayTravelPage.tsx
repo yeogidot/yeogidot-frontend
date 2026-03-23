@@ -9,8 +9,11 @@ import DeleteConfirmModal from '../../components/Modal/DeleteConfirmModal.tsx';
 import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
 import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
+import ErrorPage from '../ErrorPage/ErrorPage.tsx';
 
-const PHOTO_MARKER_LATITUDE_OFFSET = 0.007;
+const MAP_CENTER_LATITUDE_OFFSET = 0.007;
+
+
 
 export default function DayTravelPage() {
   const navigate = useNavigate();
@@ -22,6 +25,7 @@ export default function DayTravelPage() {
     data: travel,
     loading: travelLoading,
     error: travelError,
+    status: travelStatus,
     request: fetchTravel,
   } = useApi(travelService.getTravel);
 
@@ -35,7 +39,7 @@ export default function DayTravelPage() {
   }, [travelId, fetchTravel]);
 
   if (travelLoading) return <div>Loading...</div>;
-  if (travelError) return <div>Error: {travelError}</div>;
+  if (travelError) return <ErrorPage status={travelStatus} message={travelError} />;
   if (!travel) return <div>No data found.</div>;
 
   // URL 파라미터로 받은 day에 해당하는 데이터 찾기
@@ -91,22 +95,14 @@ export default function DayTravelPage() {
 
   return (
     <div className={classes.container}>
-      <BackgroundMap
-        position={
-          latestPhoto?.latitude !== undefined &&
-          latestPhoto?.longitude !== undefined
-            ? [latestPhoto.latitude as number, latestPhoto.longitude as number]
-            : undefined
-        }
-      >
+
+      <BackgroundMap position={latestPhoto?.latitude !== undefined && latestPhoto?.longitude !== undefined ? [(latestPhoto.latitude as number) - MAP_CENTER_LATITUDE_OFFSET, latestPhoto.longitude as number] : undefined}>
         {validPhotos.map((p, idx) => (
           <PhotoMarker
             key={idx}
             photoUrl={p.url!}
-            position={[
-              p.latitude! + PHOTO_MARKER_LATITUDE_OFFSET,
-              p.longitude!,
-            ]}
+            position={[p.latitude!, p.longitude!]}
+            onClick={() => p.photoId && handlePhotoClick(p.photoId)}
           />
         ))}
       </BackgroundMap>
