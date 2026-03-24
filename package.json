@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "npm run build && wrangler dev",
     "host": "vite --host 0.0.0.0 --port 3000",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "prepare": "husky"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -34,6 +35,8 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
     "prettier": "^3.6.2",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.45.0",
@@ -41,5 +44,8 @@
     "vite-plugin-svgr": "^4.5.0",
     "vite-tsconfig-paths": "^5.1.4",
     "wrangler": "^4.68.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "npx prettier --write"
   }
 }

@@ -18,7 +18,6 @@ export default function PhotoMarker({
     iconSize: [50, 50],
     iconAnchor: [25, 25], // 마커 중앙 기준
   });
-
   return (
     <Marker
       position={position}
