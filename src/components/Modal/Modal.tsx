@@ -41,7 +41,7 @@ function Root({ isOpen, onCancel, children }: Props) {
   };
   return isOpen ? (
     <div
-      className={`${classes.modalOverlay} ${isOpen ? '' : classes.hidden}`}
+      className={classes.modalOverlay}
       role="presentation"
       onClick={handleOuterClick}
     >
