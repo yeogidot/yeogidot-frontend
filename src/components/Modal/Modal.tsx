@@ -1,6 +1,8 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import Button from '@components/Buttons/Button/Button';
 import classes from './Modal.module.css';
+
+type ModalButtonVariant = 'blue' | 'red' | 'gray';
 interface Props {
   isOpen: boolean;
   onCancel: () => void;
@@ -25,11 +27,15 @@ function ButtonGroup({ children }: { children: ReactNode }) {
 
 function ModalButton({
   children,
+  variant = 'blue',
   className,
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement>) {
+}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ModalButtonVariant }) {
   return (
-    <Button {...props} className={`${classes.modalButton} ${className ?? ''}`}>
+    <Button
+      {...props}
+      className={`${classes.modalButton} ${classes[variant]} ${className ?? ''}`}
+    >
       {children}
     </Button>
   );
