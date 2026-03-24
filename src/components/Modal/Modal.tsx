@@ -54,9 +54,7 @@ function Root({ isOpen, onCancel, children }: Props) {
         {children}
       </div>
     </div>
-  ) : (
-    ''
-  );
+  ) : null;
 }
 Modal.Root = Root;
 Modal.ButtonGroup = ButtonGroup;
