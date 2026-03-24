@@ -24,11 +24,6 @@
     margin: 0 auto;
   }
 }
-.datetimePicker {
-  background-color: transparent;
-  border-style: none;
-  font-size: 14px;
-}
 
 .modal {
   width: 70%;
