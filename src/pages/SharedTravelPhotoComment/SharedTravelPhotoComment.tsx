@@ -8,7 +8,10 @@ import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
 
 export default function SharedTravelPhotoComment() {
-  const {shareToken, photoId } = useParams<{shareToken: string; photoId: string }>();
+  const { shareToken, photoId } = useParams<{
+    shareToken: string;
+    photoId: string;
+  }>();
   const [isFullPhoto, setIsFullPhoto] = useState(false);
   const navigate = useNavigate();
 
@@ -41,16 +44,17 @@ export default function SharedTravelPhotoComment() {
     return dateString.split('T')[0];
   };
 
-  const latestComment = photo.comments && photo.comments.length > 0
-    ? [...photo.comments].sort((a, b) => b.commentId - a.commentId)[0]
-    : null;
+  const latestComment =
+    photo.comments && photo.comments.length > 0
+      ? [...photo.comments].sort((a, b) => b.commentId - a.commentId)[0]
+      : null;
 
   const datedPhotoData: DatedPhotoData = {
     id: photo.photoId ?? Number(photoId),
     url: photo.url || '',
     date: photo.createdDate || new Date().toISOString(),
     file: new File([], photo.originalName ?? 'photo'),
-    isThumbnail: false
+    isThumbnail: false,
   };
 
   if (isFullPhoto) {
@@ -88,14 +92,21 @@ export default function SharedTravelPhotoComment() {
         <div className={classes.photoInformation}>
           <a>{formatDate(photo.takenAt)}</a>
           <br />
-          {/* @ts-expect-error: region is not in FullPhoto type but present in API response */}
-          {photo.region ? photo.region : (photo.latitude && photo.longitude ? `${photo.latitude}, ${photo.longitude}` : '')}
+          {photo.region
+            ? photo.region
+            : photo.latitude && photo.longitude
+              ? `${photo.latitude}, ${photo.longitude}`
+              : ''}
         </div>
-        
+
         <div className={classes.textAreaContainer}>
-           <div className={`${classes.commentBox} ${!latestComment ? classes.noComment : ''}`}>
-             {latestComment ? latestComment.content : '작성된 코멘트가 없습니다.'}
-           </div>
+          <div
+            className={`${classes.commentBox} ${!latestComment ? classes.noComment : ''}`}
+          >
+            {latestComment
+              ? latestComment.content
+              : '작성된 코멘트가 없습니다.'}
+          </div>
         </div>
       </div>
     </div>

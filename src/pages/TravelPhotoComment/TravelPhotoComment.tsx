@@ -235,7 +235,6 @@ export default function TravelPhotoComment() {
         <div className={classes.photoInformation}>
           <a>{formatDate(photo.takenAt)}</a>
           <br />
-          {/* @ts-expect-error: region is not in FullPhoto type but present in API response */}
           {photo.region
             ? photo.region
             : photo.latitude && photo.longitude
