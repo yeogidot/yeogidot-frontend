@@ -29,7 +29,7 @@ export const photoService = {
     return http.get<FullPhoto>(`/api/photos/${id}`, token);
   },
   getPhotosForMap: (token: string) => {
-    return http.get<Partial<PhotoMarkerData>[]>(
+    return http.get<PhotoMarkerData[]>(
       `/api/photos/map-markers`,
       token
     );

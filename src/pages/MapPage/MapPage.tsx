@@ -13,7 +13,7 @@ const DEFAULT_CENTER: [number, number] = [37.5665, 126.978];
 
 export default function MapPage() {
   const navigate = useNavigate();
-  const [photos, setPhotos] = useState<Partial<PhotoMarkerData>[]>([]);
+  const [photos, setPhotos] = useState<PhotoMarkerData[]>([]);
   const [mapCenter, setMapCenter] = useState<[number, number]>(DEFAULT_CENTER);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function MapPage() {
         const detailRes = await import('../../apis/services/travel').then(m => m.travelService.getTravel(travel.travelId, token));
         if (detailRes.data) {
           const allPhotos = detailRes.data.days.flatMap(day => day.photos);
-          if (allPhotos.find(p => p.photoId === photoId || (p as unknown as { id?: number | string }).id === photoId)) {
+          if (allPhotos.find(p => p.photoId === photoId)) {
             navigate(`/travel/${travel.travelId}/photos/${photoId}/travel-photo-comment`);
             return;
           }
@@ -86,11 +86,12 @@ export default function MapPage() {
 
             <BackgroundMap className={classes.map} position={mapCenter}>
                 {photos.map(photo =>
-                    photo.latitude && photo.longitude && photo.url ? (
+                    photo.latitude && photo.longitude ? (
                         <PhotoMarker
                             key={photo.photoId}
                             position={[photo.latitude, photo.longitude]}
-                            photoUrl={photo.url}
+                            photoUrl={photo.thumbnailUrl}
+                            onClick={() => photo.photoId && handleMarkerClick(photo.photoId)}
                         />
                     ) : null
                 )}
