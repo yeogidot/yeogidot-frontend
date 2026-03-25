@@ -14,7 +14,10 @@ export default function SelectThumbnailPage() {
   const handleClickButton = () => {
     if (!token) {
       alert('로그인이 필요한 서비스입니다.');
-      navigate('/login');
+      navigate('/login', {
+        viewTransition: true,
+        state: { forward: true },
+      });
       return;
     }
     request(travel, token);
@@ -29,7 +32,10 @@ export default function SelectThumbnailPage() {
     }
     if (data) {
       alert(`성공적으로 여행을 추가했습니다.${'\n'}여행페이지로 이동합니다.`);
-      navigate(`/travel/${data}`);
+      navigate(`/travel/${data}`, {
+        viewTransition: true,
+        state: { forward: true },
+      });
     }
   }, [error, loading, data]);
   const thumbnailCheckedPhotos = travel.photos.map(photo => {

@@ -7,7 +7,7 @@ import Button from '@components/Buttons/Button/Button';
 import { useTravel } from '@hooks/travel';
 export default function SelectThumbnailPhotoPage() {
   const { setTravel } = useTravel();
-  const photo: DatedPhotoData = useLocation().state;
+  const photo: DatedPhotoData = useLocation().state.photo;
   const navigate = useNavigate();
   const handleClickSetThumbnailButton = () => {
     setTravel(travel => {

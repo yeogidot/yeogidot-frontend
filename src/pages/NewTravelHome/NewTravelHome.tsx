@@ -69,7 +69,10 @@ export default function NewTravelHome() {
         earliestPhoto ? earliestPhoto.id : travel.photos[0].id
       );
     }
-    navigate('select-thumbnail');
+    navigate('select-thumbnail', {
+      viewTransition: true,
+      state: { forward: true },
+    });
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

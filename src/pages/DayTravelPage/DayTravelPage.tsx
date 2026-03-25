@@ -29,9 +29,7 @@ export default function DayTravelPage() {
     request: fetchTravel,
   } = useApi(travelService.getTravel);
 
-  const {
-    request: deleteTravelDay,
-  } = useApi(travelService.deleteTravelDay);
+  const { request: deleteTravelDay } = useApi(travelService.deleteTravelDay);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -53,15 +51,17 @@ export default function DayTravelPage() {
   // Safe check for photos
   const safePhotos = dayTravel.photos || [];
   // Use .latitude and .longitude if they exist and are numbers (including 0)
-  const validPhotos = safePhotos.filter(p => 
-    p.url && 
-    typeof p.latitude === 'number' && 
-    typeof p.longitude === 'number'
+  const validPhotos = safePhotos.filter(
+    p =>
+      p.url && typeof p.latitude === 'number' && typeof p.longitude === 'number'
   );
   const latestPhoto = validPhotos.length > 0 ? validPhotos[0] : null;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const dailyComment = dayTravel.diary?.content || (dayTravel as any).diaryContent || (typeof dayTravel.diary === 'string' ? dayTravel.diary : undefined); // 일일 코멘트
+  const dailyComment =
+    dayTravel.diary?.content ||
+    (dayTravel as any).diaryContent ||
+    (typeof dayTravel.diary === 'string' ? dayTravel.diary : undefined); // 일일 코멘트
   const noComment = String('아직 여행일기가 없습니다.');
 
   const handleDeleteClick = () => setShowDeleteModal(true);
@@ -77,11 +77,20 @@ export default function DayTravelPage() {
   };
 
   const handleEditClick = () => {
-    navigate(`/travel/${travelId}/${day}/${dayTravel.diary ? "travel-diary-edit-page" : "travel-diary-page"}`);
+    navigate(
+      `/travel/${travelId}/${day}/${dayTravel.diary ? 'travel-diary-edit-page' : 'travel-diary-page'}`,
+      {
+        viewTransition: true,
+        state: { forward: true },
+      }
+    );
   };
   const handleBackClick = () => navigate(-1);
   const handlePhotoClick = (photoId: string | number) => {
-    navigate(`/travel/${travelId}/photos/${photoId}/travel-photo-comment`);
+    navigate(`/travel/${travelId}/photos/${photoId}/travel-photo-comment`, {
+      viewTransition: true,
+      state: { forward: true },
+    });
   };
 
   return (
@@ -102,14 +111,27 @@ export default function DayTravelPage() {
         <BackButton onClick={handleBackClick} />
       </div>
       <div className={classes.panel}>
-
         <div className={classes.headerRow}>
           <div className={classes.header}>
-            <h1>{travel.title.length > 10 ? travel.title.slice(0, 10) + '...' : travel.title}</h1>
+            <h1>
+              {travel.title.length > 10
+                ? travel.title.slice(0, 10) + '...'
+                : travel.title}
+            </h1>
             <h2>{day}일차</h2>
           </div>
           <div className={classes.buttonGroup}>
-            <EditButton onClick={() => navigate('/edit-travel', { state: { travelId: Number(travelId) } })} />
+            <EditButton
+              onClick={() =>
+                navigate('/edit-travel', {
+                  viewTransition: true,
+                  state: {
+                    travel: { travelId: Number(travelId) },
+                    forward: true,
+                  },
+                })
+              }
+            />
             <DeleteButton onClick={handleDeleteClick} />
           </div>
         </div>
@@ -120,14 +142,17 @@ export default function DayTravelPage() {
           <h3>{day}일차 여행일기</h3>
 
           <div className={classes.dayTravelRow}>
-            <div className={`${classes.dailyCommentBox} ${dailyComment ? classes.hasComment : classes.noComment}`} onClick={handleEditClick} >
+            <div
+              className={`${classes.dailyCommentBox} ${dailyComment ? classes.hasComment : classes.noComment}`}
+              onClick={handleEditClick}
+            >
               {dailyComment ? dailyComment : noComment}
             </div>
 
             <div className={classes.dayTravelLocation}>
               <h3>{dayTravel.dayRegion}</h3>
             </div>
-            
+
             <div className={classes.dayTravelPhoto}>
               {safePhotos.map((photo, index) => {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -137,8 +162,11 @@ export default function DayTravelPage() {
                     key={`${currentPhotoId}-${index}`}
                     src={photo.url}
                     alt={`여행 사진 ${index + 1}`}
-                    onClick={() => currentPhotoId && handlePhotoClick(currentPhotoId)}
-                    className={classes.clickablePhoto} />
+                    onClick={() =>
+                      currentPhotoId && handlePhotoClick(currentPhotoId)
+                    }
+                    className={classes.clickablePhoto}
+                  />
                 );
               })}
             </div>

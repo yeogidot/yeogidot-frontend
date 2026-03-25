@@ -30,7 +30,7 @@ export default function FullPhotoPage() {
   };
   const [datetimeModalState, setDatetimeModalState] = useState(false);
   const [deleteModalState, setDeleteModalState] = useState(false);
-  const photoId = useLocation().state.id;
+  const photoId = useLocation().state.photo.id;
   const photo = travel.photos.find(({ id }) => id === photoId);
   const navigate = useNavigate();
   return photo ? (

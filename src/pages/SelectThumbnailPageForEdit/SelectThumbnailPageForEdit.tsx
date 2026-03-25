@@ -18,10 +18,13 @@ export default function SelectThumbnailPageForEdit() {
   const handleClickButton = () => {
     if (!token) {
       alert('로그인이 필요한 서비스입니다.');
-      navigate('/login');
+      navigate('/login', {
+        viewTransition: true,
+        state: { forward: true },
+      });
       return;
     }
-    request(state.travelId, travel, token);
+    request(state.travel.travelId, travel, token);
   };
   useEffect(() => {
     if (loading) {
@@ -33,9 +36,12 @@ export default function SelectThumbnailPageForEdit() {
     }
     if (data) {
       alert(`성공적으로 여행을 수정했습니다.${'\n'}여행페이지로 이동합니다.`);
-      navigate(`/travel/${state.travelId}`);
+      navigate(`/travel/${state.travel.travelId}`, {
+        viewTransition: true,
+        state: { forward: true },
+      });
     }
-  }, [loading, error, data, navigate, state.travelId]);
+  }, [loading, error, data, navigate, state.travel.travelId]);
   const thumbnailCheckedPhotos = travel.photos.map(photo => {
     return {
       ...photo,
