@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useAppScheme } from 'src/hooks/useAppScheme';
+import AppLaunchBanner from '../../components/AppLaunchBanner/AppLaunchBanner';
 import classes from './SharedTravelPage.module.css';
-import BackButton from '../../components/Buttons/BackButton/GrayBackButton/GrayBackButton.tsx';
 import BackgroundMap from '../../components/Map/Map.tsx';
 import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
 import { travelService } from 'src/apis/services/travel';
@@ -15,6 +16,7 @@ const MAP_CENTER_LATITUDE_OFFSET = 0.007;
 export default function SharedTravelPage() {
   const navigate = useNavigate();
   const {shareToken } = useParams<{ shareToken: string }>();
+  const { isMobile, launchAppScheme } = useAppScheme(shareToken);
 
   const {
     data: travel,
@@ -50,8 +52,6 @@ export default function SharedTravelPage() {
     navigate(`/share/${shareToken}/photos/${photoId}/comment`);
   };
 
-  const handleBackClick = () => navigate(-1);
-
   return (
     <div className={classes.container}>
       <BackgroundMap position={mapCenter ? [(mapCenter.lat as number) - MAP_CENTER_LATITUDE_OFFSET, mapCenter.lng as number] : undefined}>
@@ -68,9 +68,6 @@ export default function SharedTravelPage() {
         })}
       </BackgroundMap>
 
-      <div className={classes.backButton}>
-        <BackButton onClick={handleBackClick} />
-      </div>
 
       <div className={classes.panel}>
         <div className={classes.headerRow}>
@@ -107,6 +104,7 @@ export default function SharedTravelPage() {
           </div>
         ))}
       </div>
+      {isMobile && <AppLaunchBanner onAppLaunch={launchAppScheme} />}
     </div>
   );
 }
