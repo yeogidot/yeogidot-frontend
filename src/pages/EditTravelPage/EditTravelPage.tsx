@@ -4,6 +4,7 @@ import type { NewTravelInfo, FullTravel } from 'src/types/travel.type';
 import { travelService } from 'src/apis/services/travel';
 
 import { useApi } from '@hooks/api';
+import useModal from '@hooks/useModal';
 const convertTravelToTravelInfo = (travel: FullTravel) => {
   return {
     title: travel.title,
@@ -19,9 +20,9 @@ const convertTravelToTravelInfo = (travel: FullTravel) => {
           GPSCoordinates:
             latitude && longitude
               ? {
-                longitude: longitude,
-                latitude: latitude,
-              }
+                  longitude: longitude,
+                  latitude: latitude,
+                }
               : null,
           url: url as string,
           link: 'photo',
@@ -36,7 +37,7 @@ export default function EditTravelPage() {
   const token = localStorage.getItem('accessToken');
   const [travel, setTravel] = useState<NewTravelInfo>();
   const { data, error, request, loading } = useApi(travelService.getTravel);
-
+  const { openModal, modalElement } = useModal();
   useEffect(() => {
     if (token && !data) {
       request(state.travelId, token);
@@ -45,12 +46,20 @@ export default function EditTravelPage() {
 
   useEffect(() => {
     if (error) {
-      alert(error);
+      openModal({
+        title: '오류',
+        message: error,
+      });
       return;
     }
     if (data && !travel) {
       setTravel(convertTravelToTravelInfo(data));
     }
-  }, [data, error, travel, convertTravelToTravelInfo]);
-  return <Outlet context={{ travel, setTravel, loading, error }} />;
+  }, [data, error, travel, openModal]);
+  return (
+    <>
+      <Outlet context={{ travel, setTravel, loading, error }} />
+      {modalElement}
+    </>
+  );
 }

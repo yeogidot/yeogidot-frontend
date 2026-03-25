@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import classes from './TravelPhotoComment.module.css'
-import BackButton from 'src/components/Buttons/BackButton/GrayBackButton/GrayBackButton'
-import DeleteButton from 'src/components/Buttons/DeleteButton/DeleteButton'
+import classes from './TravelPhotoComment.module.css';
+import BackButton from 'src/components/Buttons/BackButton/GrayBackButton/GrayBackButton';
+import DeleteButton from 'src/components/Buttons/DeleteButton/DeleteButton';
 import DeleteConfirmModal from '../../components/Modal/DeleteConfirmModal.tsx';
 import Button from '@components/Buttons/Button/Button';
 import FullPhotoLayout from '@components/FullPhotoLayout/FullPhotoLayout';
@@ -11,16 +11,21 @@ import { photoService } from 'src/apis/services/photo';
 import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
 import ErrorPage from '../ErrorPage/ErrorPage.tsx';
+import useModal from '@hooks/useModal';
 
 export default function TravelPhotoComment() {
-  const { travelId, photoId } = useParams<{ travelId: string; photoId: string }>();
+  const { travelId, photoId } = useParams<{
+    travelId: string;
+    photoId: string;
+  }>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isFullPhoto, setIsFullPhoto] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [currentCommentId, setCurrentCommentId] = useState<number | null>(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { openModal, modalElement } = useModal();
 
   const {
     data: travel,
@@ -33,18 +38,16 @@ export default function TravelPhotoComment() {
   const {
     status: writeStatus,
     request: writeComment,
-    reset: resetWrite
+    reset: resetWrite,
   } = useApi(photoService.writePhotoComment);
 
   const {
     status: updateStatus,
     request: updateComment,
-    reset: resetUpdate
+    reset: resetUpdate,
   } = useApi(photoService.updatePhotoComment);
 
-  const {
-    request: deletePhoto
-  } = useApi(photoService.deletePhoto);
+  const { request: deletePhoto } = useApi(photoService.deletePhoto);
 
   useEffect(() => {
     if (writeStatus === 201) {
@@ -52,13 +55,19 @@ export default function TravelPhotoComment() {
       if (travelId && token) {
         fetchTravel(Number(travelId), token);
       }
-      alert('코멘트가 성공적으로 저장되었습니다.');
+      openModal({
+        title: '코멘트 저장 성공',
+        message: '코멘트가 성공적으로 저장되었습니다.',
+      });
       resetWrite();
     } else if (writeStatus !== null) {
-      alert('코멘트 저장 중 오류가 발생했습니다.');
+      openModal({
+        title: '코멘트 저장 실패',
+        message: '코멘트 저장 중 오류가 발생했습니다.',
+      });
       resetWrite();
     }
-  }, [writeStatus, travelId, fetchTravel, resetWrite]);
+  }, [writeStatus, travelId, fetchTravel, openModal, resetWrite]);
 
   useEffect(() => {
     if (updateStatus === 200) {
@@ -66,13 +75,19 @@ export default function TravelPhotoComment() {
       if (travelId && token) {
         fetchTravel(Number(travelId), token);
       }
-      alert('코멘트가 성공적으로 저장되었습니다.');
+      openModal({
+        title: '코멘트 수정 성공',
+        message: '코멘트가 성공적으로 저장되었습니다.',
+      });
       resetUpdate();
     } else if (updateStatus !== null) {
-      alert('코멘트 수정 중 오류가 발생했습니다.');
+      openModal({
+        title: '코멘트 수정 실패',
+        message: '코멘트 수정 중 오류가 발생했습니다.',
+      });
       resetUpdate();
     }
-  }, [updateStatus, travelId, fetchTravel, resetUpdate]);
+  }, [updateStatus, travelId, fetchTravel, openModal, resetUpdate]);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -91,7 +106,9 @@ export default function TravelPhotoComment() {
   useEffect(() => {
     if (photo?.comments && photo.comments.length > 0) {
       // Find comment with highest commentId
-      const latestComment = [...photo.comments].sort((a, b) => b.commentId - a.commentId)[0];
+      const latestComment = [...photo.comments].sort(
+        (a, b) => b.commentId - a.commentId
+      )[0];
       setCommentText(latestComment.content);
       setIsEditing(true);
       setCurrentCommentId(latestComment.commentId);
@@ -135,7 +152,10 @@ export default function TravelPhotoComment() {
       }
     } catch (error) {
       console.error('코멘트 저장 실패:', error);
-      alert('코멘트 저장 중 오류가 발생했습니다.');
+      openModal({
+        title: '코멘트 저장 실패',
+        message: '코멘트 저장 중 오류가 발생했습니다.',
+      });
     }
   };
 
@@ -151,7 +171,9 @@ export default function TravelPhotoComment() {
   };
 
   useEffect(() => {
-    const textarea = document.querySelector(`.${classes.textAreaWrapper}`) as HTMLTextAreaElement;
+    const textarea = document.querySelector(
+      `.${classes.textAreaWrapper}`
+    ) as HTMLTextAreaElement;
     if (textarea) {
       textarea.style.height = 'auto';
       textarea.style.height = `${textarea.scrollHeight}px`;
@@ -159,24 +181,29 @@ export default function TravelPhotoComment() {
   }, [commentText]);
 
   if (travelLoading) return <div>Loading...</div>;
-  if (travelError) return <ErrorPage status={travelStatus} message={travelError} />;
-  if (!travel || !photo) return <ErrorPage status={404} message="No data found." />;
+  if (travelError)
+    return <ErrorPage status={travelStatus} message={travelError} />;
+  if (!travel || !photo)
+    return <ErrorPage status={404} message="No data found." />;
 
   const datedPhotoData: DatedPhotoData = {
     id: photo.photoId ?? Number(photoId),
     url: photo.url || '',
     date: photo.createdDate || new Date().toISOString(),
     file: new File([], photo.originalName ?? 'photo'),
-    isThumbnail: false
+    isThumbnail: false,
   };
 
   if (isFullPhoto) {
     return (
-      <FullPhotoLayout photo={datedPhotoData}>
-        <div className={classes.backButtonWrapper} style={{ zIndex: 10 }}>
-          <BackButton onClick={() => setIsFullPhoto(false)} />
-        </div>
-      </FullPhotoLayout>
+      <>
+        <FullPhotoLayout photo={datedPhotoData}>
+          <div className={classes.backButtonWrapper} style={{ zIndex: 10 }}>
+            <BackButton onClick={() => setIsFullPhoto(false)} />
+          </div>
+        </FullPhotoLayout>
+        {modalElement}
+      </>
     );
   }
 
@@ -209,11 +236,15 @@ export default function TravelPhotoComment() {
           <a>{formatDate(photo.takenAt)}</a>
           <br />
           {/* @ts-expect-error: region is not in FullPhoto type but present in API response */}
-          {photo.region ? photo.region : (photo.latitude && photo.longitude ? `${photo.latitude}, ${photo.longitude}` : '')}
+          {photo.region
+            ? photo.region
+            : photo.latitude && photo.longitude
+              ? `${photo.latitude}, ${photo.longitude}`
+              : ''}
         </div>
-        
+
         <div className={classes.textAreaContainer}>
-           <textarea
+          <textarea
             className={classes.textAreaWrapper}
             value={commentText}
             onChange={handleInputChange}
@@ -222,7 +253,9 @@ export default function TravelPhotoComment() {
         </div>
 
         <div className={classes.finishButton}>
-          <Button onClick={handleFinishClick}>{isEditing ? '수정' : '작성'}</Button>
+          <Button onClick={handleFinishClick}>
+            {isEditing ? '수정' : '작성'}
+          </Button>
         </div>
       </div>
 
@@ -233,6 +266,7 @@ export default function TravelPhotoComment() {
           onConfirm={handleConfirmDelete}
         />
       )}
+      {modalElement}
     </div>
   );
 }
