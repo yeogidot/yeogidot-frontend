@@ -2,8 +2,11 @@
   position: relative;
   width: 100%;
   height: 952px;
-  overflow: scroll;
   font-family: sans-serif;
+}
+
+.container :global(.leaflet-top .leaflet-control-zoom) {
+  margin-top: 59px;
 }
 
 .panel {

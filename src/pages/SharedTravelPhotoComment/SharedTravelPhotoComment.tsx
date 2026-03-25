@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAppScheme } from 'src/hooks/useAppScheme';
+import AppLaunchBanner from 'src/components/AppLaunchBanner/AppLaunchBanner';
 import classes from './SharedTravelPhotoComment.module.css';
 import BackButton from 'src/components/Buttons/BackButton/GrayBackButton/GrayBackButton';
 import FullPhotoLayout from '@components/FullPhotoLayout/FullPhotoLayout';
@@ -9,6 +11,8 @@ import { useApi } from 'src/hooks/api';
 
 export default function SharedTravelPhotoComment() {
   const {shareToken, photoId } = useParams<{shareToken: string; photoId: string }>();
+  const { isMobile, launchAppScheme } = useAppScheme(shareToken, `photos/${photoId}/comment`);
+  
   const [isFullPhoto, setIsFullPhoto] = useState(false);
   const navigate = useNavigate();
 
@@ -98,6 +102,7 @@ export default function SharedTravelPhotoComment() {
            </div>
         </div>
       </div>
+      {isMobile && <AppLaunchBanner onAppLaunch={launchAppScheme} />}
     </div>
   );
 }

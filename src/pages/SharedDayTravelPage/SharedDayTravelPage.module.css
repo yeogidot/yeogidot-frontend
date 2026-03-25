@@ -6,6 +6,10 @@
   font-family: sans-serif;
 }
 
+.container :global(.leaflet-top .leaflet-control-zoom) {
+  margin-top: 59px;
+}
+
 .panel {
   position: absolute;
   top: 400px;
