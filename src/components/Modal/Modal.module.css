@@ -1,0 +1,63 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  animation: 0.5s cubic-bezier(0.075, 0.82, 0.165, 1) 0s alternate fade-in;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 440px) {
+  .modalOverlay {
+    width: 440px;
+    margin: 0 auto;
+  }
+}
+
+.modal {
+  width: 70%;
+  min-height: 15%;
+  border-radius: 5px;
+  background: #ffffff;
+  padding: 24px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  gap: 16px;
+}
+
+.modalButtonGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modalButton {
+  min-width: 59px;
+  height: 32px;
+  border-radius: 5px;
+  border: none;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0;
+  color: #fff;
+  cursor: pointer;
+}
+
+.modalTitle {
+  font-size: 20px;
+  margin: 0;
+}

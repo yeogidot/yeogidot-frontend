@@ -48,7 +48,10 @@ export default function MapPage() {
   }, []);
 
   const handleBackClick = () => {
-    navigate('/my-travel');
+    navigate('/my-travel', {
+      viewTransition: true,
+      state: { forward: true },
+    });
   };
 
   const handleMarkerClick = async (photoId: number) => {

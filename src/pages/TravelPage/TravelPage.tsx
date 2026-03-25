@@ -13,12 +13,9 @@ import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
 import ErrorPage from '../ErrorPage/ErrorPage.tsx';
 
-
 // import type { FullTravel } from 'src/types/travel.type'; // inferred from service
 
 const MAP_CENTER_LATITUDE_OFFSET = 0.007;
-
-
 
 export default function TravelPage() {
   const navigate = useNavigate();
@@ -35,14 +32,11 @@ export default function TravelPage() {
     request: fetchTravel,
   } = useApi(travelService.getTravel);
 
-  const {
-    request: deleteTravel,
-  } = useApi(travelService.deleteTravel);
+  const { request: deleteTravel } = useApi(travelService.deleteTravel);
 
-  const {
-    data: sharedUrlData,
-    request: fetchSharedUrl,
-  } = useApi(travelService.getSharedUrl);
+  const { data: sharedUrlData, request: fetchSharedUrl } = useApi(
+    travelService.getSharedUrl
+  );
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -52,16 +46,29 @@ export default function TravelPage() {
   }, [travelId]);
 
   if (travelLoading) return <div>Loading...</div>;
-  if (travelError) return <ErrorPage status={travelStatus} message={travelError} />;
+  if (travelError)
+    return <ErrorPage status={travelStatus} message={travelError} />;
   if (!travel) return <div>여행 데이터를 찾을 수 없습니다.</div>;
 
   const allPhotos = travel.days.flatMap(day =>
-    (day.photos || []).filter(p => p.url && p.latitude !== null && p.longitude !== null && p.latitude !== undefined && p.longitude !== undefined)
+    (day.photos || []).filter(
+      p =>
+        p.url &&
+        p.latitude !== null &&
+        p.longitude !== null &&
+        p.latitude !== undefined &&
+        p.longitude !== undefined
+    )
   );
 
-  const mapCenter = allPhotos.length > 0 && allPhotos[0].latitude !== null && allPhotos[0].longitude !== null && allPhotos[0].latitude !== undefined && allPhotos[0].longitude !== undefined
-    ? { lat: allPhotos[0].latitude, lng: allPhotos[0].longitude }
-    : undefined;
+  const mapCenter =
+    allPhotos.length > 0 &&
+    allPhotos[0].latitude !== null &&
+    allPhotos[0].longitude !== null &&
+    allPhotos[0].latitude !== undefined &&
+    allPhotos[0].longitude !== undefined
+      ? { lat: allPhotos[0].latitude, lng: allPhotos[0].longitude }
+      : undefined;
 
   const handleDeleteClick = () => setShowDeleteModal(true);
   const handleCloseModal = () => setShowDeleteModal(false);
@@ -70,7 +77,10 @@ export default function TravelPage() {
     const token = localStorage.getItem('accessToken');
     if (travelId && token) {
       await deleteTravel(Number(travelId), token);
-      navigate('/my-travel'); // Go back to list after delete
+      navigate('/my-travel', {
+        viewTransition: true,
+        state: { forward: true },
+      }); // Go back to list after delete
     }
     setShowDeleteModal(false);
   };
@@ -86,19 +96,30 @@ export default function TravelPage() {
   const handleCloseShareModal = () => setShowShareModal(false);
 
   const handleDayClick = (dayNumber: number) => {
-    navigate(`./${dayNumber}`);
+    navigate(`./${dayNumber}`, {
+      viewTransition: true,
+      state: { forward: true },
+    });
   };
 
   const handlePhotoClick = (photoId: string | number) => {
     navigate(`/travel/${travelId}/photos/${photoId}/travel-photo-comment`);
   };
 
-  const handleBackClick = () => navigate('/my-travel');
+  const handleBackClick = () => navigate(-1);
 
   return (
     <div className={classes.container}>
-
-      <BackgroundMap position={mapCenter ? [(mapCenter.lat as number) - MAP_CENTER_LATITUDE_OFFSET, mapCenter.lng as number] : undefined}>
+      <BackgroundMap
+        position={
+          mapCenter
+            ? [
+                (mapCenter.lat as number) - MAP_CENTER_LATITUDE_OFFSET,
+                mapCenter.lng as number,
+              ]
+            : undefined
+        }
+      >
         {allPhotos.map((photo, index) => {
           const currentPhotoId = photo.photoId ?? (photo as any).id;
           return (
@@ -116,25 +137,38 @@ export default function TravelPage() {
         <BackButton onClick={handleBackClick} />
       </div>
       <div className={classes.panel}>
-
         <div className={classes.headerRow}>
           <div className={classes.header}>
-            {travel.title.length > 10 ? travel.title.slice(0, 10) + '...' : travel.title}
+            {travel.title.length > 10
+              ? travel.title.slice(0, 10) + '...'
+              : travel.title}
           </div>
 
           <div className={classes.buttonGroup}>
-            <EditButton onClick={() => navigate('/edit-travel', { state: { travelId: Number(travelId) } })} />
+            <EditButton
+              onClick={() =>
+                navigate('/edit-travel', {
+                  viewTransition: true,
+                  state: {
+                    travel: { travelId: Number(travelId) },
+                    forward: true,
+                  },
+                })
+              }
+            />
             <ShareButton onClick={handleShareClick} />
             <DeleteButton onClick={handleDeleteClick} />
           </div>
         </div>
 
         <div className={classes.travelInformation}>
-          <div>{travel.startDate} ~ {travel.endDate}</div>
+          <div>
+            {travel.startDate} ~ {travel.endDate}
+          </div>
           {/* City isn't explicitly in FullTravel root, might need to derive from days or it's missing in type */}
         </div>
 
-        {travel.days.map((day) => (
+        {travel.days.map(day => (
           <div
             key={day.dayId}
             className={classes.dayTravelRow}
@@ -167,7 +201,10 @@ export default function TravelPage() {
         />
       )}
       {showShareModal && sharedUrlData && (
-        <ShareModal shareUrl={sharedUrlData.data.shareUrl} onCancel={handleCloseShareModal} />
+        <ShareModal
+          shareUrl={sharedUrlData.data.shareUrl}
+          onCancel={handleCloseShareModal}
+        />
       )}
     </div>
   );
