@@ -6,16 +6,18 @@ import BackButton from '../../components/Buttons/BackButton/BlackBackButton/Blac
 import Button from '../../components/Buttons/Button/Button';
 import { authService } from '../../apis/services/auth';
 import type { LoginInput } from '../../types/auth.type'; // 타입 경로 확인 필요
+import useModal from '@hooks/useModal';
 
 export default function LogInPage() {
   const navigate = useNavigate();
+  const { openModal, modalElement } = useModal();
 
   // 1. React Hook Form 설정
   const {
     register,
     handleSubmit,
     setError,
-    formState: { errors }
+    formState: { errors },
   } = useForm<LoginInput>();
 
   // 2. 로그인 제출 핸들러
@@ -32,7 +34,6 @@ export default function LogInPage() {
         localStorage.setItem('accessToken', token.access_token);
 
         // 메인 페이지로 이동
-        alert('로그인에 성공했습니다.');
         navigate('/');
       }
     } catch (error: any) {
@@ -44,19 +45,24 @@ export default function LogInPage() {
       if (status === 400) {
         setError('password', { message: '이메일과 비밀번호를 입력해주세요.' });
       } else if (status === 403) {
-        setError('password', { message: '이메일 또는 비밀번호가 일치하지 않습니다.' });
+        setError('password', {
+          message: '이메일 또는 비밀번호가 일치하지 않습니다.',
+        });
       } else if (status === 404) {
         setError('email', { message: '가입되지 않은 이메일입니다.' });
       } else {
         const errorMessage = error.message || '로그인에 실패했습니다.';
-        alert(errorMessage);
+        openModal({
+          title: '오류',
+          message: errorMessage,
+        });
       }
     }
   };
 
   return (
     <div className={classes.container}>
-      <Link to='/..'>
+      <Link to="/..">
         <div className={classes.backButton}>
           <BackButton />
         </div>
@@ -85,15 +91,22 @@ export default function LogInPage() {
             className={classes.passwordInput}
           />
           {errors.password && (
-            <span className={classes.errorMessage}>{errors.password.message}</span>
+            <span className={classes.errorMessage}>
+              {errors.password.message}
+            </span>
           )}
         </div>
 
-        <Link to="/signup" className={classes.signUp}>회원가입</Link>
+        <Link to="/signup" className={classes.signUp}>
+          회원가입
+        </Link>
 
         {/* 버튼 타입 submit으로 지정 */}
-        <Button type="submit" className={classes.logInButton}>로그인</Button>
+        <Button type="submit" className={classes.logInButton}>
+          로그인
+        </Button>
       </form>
+      {modalElement}
     </div>
   );
 }
