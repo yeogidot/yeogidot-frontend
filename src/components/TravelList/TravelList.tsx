@@ -24,7 +24,12 @@ export default function TravelList({ travels }: Props) {
               아직 추가된 여행이 없습니다.
             </span>
             <br />
-            <Link className={classes.newTravelLink} to="/new-travel">
+            <Link
+              className={classes.newTravelLink}
+              to="/new-travel"
+              state={{ forward: true }}
+              viewTransition
+            >
               새 여행 추가하기
             </Link>
           </div>
