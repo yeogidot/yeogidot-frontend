@@ -7,7 +7,7 @@ interface PhotoMarkerProps {
   onClick?: () => void;
 }
 
-export default function PhotoMarker({ photoUrl, position }: PhotoMarkerProps) {
+export default function PhotoMarker({ photoUrl, position, onClick }: PhotoMarkerProps) {
   const icon = L.icon({
     iconUrl: photoUrl,
     className: classes.photoMarker,
