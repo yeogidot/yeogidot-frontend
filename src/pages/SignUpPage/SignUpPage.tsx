@@ -21,10 +21,10 @@ export default function SignUpPage() {
     register,
     handleSubmit,
     setError,
-    formState: { errors }
+    formState: { errors },
   } = useForm<SignUpForm>({
     resolver: zodResolver(SignUpSchema),
-    mode: 'onChange' // 입력할 때마다 실시간으로 유효성 검사 (선택 사항)
+    mode: 'onChange', // 입력할 때마다 실시간으로 유효성 검사 (선택 사항)
   });
 
   const onSubmit = async (data: SignUpForm) => {
@@ -35,13 +35,14 @@ export default function SignUpPage() {
         email: data.email,
         password: data.password,
         password_check: data.passwordCheck,
-        privacy_policy_agreed: data.agree
+        privacy_policy_agreed: data.agree,
       } as any);
 
       // 성공 시 처리
-      alert('회원가입이 성공적으로 완료되었습니다!\n로그인 페이지로 이동합니다.');
+      alert(
+        '회원가입이 성공적으로 완료되었습니다!\n로그인 페이지로 이동합니다.'
+      );
       navigate('/login');
-
     } catch (error: any) {
       console.error('회원가입 에러:', error);
 
@@ -50,8 +51,9 @@ export default function SignUpPage() {
       if (status === 400) {
         setError('email', { message: '중복된 이메일입니다.' });
       } else {
-        const errorMsg = error.responseBody || error.message || "알 수 없는 에러";
-        const statusCode = status || "";
+        const errorMsg =
+          error.responseBody || error.message || '알 수 없는 에러';
+        const statusCode = status || '';
         alert(`회원가입 실패 (${statusCode}):\n${errorMsg}`);
       }
     }
@@ -59,7 +61,7 @@ export default function SignUpPage() {
 
   return (
     <div className={classes.container}>
-      <Link to='/login'>
+      <Link to="/login">
         <div className={classes.backButton}>
           <BackButton />
         </div>
@@ -69,18 +71,16 @@ export default function SignUpPage() {
 
       {/* 폼 제출 핸들러 연결 */}
       <form onSubmit={handleSubmit(onSubmit)} className={classes.signUpForm}>
-
         {/* 이메일 */}
         <div className={classes.idForm}>
           <h3>이메일</h3>
           <input
             {...register('email')}
             className={classes.idInput}
+            type="email"
           />
           {errors.email && (
-            <span className={classes.errorMessage}>
-              {errors.email.message}
-            </span>
+            <span className={classes.errorMessage}>{errors.email.message}</span>
           )}
         </div>
 
@@ -123,20 +123,22 @@ export default function SignUpPage() {
               className={classes.checkboxInput}
             />
             <span>
-              <a href="https://lilac-crystal-fca.notion.site/2fdc68016f76806b90b0ec82a710b7c9">개인정보약관</a>에 동의하시겠습니까?
+              <a href="https://lilac-crystal-fca.notion.site/2fdc68016f76806b90b0ec82a710b7c9">
+                개인정보약관
+              </a>
+              에 동의하시겠습니까?
             </span>
           </label>
 
           {errors.agree && (
-            <span className={classes.errorMessage}>
-              {errors.agree.message}
-            </span>
+            <span className={classes.errorMessage}>{errors.agree.message}</span>
           )}
         </div>
 
-        <Button type="submit" className={classes.signUpButton}>회원가입</Button>
+        <Button type="submit" className={classes.signUpButton}>
+          회원가입
+        </Button>
       </form>
-
     </div>
   );
 }
