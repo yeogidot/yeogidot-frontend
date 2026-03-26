@@ -16,7 +16,7 @@ export default function SharedTravelPhotoComment() {
   }>();
   const [isFullPhoto, setIsFullPhoto] = useState(false);
   const navigate = useNavigate();
-
+  const { isMobile, launchAppScheme } = useAppScheme(shareToken);
   const {
     data: travel,
     loading: travelLoading,
