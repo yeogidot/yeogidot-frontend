@@ -8,6 +8,7 @@ import LogoImg from '../../assets/images/Logo.svg';
 import BackButton from '../../components/Buttons/BackButton/BlackBackButton/BlackBackButton';
 import Button from '../../components/Buttons/Button/Button';
 import { SignUpSchema } from './SignUpSchema';
+import useModal from '@hooks/useModal';
 
 // API 서비스 import
 import { authService } from '../../apis/services/auth';
@@ -16,6 +17,7 @@ type SignUpForm = z.infer<typeof SignUpSchema>;
 
 export default function SignUpPage() {
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
+  const { openModal, modalElement } = useModal();
 
   const {
     register,
@@ -39,10 +41,21 @@ export default function SignUpPage() {
       } as any);
 
       // 성공 시 처리
-      alert(
-        '회원가입이 성공적으로 완료되었습니다!\n로그인 페이지로 이동합니다.'
-      );
-      navigate('/login');
+      openModal({
+        title: '회원가입 성공',
+        message:
+          '회원가입이 성공적으로 완료되었습니다!\n로그인 페이지로 이동합니다.',
+        onCancel: () =>
+          navigate('/login', {
+            viewTransition: true,
+            state: { forward: true },
+          }),
+        onConfirm: () =>
+          navigate('/login', {
+            viewTransition: true,
+            state: { forward: true },
+          }),
+      });
     } catch (error: any) {
       console.error('회원가입 에러:', error);
 
@@ -54,14 +67,17 @@ export default function SignUpPage() {
         const errorMsg =
           error.responseBody || error.message || '알 수 없는 에러';
         const statusCode = status || '';
-        alert(`회원가입 실패 (${statusCode}):\n${errorMsg}`);
+        openModal({
+          title: '회원가입 실패',
+          message: `회원가입 실패 (${statusCode}):\n${errorMsg}`,
+        });
       }
     }
   };
 
   return (
     <div className={classes.container}>
-      <Link to="/login">
+      <Link to="/login" viewTransition>
         <div className={classes.backButton}>
           <BackButton />
         </div>
@@ -139,6 +155,7 @@ export default function SignUpPage() {
           회원가입
         </Button>
       </form>
+      {modalElement}
     </div>
   );
 }

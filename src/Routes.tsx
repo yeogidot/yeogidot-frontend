@@ -20,12 +20,15 @@ import LogInPage from './pages/LogInPage/LogInPage';
 import SelectThumbnailPage from './pages/SelectThumbnailPage/SelectThumbnailPage';
 import SelectThumbnailPhotoPage from './pages/SelectThumbnailPhotoPage/SelectThumbnailPhotoPage';
 import MapPage from './pages/MapPage/MapPage';
+import ErrorRoute from './pages/ErrorPage/ErrorRoute';
 
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import { Transition } from './pages/Transition/Transition';
 
 const router = createBrowserRouter([
   {
     path: '/',
+    Component: Transition,
     children: [
       {
         path: '/signup',
@@ -34,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: '/login',
         Component: LogInPage,
+      },
+      {
+        path: '/error/:status',
+        Component: ErrorRoute,
       },
       // ✅ 보호된 경로 그룹
       {

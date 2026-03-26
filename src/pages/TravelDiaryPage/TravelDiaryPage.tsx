@@ -24,7 +24,10 @@ export default function TravelDiaryPage() {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      navigate('/login');
+      navigate('/login', {
+        viewTransition: true,
+        state: { forward: true },
+      });
       return;
     }
     if (travelId && day) {
