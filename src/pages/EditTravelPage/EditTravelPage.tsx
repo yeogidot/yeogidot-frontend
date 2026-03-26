@@ -40,7 +40,7 @@ export default function EditTravelPage() {
   const { openModal, modalElement } = useModal();
   useEffect(() => {
     if (token && !data) {
-      request(state.travelId, token);
+      request(state.travel.travelId, token);
     }
   }, [token, request, data, state]);
 

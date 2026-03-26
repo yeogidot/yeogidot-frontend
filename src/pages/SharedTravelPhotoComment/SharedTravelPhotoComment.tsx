@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAppScheme } from 'src/hooks/useAppScheme';
+import AppLaunchBanner from 'src/components/AppLaunchBanner/AppLaunchBanner';
 import classes from './SharedTravelPhotoComment.module.css';
 import BackButton from 'src/components/Buttons/BackButton/GrayBackButton/GrayBackButton';
 import FullPhotoLayout from '@components/FullPhotoLayout/FullPhotoLayout';
@@ -109,6 +111,7 @@ export default function SharedTravelPhotoComment() {
           </div>
         </div>
       </div>
+      {isMobile && <AppLaunchBanner onAppLaunch={launchAppScheme} />}
     </div>
   );
 }

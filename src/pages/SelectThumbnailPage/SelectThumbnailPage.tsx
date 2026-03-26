@@ -18,8 +18,8 @@ export default function SelectThumbnailPage() {
       openModal({
         title: '권한없음',
         message: '로그인이 필요한 서비스입니다.',
-        onCancel: () => navigate('/error/401'),
-        onConfirm: () => navigate('/login'),
+        onCancel: () => navigate('/error/401',{viewTranstion : true}),
+        onConfirm: () => navigate('/login',{viewTranstion : true, state:{forward:true}}),
       });
       return;
     }
@@ -40,8 +40,14 @@ export default function SelectThumbnailPage() {
       openModal({
         title: '여행 생성 성공',
         message: `성공적으로 여행을 생성했습니다.${'\n'}여행페이지로 이동합니다.`,
-        onCancel: () => navigate(`/travel/${data}`),
-        onConfirm: () => navigate(`/travel/${data}`),
+        onCancel: () => navigate(`/travel/${data}`, {
+          viewTransition: true,
+          state: { forward: true },
+        }),
+        onConfirm: () => navigate(`/travel/${data}`, {
+          viewTransition: true,
+          state: { forward: true },
+        })
       });
     }
   }, [error, loading, data]);

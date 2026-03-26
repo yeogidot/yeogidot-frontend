@@ -26,8 +26,8 @@ export default function MyTravelPage() {
       openModal({
         title: '권한없음',
         message: '로그인이 필요한 서비스입니다.',
-        onCancel: () => navigate('/error/401'),
-        onConfirm: () => navigate('/login'),
+        onCancel: () => navigate('/error/401',{viewTranstion : true}),
+        onConfirm: () => navigate('/login',{viewTranstion : true, state:{forward:true}}),
       });
       return;
     }
@@ -39,6 +39,8 @@ export default function MyTravelPage() {
         <h1 className={classes.headerText}>내 여행 목록</h1>
         <Link
           to="/login"
+          state={{ forward: true }}
+          viewTransition
           onClick={() => localStorage.removeItem('accessToken')}
           className={classes.logoutLink}
         >

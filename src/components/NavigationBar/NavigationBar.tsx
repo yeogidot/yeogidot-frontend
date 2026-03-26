@@ -27,6 +27,8 @@ export default function NavigationBar({ nowTab }: Props) {
         to={'/new-travel'}
         className={classes.newTravelButton}
         aria-label="새 여행추가"
+        state={{ forward: true }}
+        viewTransition
       >
         <AddIcon />
       </Link>

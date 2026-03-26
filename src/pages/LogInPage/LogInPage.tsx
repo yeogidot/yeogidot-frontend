@@ -34,7 +34,10 @@ export default function LogInPage() {
         localStorage.setItem('accessToken', token.access_token);
 
         // 메인 페이지로 이동
-        navigate('/');
+        navigate('/', {
+          viewTransition: true,
+          state: { forward: true },
+        });
       }
     } catch (error: any) {
       // 4. 에러 처리 (http.ts에서 던진 에러 잡기)
@@ -97,7 +100,12 @@ export default function LogInPage() {
           )}
         </div>
 
-        <Link to="/signup" className={classes.signUp}>
+        <Link
+          to="/signup"
+          className={classes.signUp}
+          state={{ forward: true }}
+          viewTransition
+        >
           회원가입
         </Link>
 

@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useAppScheme } from 'src/hooks/useAppScheme';
+import AppLaunchBanner from '../../components/AppLaunchBanner/AppLaunchBanner';
 import classes from './SharedDayTravelPage.module.css';
 import BackButton from '../../components/Buttons/BackButton/GrayBackButton/GrayBackButton.tsx';
 import BackgroundMap from '../../components/Map/Map.tsx';
@@ -15,6 +17,7 @@ const MAP_CENTER_LATITUDE_OFFSET = 0.007;
 export default function SharedDayTravelPage() {
   const navigate = useNavigate();
   const {shareToken, day } = useParams<{ shareToken: string; day: string }>();
+  const { isMobile, launchAppScheme } = useAppScheme(shareToken, day);
 
   const {
     data: travel,
@@ -49,7 +52,10 @@ export default function SharedDayTravelPage() {
 
   const handleBackClick = () => navigate(-1);
   const handlePhotoClick = (photoId: string | number) => {
-    navigate(`/share/${shareToken}/photos/${photoId}/comment`);
+    navigate(`/share/${shareToken}/photos/${photoId}/comment`, {
+      viewTransition: true,
+      state: { forward: true },
+    });
   };
 
   return (
@@ -108,6 +114,7 @@ export default function SharedDayTravelPage() {
           </div>
         </div>
       </div>
+      {isMobile && <AppLaunchBanner onAppLaunch={launchAppScheme} />}
     </div>
   );
 }

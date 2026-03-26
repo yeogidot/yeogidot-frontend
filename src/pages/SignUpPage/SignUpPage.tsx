@@ -45,8 +45,12 @@ export default function SignUpPage() {
         title: '회원가입 성공',
         message:
           '회원가입이 성공적으로 완료되었습니다!\n로그인 페이지로 이동합니다.',
-        onCancel: () => navigate('/login'),
-        onConfirm: () => navigate('/login'),
+        onCancel: () => navigate('/login' {
+          viewTransition: true,
+          state: {forward: true}}),
+        onConfirm: () => navigate('/login'{
+          viewTransition: true,
+          state: {forward: true}}),
       });
     } catch (error: any) {
       console.error('회원가입 에러:', error);
@@ -69,7 +73,7 @@ export default function SignUpPage() {
 
   return (
     <div className={classes.container}>
-      <Link to="/login">
+      <Link to="/login" viewTransition>
         <div className={classes.backButton}>
           <BackButton />
         </div>
