@@ -90,7 +90,11 @@ export default function SignUpPage() {
         {/* 이메일 */}
         <div className={classes.idForm}>
           <h3>이메일</h3>
-          <input {...register('email')} className={classes.idInput} />
+          <input
+            {...register('email')}
+            className={classes.idInput}
+            type="email"
+          />
           {errors.email && (
             <span className={classes.errorMessage}>{errors.email.message}</span>
           )}
