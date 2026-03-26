@@ -7,16 +7,23 @@ import { useTravel } from '@hooks/travel';
 import { useApi } from '@hooks/api';
 import { travelService } from 'src/apis/services/travel';
 import { useEffect } from 'react';
+import useModal from '@hooks/useModal';
 export default function SelectThumbnailPage() {
   const token = localStorage.getItem('accessToken');
   const { travel } = useTravel();
+  const { openModal, modalElement } = useModal();
   const { loading, data, error, request } = useApi(travelService.createTravel);
   const handleClickButton = () => {
     if (!token) {
-      alert('로그인이 필요한 서비스입니다.');
-      navigate('/login', {
-        viewTransition: true,
-        state: { forward: true },
+      openModal({
+        title: '권한없음',
+        message: '로그인이 필요한 서비스입니다.',
+        onCancel: () => navigate('/error/401', { viewTransition: true }),
+        onConfirm: () =>
+          navigate('/login', {
+            viewTransition: true,
+            state: { forward: true },
+          }),
       });
       return;
     }
@@ -27,14 +34,26 @@ export default function SelectThumbnailPage() {
       return;
     }
     if (error) {
-      alert(error);
+      openModal({
+        title: '에러',
+        message: error,
+      });
       return;
     }
     if (data) {
-      alert(`성공적으로 여행을 추가했습니다.${'\n'}여행페이지로 이동합니다.`);
-      navigate(`/travel/${data}`, {
-        viewTransition: true,
-        state: { forward: true },
+      openModal({
+        title: '여행 생성 성공',
+        message: `성공적으로 여행을 생성했습니다.${'\n'}여행페이지로 이동합니다.`,
+        onCancel: () =>
+          navigate(`/travel/${data}`, {
+            viewTransition: true,
+            state: { forward: true },
+          }),
+        onConfirm: () =>
+          navigate(`/travel/${data}`, {
+            viewTransition: true,
+            state: { forward: true },
+          }),
       });
     }
   }, [error, loading, data]);
@@ -80,6 +99,7 @@ export default function SelectThumbnailPage() {
           ? '여행을 생성하고 있어요. 완료되면 자동으로 여행 페이지로 이동해요.'
           : ''}
       </p>
+      {modalElement}
     </div>
   );
 }

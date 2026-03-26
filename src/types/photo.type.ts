@@ -28,6 +28,7 @@ export interface Photo {
   createdDate?: string;
   modifiedDate?: string;
   comments: Comment[];
+  region: string;
 }
 
 export interface PhotoGeoData {

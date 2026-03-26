@@ -2,6 +2,7 @@ import classes from './MyTravelPage.module.css';
 import NavigationBar from '@components/NavigationBar/NavigationBar';
 import TravelList from '@components/TravelList/TravelList';
 import { useApi } from '@hooks/api';
+import useModal from '@hooks/useModal';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +10,7 @@ import { travelService } from 'src/apis/services/travel';
 export default function MyTravelPage() {
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
+  const { openModal, modalElement } = useModal();
   const { data, error, request, loading, status } = useApi(
     travelService.getTravels
   );
@@ -21,14 +23,19 @@ export default function MyTravelPage() {
 
   useEffect(() => {
     if (!token || status === 401) {
-      alert('로그인이 필요한 서비스입니다.');
-      navigate('/login', {
-        viewTransition: true,
-        state: { forward: true },
+      openModal({
+        title: '권한없음',
+        message: '로그인이 필요한 서비스입니다.',
+        onCancel: () => navigate('/error/401', { viewTransition: true }),
+        onConfirm: () =>
+          navigate('/login', {
+            viewTransition: true,
+            state: { forward: true },
+          }),
       });
       return;
     }
-  }, [token, status, navigate]);
+  }, [token, status, navigate, openModal]);
 
   return (
     <>
@@ -51,6 +58,7 @@ export default function MyTravelPage() {
         <TravelList travels={data} />
       )}
       <NavigationBar nowTab="my-travel" />
+      {modalElement}
     </>
   );
 }
