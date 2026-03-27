@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Modal from '@components/Modal/Modal';
 
 type OpenModalOptions = {
@@ -47,11 +47,11 @@ export default function useModal(initialOptions?: InitialModalOptions) {
     };
   });
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setState(prev => ({ ...prev, isOpen: false }));
-  };
+  }, []);
 
-  const openModal = (options: OpenModalOptions) => {
+  const openModal = useCallback((options: OpenModalOptions) => {
     setState({
       isOpen: true,
       title: options.title ?? '확인',
@@ -61,7 +61,7 @@ export default function useModal(initialOptions?: InitialModalOptions) {
       onConfirm: options.onConfirm,
       onCancel: options.onCancel,
     });
-  };
+  }, []);
 
   const handleConfirm = () => {
     state.onConfirm?.();
