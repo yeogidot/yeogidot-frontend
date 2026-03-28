@@ -1,6 +1,6 @@
 .container {
   overflow: scroll;
-  height: 35vh;
+  height: 32.5vh;
   -ms-overflow-style: none;
   display: flex;
   flex-direction: column;
