@@ -22,7 +22,7 @@ export default function SelectThumbnailPageForEdit() {
       openModal({
         title: '권한없음',
         message: '로그인이 필요한 서비스입니다.',
-        onCancel: () => navigate('/error/401'),
+        onCancel: () => navigate('/error/401', { viewTransition: true }),
         onConfirm: () =>
           navigate('/login', {
             viewTransition: true,

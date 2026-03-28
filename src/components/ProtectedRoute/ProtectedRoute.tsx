@@ -17,12 +17,7 @@ const ProtectedRoute = () => {
           cancelText: '취소',
           confirmText: '확인',
           onCancel: () => navigate('/error/401', { replace: true }),
-          onConfirm: () =>
-            navigate('/login', {
-              viewTransition: true,
-              state: { forward: true },
-              replace: true,
-            }),
+          onConfirm: () => navigate('/login', { replace: true }),
         }
       : undefined
   );
