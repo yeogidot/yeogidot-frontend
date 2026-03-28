@@ -103,12 +103,7 @@ export default function TravelPage() {
   };
 
   const handlePhotoClick = (photoId: string | number) => {
-    navigate(`/travel/${travelId}/photos/${photoId}/travel-photo-comment`, {
-      viewTransition: true,
-      state: {
-        forward: true,
-      },
-    });
+    navigate(`/travel/${travelId}/photos/${photoId}/travel-photo-comment`);
   };
 
   const handleBackClick = () => navigate(-1);
