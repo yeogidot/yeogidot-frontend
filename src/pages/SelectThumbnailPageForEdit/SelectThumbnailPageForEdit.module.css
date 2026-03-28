@@ -35,6 +35,9 @@
   margin: 0px;
 }
 .loadingMessage {
+  text-align: center;
+  word-break: keep-all;
+  width: 75%;
   min-height: 24px;
   margin: 0 auto;
   color: #5a5a5a;
