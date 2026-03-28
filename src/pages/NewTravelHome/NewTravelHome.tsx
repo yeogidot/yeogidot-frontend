@@ -134,9 +134,11 @@ export default function NewTravelHome() {
           id="travel-name"
           autoComplete="off"
         />
-        {titleErrorText !== '' && (
-          <p className={classes.titleErrorHelperText}>{titleErrorText}</p>
-        )}
+        <p
+          className={`${classes.titleErrorHelperText} ${titleErrorText === '' ? classes.invisible : ''}`}
+        >
+          {titleErrorText === '' ? '오류 없음' : titleErrorText}
+        </p>
       </section>
       <section className={classes.inputSection}>
         <h3 className={classes.inputHeader}>여행 사진</h3>
@@ -146,15 +148,19 @@ export default function NewTravelHome() {
         >
           사진 업로드
         </FileSelectButton>
-        {photoErrorText !== '' && (
-          <p className={classes.photoErrorHelperText}>{photoErrorText}</p>
-        )}
       </section>
-      <p className={classes.uploadDescription}>
-        사진 위치 정보가 없으면 위치가 표시 되지 않습니다.
-        <br />
-        (카카오톡 사진 전송시, 원본 사진 요망)
-      </p>
+      <div>
+        <p className={classes.uploadDescription}>
+          사진 위치 정보가 없으면 위치가 표시 되지 않습니다.
+          <br />
+          (카카오톡 사진 전송시, 원본 사진 요망)
+        </p>
+        <p
+          className={`${classes.photoErrorHelperText} ${photoErrorText === '' ? classes.invisible : ''}`}
+        >
+          {photoErrorText === '' ? '오류 없음' : photoErrorText}
+        </p>
+      </div>
 
       <DatePhotoGrid photos={travel.photos} />
       <Button className={classes.button} onClick={handleClickNextButton}>

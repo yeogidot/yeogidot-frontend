@@ -46,27 +46,27 @@
   left: 8px;
 }
 
-.deleteButtonWrapper {}
-
 .photoInformation {
   font-size: 16px;
-  color: #5B5B5B;
+  color: #5b5b5b;
 }
 
 .photoInformation a {
-  color: #029AFF;
+  color: #029aff;
 }
 
 .textAreaContainer {
   width: 100%;
   min-height: 140px;
   border-radius: 8px;
-  background-color: #F6F6F6;
+  background-color: #f6f6f6;
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
   padding: 16px;
+  margin-top: 21px;
+  margin-bottom: 7px;
 }
 
 .textAreaWrapper {
@@ -74,7 +74,6 @@
   background: transparent;
   border: none;
   outline: none;
-  font-family: 'Regular';
   font-size: 15px;
   line-height: 1.5;
   text-align: center;
@@ -86,8 +85,6 @@
 .textAreaWrapper::placeholder {
   text-align: center;
 }
-
-
 
 .finishButton Button {
   top: 50%;

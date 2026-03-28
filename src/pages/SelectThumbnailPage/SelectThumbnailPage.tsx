@@ -94,11 +94,6 @@ export default function SelectThumbnailPage() {
       >
         {loading ? '여행 추가 중...' : '여행 추가'}
       </Button>
-      <p className={classes.loadingMessage} role="status" aria-live="polite">
-        {loading
-          ? '여행을 생성하고 있어요. 완료되면 자동으로 여행 페이지로 이동해요.'
-          : ''}
-      </p>
       {modalElement}
     </div>
   );
