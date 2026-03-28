@@ -180,12 +180,12 @@ export default function TravelPhotoComment() {
     }
   }, [commentText]);
 
-  if (travelLoading) return <div>Loading...</div>;
   if (travelError)
     return <ErrorPage status={travelStatus} message={travelError} />;
-  if (!travel || !photo)
-    return <ErrorPage status={404} message="No data found." />;
-
+  if (travelLoading) return <div>Loading...</div>;
+  if (!photo) {
+    return <div>사진 없음</div>;
+  }
   const datedPhotoData: DatedPhotoData = {
     id: photo.photoId ?? Number(photoId),
     url: photo.url || '',
