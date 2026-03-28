@@ -57,23 +57,30 @@ export default function MapPage() {
   const handleMarkerClick = async (photoId: number) => {
     try {
       const token = localStorage.getItem('accessToken') || '';
-      
+
       // We must find the travelId that contains this photoId
       // because the photo object doesn't have travelId and TravelPhotoComment requires it.
-      const travelsRes = await import('../../apis/services/travel').then(m => m.travelService.getTravels(token));
+      const travelsRes = await import('../../apis/services/travel').then(m =>
+        m.travelService.getTravels(token)
+      );
       if (!travelsRes.data) return;
 
       for (const travel of travelsRes.data) {
-        const detailRes = await import('../../apis/services/travel').then(m => m.travelService.getTravel(travel.travelId, token));
+        const detailRes = await import('../../apis/services/travel').then(m =>
+          m.travelService.getTravel(travel.travelId, token)
+        );
         if (detailRes.data) {
           const allPhotos = detailRes.data.days.flatMap(day => day.photos);
           if (allPhotos.find(p => p.photoId === photoId)) {
-            navigate(`/travel/${travel.travelId}/photos/${photoId}/travel-photo-comment`);
+            navigate(
+              `/travel/${travel.travelId}/photos/${photoId}/travel-photo-comment`,
+              { viewTransition: true, state: { forward: true } }
+            );
             return;
           }
         }
       }
-      
+
       alert('이 사진이 포함된 여행을 찾을 수 없습니다.');
     } catch (e) {
       console.error(e);
@@ -87,18 +94,18 @@ export default function MapPage() {
         <BackButton onClick={handleBackClick} />
       </div>
 
-            <BackgroundMap className={classes.map} position={mapCenter}>
-                {photos.map(photo =>
-                    photo.latitude && photo.longitude ? (
-                        <PhotoMarker
-                            key={photo.photoId}
-                            position={[photo.latitude, photo.longitude]}
-                            photoUrl={photo.thumbnailUrl}
-                            onClick={() => photo.photoId && handleMarkerClick(photo.photoId)}
-                        />
-                    ) : null
-                )}
-            </BackgroundMap>
+      <BackgroundMap className={classes.map} position={mapCenter}>
+        {photos.map(photo =>
+          photo.latitude && photo.longitude ? (
+            <PhotoMarker
+              key={photo.photoId}
+              position={[photo.latitude, photo.longitude]}
+              photoUrl={photo.thumbnailUrl}
+              onClick={() => photo.photoId && handleMarkerClick(photo.photoId)}
+            />
+          ) : null
+        )}
+      </BackgroundMap>
 
       <NavigationBar nowTab="map" />
     </div>
