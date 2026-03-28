@@ -34,7 +34,7 @@ export default function LogInPage() {
         localStorage.setItem('accessToken', token.access_token);
 
         // 메인 페이지로 이동
-        navigate('/', {
+        navigate('/my-travel', {
           viewTransition: true,
           state: { forward: true },
         });
