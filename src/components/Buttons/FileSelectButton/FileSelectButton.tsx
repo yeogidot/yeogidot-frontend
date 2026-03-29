@@ -5,7 +5,7 @@ export default function FileSelectButton({
   onChange,
   children,
   id = 'select-photo',
-  accept = 'image/*',
+  accept = '',
   multiple = true,
   className = '',
   ...props
