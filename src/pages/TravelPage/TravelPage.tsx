@@ -162,6 +162,7 @@ export default function TravelPage() {
         </div>
 
         <div className={classes.travelInformation}>
+          <div>{travel.trvRegion}</div>
           <div>
             {travel.startDate} ~ {travel.endDate}
           </div>
