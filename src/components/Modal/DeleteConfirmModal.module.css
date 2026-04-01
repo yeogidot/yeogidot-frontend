@@ -18,7 +18,6 @@
   flex-direction: column;
   justify-content: space-between;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-  font-family: 'Inter', sans-serif;
 }
 
 .modalMessage {
@@ -48,11 +47,10 @@
 
 .cancelButton,
 .confirmDeleteButton {
-  width: 59px;
-  height: 32px;
+  min-width: 59px;
+  min-height: 32px;
   border-radius: 5px;
   border: none;
-  font-family: 'Inter', sans-serif;
   font-weight: 700;
   font-size: 16px;
   line-height: 100%;
@@ -66,7 +64,5 @@
 }
 
 .confirmDeleteButton {
-  background: #F62424;
+  background: #f62424;
 }
-
-

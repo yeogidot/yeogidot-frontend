@@ -6,9 +6,11 @@ import BackButton from '../../components/Buttons/BackButton/BlackBackButton/Blac
 import Button from '../../components/Buttons/Button/Button';
 import { authService } from '../../apis/services/auth';
 import type { LoginInput } from '../../types/auth.type'; // 타입 경로 확인 필요
+import useModal from '@hooks/useModal';
 
 export default function LogInPage() {
   const navigate = useNavigate();
+  const { openModal, modalElement } = useModal();
 
   // 1. React Hook Form 설정
   const {
@@ -32,8 +34,7 @@ export default function LogInPage() {
         localStorage.setItem('accessToken', token.access_token);
 
         // 메인 페이지로 이동
-        alert('로그인에 성공했습니다.');
-        navigate('/', {
+        navigate('/my-travel', {
           viewTransition: true,
           state: { forward: true },
         });
@@ -54,14 +55,17 @@ export default function LogInPage() {
         setError('email', { message: '가입되지 않은 이메일입니다.' });
       } else {
         const errorMessage = error.message || '로그인에 실패했습니다.';
-        alert(errorMessage);
+        openModal({
+          title: '오류',
+          message: errorMessage,
+        });
       }
     }
   };
 
   return (
     <div className={classes.container}>
-      <Link to="/.." state={{ forward: true }} viewTransition>
+      <Link to="/..">
         <div className={classes.backButton}>
           <BackButton />
         </div>
@@ -76,6 +80,7 @@ export default function LogInPage() {
           <input
             {...register('email', { required: '이메일을 입력해주세요' })}
             className={classes.idInput}
+            type="email"
           />
           {errors.email && (
             <span className={classes.errorMessage}>{errors.email.message}</span>
@@ -110,6 +115,7 @@ export default function LogInPage() {
           로그인
         </Button>
       </form>
+      {modalElement}
     </div>
   );
 }

@@ -1,9 +1,9 @@
 .header {
   color: white;
   display: flex;
-  padding-block: 5vh;
-  padding-inline: 22px;
-  width: calc(100% - (22px * 2));
+  padding-top: 75px;
+  padding-inline: 24px;
+  width: calc(100% - (24px * 2));
   justify-content: space-between;
   background-color: rgba(0, 0, 0, 0.4);
   position: fixed;

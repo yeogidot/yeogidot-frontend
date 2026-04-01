@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  row-gap: 16px;
+  row-gap: 8px;
 }
 .uploadDescription {
   text-align: center;
@@ -28,6 +28,10 @@
   font-size: 14px;
   margin: 0px 0px;
   text-align: center;
+}
+
+.invisible {
+  visibility: hidden;
 }
 
 .backButton {
@@ -70,7 +74,10 @@
   row-gap: 8px;
 }
 .button {
-  margin: 5% auto;
+  transform: translateX(-50%);
+  left: 50%;
+  bottom: 7%;
+  position: absolute;
 }
 .photoSelectButton {
   margin: 0 auto;

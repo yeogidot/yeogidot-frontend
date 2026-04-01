@@ -57,6 +57,17 @@
   cursor: pointer;
 }
 
+.blue {
+  background-color: #0d9eff;
+}
+
+.red {
+  background-color: #f62424;
+}
+
+.gray {
+  background-color: #757575;
+}
 .modalTitle {
   font-size: 20px;
   margin: 0;

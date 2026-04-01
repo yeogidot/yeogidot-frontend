@@ -27,7 +27,10 @@
 }
 
 .button {
-  margin: 5% auto;
+  transform: translateX(-50%);
+  left: 50%;
+  bottom: 7%;
+  position: absolute;
 }
 
 .button:disabled {
@@ -41,6 +44,9 @@
 }
 
 .loadingMessage {
+  text-align: center;
+  word-break: keep-all;
+  width: 75%;
   min-height: 24px;
   margin: 0 auto;
   color: #5a5a5a;
