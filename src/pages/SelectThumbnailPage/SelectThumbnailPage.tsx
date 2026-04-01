@@ -1,5 +1,5 @@
 import classes from './SelectThumbnailPage.module.css';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import BlackBackIcon from '@assets/icons/back-black.svg';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import Button from '@components/Buttons/Button/Button';
@@ -29,6 +29,12 @@ export default function SelectThumbnailPage() {
     }
     request(travel, token);
   };
+
+  const isValidTravelForThumbnail =
+    travel.title.trim() !== '' && travel.photos.length > 0;
+  if (!isValidTravelForThumbnail) {
+    return <Navigate to="/my-travel" />;
+  }
   useEffect(() => {
     if (loading) {
       return;

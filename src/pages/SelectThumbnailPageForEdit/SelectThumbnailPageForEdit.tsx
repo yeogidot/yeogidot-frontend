@@ -1,5 +1,5 @@
 import classes from './SelectThumbnailPageForEdit.module.css';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import BlackBackIcon from '@assets/icons/back-black.svg';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import Button from '@components/Buttons/Button/Button';
@@ -33,6 +33,9 @@ export default function SelectThumbnailPageForEdit() {
     }
     request(state.travel.travelId, travel, token);
   };
+  if (!travel) {
+    return <Navigate to={'/my-travel'} />;
+  }
   useEffect(() => {
     if (loading) {
       return;
