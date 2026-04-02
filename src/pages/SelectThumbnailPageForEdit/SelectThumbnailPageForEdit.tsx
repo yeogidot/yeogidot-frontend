@@ -33,9 +33,6 @@ export default function SelectThumbnailPageForEdit() {
     }
     request(state.travel.travelId, travel, token);
   };
-  if (!travel) {
-    return <Navigate to={'/my-travel'} />;
-  }
   useEffect(() => {
     if (loading) {
       return;
@@ -64,6 +61,9 @@ export default function SelectThumbnailPageForEdit() {
       });
     }
   }, [loading, error, data, navigate, openModal, state.travelId]);
+  if (!travel) {
+    return <Navigate to={'/my-travel'} />;
+  }
   const thumbnailCheckedPhotos = travel.photos.map(photo => {
     return {
       ...photo,

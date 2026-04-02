@@ -30,11 +30,6 @@ export default function SelectThumbnailPage() {
     request(travel, token);
   };
 
-  const isValidTravelForThumbnail =
-    travel.title.trim() !== '' && travel.photos.length > 0;
-  if (!isValidTravelForThumbnail) {
-    return <Navigate to="/my-travel" />;
-  }
   useEffect(() => {
     if (loading) {
       return;
@@ -63,6 +58,11 @@ export default function SelectThumbnailPage() {
       });
     }
   }, [error, loading, data]);
+  const isValidTravelForThumbnail =
+    travel.title.trim() !== '' && travel.photos.length > 0;
+  if (!isValidTravelForThumbnail) {
+    return <Navigate to="/my-travel" />;
+  }
   const thumbnailCheckedPhotos = travel.photos.map(photo => {
     return {
       ...photo,
