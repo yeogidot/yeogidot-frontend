@@ -1,5 +1,5 @@
 import classes from './SelectThumbnailPageForEdit.module.css';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import BlackBackIcon from '@assets/icons/back-black.svg';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import Button from '@components/Buttons/Button/Button';
@@ -61,6 +61,9 @@ export default function SelectThumbnailPageForEdit() {
       });
     }
   }, [loading, error, data, navigate, openModal, state.travelId]);
+  if (!travel) {
+    return <Navigate to={'/my-travel'} />;
+  }
   const thumbnailCheckedPhotos = travel.photos.map(photo => {
     return {
       ...photo,
