@@ -1,7 +1,9 @@
 import BlackBackIcon from '@assets/icons/back-black.svg';
 import FileSelectButton from '@components/Buttons/FileSelectButton/FileSelectButton';
+import WebViewImageSelectButton from '@components/Buttons/WebViewImageSelectButton/WebViewImageSelectButton';
 import Button from '@components/Buttons/Button/Button';
 import type { FullPhotoData } from 'src/types/photo.type';
+import { isReactNativeWebView } from '@utils/webview';
 import classes from './EditTravelHome.module.css';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -145,12 +147,18 @@ export default function EditTravelHome() {
           </section>
           <section className={classes.inputSection}>
             <h3 className={classes.inputHeader}>여행 사진</h3>
-            <FileSelectButton
-              className={classes.photoSelectButton}
-              onChange={handleFileChange}
-            >
-              사진 업로드
-            </FileSelectButton>
+            {isReactNativeWebView() ? (
+              <WebViewImageSelectButton className={classes.photoSelectButton}>
+                사진 업로드
+              </WebViewImageSelectButton>
+            ) : (
+              <FileSelectButton
+                className={classes.photoSelectButton}
+                onChange={handleFileChange}
+              >
+                사진 업로드
+              </FileSelectButton>
+            )}
           </section>
           <div>
             <p className={classes.uploadDescription}>
