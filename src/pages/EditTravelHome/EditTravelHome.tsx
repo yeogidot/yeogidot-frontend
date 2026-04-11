@@ -157,7 +157,7 @@ export default function EditTravelHome() {
           const url = URL.createObjectURL(file);
 
           return {
-            id: Date.now(),
+            id: new URL(url.slice(5)).pathname.slice(1),
             url,
             date: photo.date,
             GPSCoordinates: photo.GPSCoordinates,
