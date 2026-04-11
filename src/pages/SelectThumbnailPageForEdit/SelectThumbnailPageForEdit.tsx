@@ -45,6 +45,12 @@ export default function SelectThumbnailPageForEdit() {
       return;
     }
     if (data) {
+      travel.photos.forEach(({ url }) => {
+        if (url.startsWith('blob:')) {
+          URL.revokeObjectURL(url);
+        }
+      });
+
       openModal({
         title: '여행 수정 성공',
         message: `성공적으로 여행을 수정했습니다.${'\n'}여행페이지로 이동합니다.`,

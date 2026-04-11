@@ -42,6 +42,7 @@ export default function SelectThumbnailPage() {
       return;
     }
     if (data) {
+      travel.photos.forEach(({ url }) => URL.revokeObjectURL(url));
       openModal({
         title: '여행 생성 성공',
         message: `성공적으로 여행을 생성했습니다.${'\n'}여행페이지로 이동합니다.`,
