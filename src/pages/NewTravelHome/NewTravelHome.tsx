@@ -1,14 +1,21 @@
 import BlackBackIcon from '@assets/icons/back-black.svg';
 import FileSelectButton from '@components/Buttons/FileSelectButton/FileSelectButton';
+import WebViewImageSelectButton from '@components/Buttons/WebViewImageSelectButton/WebViewImageSelectButton';
 import Button from '@components/Buttons/Button/Button';
-import type { FullPhotoData } from 'src/types/photo.type';
+import type {
+  FullPhotoData,
+  WebViewSelectImagesResultMessage,
+} from 'src/types/photo.type';
+import { isReactNativeWebView } from '@utils/webview';
 import classes from './NewTravelHome.module.css';
 import DatePhotoGrid from '@components/DatePhotoGrid/DatePhotoGrid';
 import { useNavigate } from 'react-router-dom';
 import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
 import { useTravel } from '@hooks/travel';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { dateCompare } from '@utils/date';
+import { base64ToFile } from '@utils/photo';
+
 const checkFileExtension = (file: File, extensions: string[]) => {
   const fileExtension = file.name.split('.').pop()?.toLowerCase();
   if (fileExtension === undefined) {
@@ -23,12 +30,6 @@ export default function NewTravelHome() {
 
   const [titleErrorText, setTitleErrorText] = useState('');
   const [photoErrorText, setPhotoErrorText] = useState('');
-
-  const setPhotos = (photos: FullPhotoData[]) => {
-    setTravel(travel => {
-      return { ...travel, photos };
-    });
-  };
 
   const setThumbnailPhotoId = (id: number | string) => {
     setTravel(travel => {
@@ -108,9 +109,82 @@ export default function NewTravelHome() {
     const warnedPhotos = addedPhotos.map(photo => {
       return { ...photo, warning: photo.GPSCoordinates === null };
     });
-    const newPhotos = [...travel.photos, ...warnedPhotos];
-    setPhotos(newPhotos);
+    setTravel(currentTravel => {
+      return {
+        ...currentTravel,
+        photos: [...currentTravel.photos, ...warnedPhotos],
+      };
+    });
   };
+
+  useEffect(() => {
+    if (!isReactNativeWebView()) {
+      return;
+    }
+
+    const handleWebViewMessage = (event: MessageEvent<string> | Event) => {
+      const messageData = 'data' in event ? event.data : undefined;
+      if (typeof messageData !== 'string') {
+        return;
+      }
+      let parsedMessage: unknown;
+      try {
+        parsedMessage = JSON.parse(messageData);
+      } catch {
+        return;
+      }
+
+      if (
+        typeof parsedMessage !== 'object' ||
+        parsedMessage === null ||
+        !('type' in parsedMessage) ||
+        parsedMessage.type !== 'SELECT_IMAGES_RESULT' ||
+        !('photos' in parsedMessage) ||
+        !Array.isArray(parsedMessage.photos)
+      ) {
+        return;
+      }
+
+      const message = parsedMessage as WebViewSelectImagesResultMessage;
+      if (message.photos.length === 0) {
+        return;
+      }
+
+      setPhotoErrorText('');
+      const addedPhotos: FullPhotoData[] = message.photos.map(
+        (photo, index) => {
+          const fileName = `webview-photo-${Date.now()}-${index}`;
+          const file = base64ToFile(photo.photoBase64, fileName);
+          const url = URL.createObjectURL(file);
+          const blobId = new URL(url.slice(5)).pathname.slice(1);
+          return {
+            id: blobId,
+            url,
+            date: photo.date,
+            GPSCoordinates: photo.GPSCoordinates,
+            link: 'photo',
+            file,
+            warning: photo.GPSCoordinates === null,
+          };
+        }
+      );
+
+      setTravel(currentTravel => {
+        return {
+          ...currentTravel,
+          photos: [...currentTravel.photos, ...addedPhotos],
+        };
+      });
+    };
+
+    const messageEventListener = handleWebViewMessage as EventListener;
+    window.addEventListener('message', messageEventListener);
+    document.addEventListener('message', messageEventListener);
+    return () => {
+      window.removeEventListener('message', messageEventListener);
+      document.removeEventListener('message', messageEventListener);
+    };
+  }, [setTravel]);
   return (
     <div className={classes.container}>
       <header className={classes.header}>
@@ -142,12 +216,18 @@ export default function NewTravelHome() {
       </section>
       <section className={classes.inputSection}>
         <h3 className={classes.inputHeader}>여행 사진</h3>
-        <FileSelectButton
-          className={classes.photoSelectButton}
-          onChange={handleFileChange}
-        >
-          사진 업로드
-        </FileSelectButton>
+        {isReactNativeWebView() ? (
+          <WebViewImageSelectButton className={classes.photoSelectButton}>
+            사진 업로드
+          </WebViewImageSelectButton>
+        ) : (
+          <FileSelectButton
+            className={classes.photoSelectButton}
+            onChange={handleFileChange}
+          >
+            사진 업로드
+          </FileSelectButton>
+        )}
       </section>
       <div>
         <p className={classes.uploadDescription}>

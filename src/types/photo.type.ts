@@ -14,6 +14,17 @@ export interface FullPhotoData extends DatedPhotoData {
   GPSCoordinates: { latitude: number; longitude: number } | null;
 }
 
+export interface WebViewPhoto {
+  photoBase64: string;
+  GPSCoordinates: { latitude: number; longitude: number } | null;
+  date: string | null;
+}
+
+export interface WebViewSelectImagesResultMessage {
+  type: 'SELECT_IMAGES_RESULT';
+  photos: WebViewPhoto[];
+}
+
 export interface uploadedPhoto {
   id: number;
   url: string;

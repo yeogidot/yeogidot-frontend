@@ -38,3 +38,17 @@ export async function photoFileToWebp(photoFile: File) {
     image.src = imageURL;
   });
 }
+
+export const base64ToFile = (base64: string, fileName: string) => {
+  const [header, data] = base64.split(',');
+  const hasDataUrlHeader = base64.includes(',');
+  const mimeType = hasDataUrlHeader
+    ? (header.match(/data:(.*?);base64/)?.[1] ?? 'image/jpeg')
+    : 'image/jpeg';
+  const base64Data = hasDataUrlHeader ? data : base64;
+  const binaryString = atob(base64Data);
+  const byteArray = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+  const extension = mimeType.split('/')[1] ?? 'jpg';
+
+  return new File([byteArray], `${fileName}.${extension}`, { type: mimeType });
+};
