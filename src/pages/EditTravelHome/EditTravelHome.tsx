@@ -136,7 +136,19 @@ export default function EditTravelHome() {
       if (
         typeof parsedMessage !== 'object' ||
         parsedMessage === null ||
-        !('type' in parsedMessage) ||
+        !('type' in parsedMessage)
+      ) {
+        return;
+      }
+      if (
+        parsedMessage.type === 'SELECT_IMAGES_ERROR' &&
+        'message' in parsedMessage &&
+        typeof parsedMessage.message === 'string'
+      ) {
+        setPhotoErrorText(parsedMessage.message);
+        return;
+      }
+      if (
         parsedMessage.type !== 'SELECT_IMAGES_RESULT' ||
         !('photos' in parsedMessage) ||
         !Array.isArray(parsedMessage.photos)

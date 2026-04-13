@@ -25,6 +25,11 @@ export interface WebViewSelectImagesResultMessage {
   photos: WebViewPhoto[];
 }
 
+export interface WebViewSelectImagesErrorMessage {
+  type: 'SELECT_IMAGES_ERROR';
+  message: string;
+}
+
 export interface uploadedPhoto {
   id: number;
   url: string;
