@@ -5,7 +5,9 @@ export const useAppScheme = (shareToken: string | undefined, additionalPath: str
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    if (searchParams.get('type') === 'app') {
+    const isInApp = searchParams.get('type') === 'app' || sessionStorage.getItem('is_in_app') === 'true';
+    if (isInApp) {
+      sessionStorage.setItem('is_in_app', 'true');
       setIsMobile(false);
       return;
     }
