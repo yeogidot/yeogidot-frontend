@@ -44,7 +44,7 @@ export const useAppScheme = (shareToken: string | undefined, additionalPath: str
     if (isAndroid) {
       window.location.href = intentUrl;
     } else if (isIOS) {
-      window.location.href = intentUrl;
+      window.location.href = schemeUrl;
     } else {
       console.log('📱 PC 환경 감지됨: 테스트를 위해 기본 스킴을 호출해 봅니다.', schemeUrl);
       window.location.href = schemeUrl;
