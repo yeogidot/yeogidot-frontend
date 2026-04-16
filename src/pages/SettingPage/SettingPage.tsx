@@ -15,7 +15,7 @@ export default function SettingPage() {
             navigate(-1);
           }}
         >
-          <img src={BlackBackIcon} alt="뒤로가기 버튼 이미지" />
+<img src={BlackBackIcon} alt="뒤로가기" />
         </button>
         <h1 className={classes.headerText}>개인 설정</h1>
       </header>
