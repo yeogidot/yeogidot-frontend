@@ -45,7 +45,7 @@ export default function MyTravelPage() {
           to="/setting"
           state={{ forward: true }}
           viewTransition
-          className={classes.logoutLink}
+          className={classes.menuLink}
         >
           개인 설정
         </Link>
