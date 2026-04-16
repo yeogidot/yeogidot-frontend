@@ -24,6 +24,7 @@ import ErrorRoute from './pages/ErrorPage/ErrorRoute';
 
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import { Transition } from './pages/Transition/Transition';
+import SettingPage from './pages/SettingPage/SettingPage';
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
           {
             path: '/my-travel',
             Component: MyTravelPage,
+          },
+          {
+            path: '/setting',
+            Component: SettingPage,
           },
           {
             path: '/map',
