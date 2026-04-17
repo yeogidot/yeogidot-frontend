@@ -18,4 +18,14 @@ export const authService = {
       status?: number;
     }>('/api/auth/account', token, { password });
   },
+  changePassword: (
+    input: { password: string; new_password: string },
+    token: string
+  ) => {
+    return http.patch<{
+      message: string;
+      error?: string;
+      status?: number;
+    }>('/api/auth/password', input, token);
+  },
 };
