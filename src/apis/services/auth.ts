@@ -11,4 +11,11 @@ export const authService = {
   logout: () => {
     return http.post<string>('/api/auth/login', undefined);
   },
+  deleteAccount: (password: string, token: string) => {
+    return http.delete<{
+      message: string;
+      error?: string;
+      status?: number;
+    }>('/api/auth/account', token, { password });
+  },
 };
