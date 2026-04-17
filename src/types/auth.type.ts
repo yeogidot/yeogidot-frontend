@@ -10,6 +10,11 @@ export interface LoginInput {
   password: string;
 }
 
+export interface ChangePasswordInput {
+  password: string;
+  new_password: string;
+}
+
 export interface Token {
   token_type: string;
   access_token: string;
