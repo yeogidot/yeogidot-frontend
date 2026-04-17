@@ -1,0 +1,117 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  min-height: 100dvh;
+}
+
+.header {
+  padding-top: 83px;
+  padding-inline: 38px;
+}
+
+.headerText {
+  margin-bottom: 0px;
+}
+
+.backButton {
+  border-radius: 10px;
+  padding: 0px;
+  border-style: none;
+  background-color: transparent;
+}
+
+.content {
+  padding-inline: 38px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+  flex: 1;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 24px;
+}
+
+.warningText {
+  color: #666666;
+  line-height: 24px;
+  margin: 0;
+}
+
+.deletedDataList {
+  margin: 0;
+  padding-left: 22px;
+  color: #444444;
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+  line-height: 24px;
+}
+
+.inputSection {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}
+
+.inputHeader {
+  margin: 0;
+}
+
+.textInput {
+  margin: 0 auto;
+  width: 90%;
+  height: 44px;
+  border-radius: 5px;
+  border-style: none;
+  font-size: 20px;
+  border-width: 1px;
+  background-color: #f5f5f5;
+  padding-inline: 5%;
+}
+
+.textInputError {
+  border-style: solid;
+  border-color: red;
+}
+
+.textInputError:focus {
+  outline-color: red;
+}
+
+.textInput:focus {
+  outline-color: #0d9eff;
+  outline-offset: 0px;
+}
+
+.errorHelperText {
+  color: red;
+  font-size: 14px;
+  margin: 0;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.deleteButton {
+  width: 100%;
+  border-radius: 10px;
+  background-color: #e53935;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 14px 16px;
+  height: auto;
+  min-width: 0;
+  margin-top: auto;
+  margin-bottom: 24px;
+}
+
+.modalMessage {
+  margin: 0;
+  color: #555555;
+  line-height: 22px;
+}
