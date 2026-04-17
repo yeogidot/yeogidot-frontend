@@ -1,5 +1,10 @@
 import { http } from '../http';
-import type { SignUpInput, LoginInput, Token } from 'src/types/auth.type';
+import type {
+  SignUpInput,
+  LoginInput,
+  Token,
+  ChangePasswordInput,
+} from 'src/types/auth.type';
 
 export const authService = {
   signUp: (input: SignUpInput) => {
@@ -18,10 +23,7 @@ export const authService = {
       status?: number;
     }>('/api/auth/account', token, { password });
   },
-  changePassword: (
-    input: { password: string; new_password: string },
-    token: string
-  ) => {
+  changePassword: (input: ChangePasswordInput, token: string) => {
     return http.patch<{
       message: string;
       error?: string;

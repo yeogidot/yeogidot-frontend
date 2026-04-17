@@ -10,7 +10,7 @@ export interface LoginInput {
   password: string;
 }
 
-export interface changePasswordInput {
+export interface ChangePasswordInput {
   password: string;
   new_password: string;
 }
