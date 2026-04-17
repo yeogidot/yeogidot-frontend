@@ -21,6 +21,8 @@ import SelectThumbnailPage from './pages/SelectThumbnailPage/SelectThumbnailPage
 import SelectThumbnailPhotoPage from './pages/SelectThumbnailPhotoPage/SelectThumbnailPhotoPage';
 import MapPage from './pages/MapPage/MapPage';
 import ErrorRoute from './pages/ErrorPage/ErrorRoute';
+import DeleteAccountPage from './pages/DeleteAccountPage/DeleteAccountPage';
+import DeleteAccountCompletePage from './pages/DeleteAccountCompletePage/DeleteAccountCompletePage';
 
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import { Transition } from './pages/Transition/Transition';
@@ -53,6 +55,14 @@ const router = createBrowserRouter([
           {
             path: '/my-travel',
             Component: MyTravelPage,
+          },
+          {
+            path: '/delete-account',
+            Component: DeleteAccountPage,
+          },
+          {
+            path: '/delete-account/complete',
+            Component: DeleteAccountCompletePage,
           },
           {
             path: '/map',
