@@ -42,13 +42,12 @@ export default function MyTravelPage() {
       <header className={classes.header}>
         <h1 className={classes.headerText}>내 여행 목록</h1>
         <Link
-          to="/login"
+          to="/setting"
           state={{ forward: true }}
           viewTransition
-          onClick={() => localStorage.removeItem('accessToken')}
-          className={classes.logoutLink}
+          className={classes.menuLink}
         >
-          로그아웃
+          개인 설정
         </Link>
       </header>
       {error ? error : ''}

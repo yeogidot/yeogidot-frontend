@@ -1,0 +1,71 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}
+
+.header {
+  padding-top: 83px;
+  padding-inline: 38px;
+}
+
+.headerText {
+  margin-bottom: 0px;
+}
+
+.backButton {
+  border-radius: 10px;
+  padding: 0px;
+  border-style: none;
+  background-color: transparent;
+}
+
+.menuSection {
+  padding-inline: 38px;
+  margin-top: 16px;
+}
+
+.menuList {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+  border-top: 1px solid #e8e8e8;
+}
+
+.menuList li {
+  margin: 0px;
+  padding: 0px;
+}
+
+.menuItem,
+.menuItemButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid #e8e8e8;
+  background: transparent;
+  padding: 16px 4px;
+  font-size: 16px;
+  line-height: 24px;
+  color: #1f1f1f;
+  text-align: left;
+  text-decoration: none;
+}
+
+.menuItemButton {
+  cursor: pointer;
+  font: inherit;
+}
+
+.dangerMenuItem {
+  color: #e53935;
+}
+
+.chevronIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}

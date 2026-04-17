@@ -26,6 +26,7 @@ import DeleteAccountCompletePage from './pages/DeleteAccountCompletePage/DeleteA
 
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import { Transition } from './pages/Transition/Transition';
+import SettingPage from './pages/SettingPage/SettingPage';
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
           {
             path: '/delete-account/complete',
             Component: DeleteAccountCompletePage,
+          },
+          {
+            path: '/setting',
+            Component: SettingPage,
           },
           {
             path: '/map',
