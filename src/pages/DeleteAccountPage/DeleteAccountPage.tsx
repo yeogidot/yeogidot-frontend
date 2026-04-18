@@ -1,16 +1,24 @@
 import BlackBackIcon from '@assets/icons/back-black.svg';
 import Button from '@components/Buttons/Button/Button';
-import Modal from '@components/Modal/Modal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classes from './DeleteAccountPage.module.css';
+import { useApi } from '@hooks/api';
+import { authService } from 'src/apis/services/auth';
+import useModal from '@hooks/useModal';
+
+const DELETE_ACCOUNT_ERROR_MESSAGES: Record<number, string> = {
+  400: '비밀번호가 일치하지 않습니다.',
+  401: '인증이 필요합니다.',
+};
 
 export default function DeleteAccountPage() {
   const navigate = useNavigate();
+  const { openModal, modalElement } = useModal();
   const [password, setPassword] = useState('');
   const [passwordErrorText, setPasswordErrorText] = useState('');
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-
+  const { status, request } = useApi(authService.deleteAccount);
+  const token = localStorage.getItem('accessToken');
   const handlePasswordInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -25,16 +33,44 @@ export default function DeleteAccountPage() {
       setPasswordErrorText('비밀번호를 입력해주세요.');
       return;
     }
-    setIsConfirmModalOpen(true);
-  };
-
-  const handleConfirmDelete = () => {
-    setIsConfirmModalOpen(false);
-    navigate('/delete-account/complete', {
-      viewTransition: true,
-      state: { forward: true },
+    openModal({
+      title: '정말로 탈퇴하겠습니까?',
+      message:
+        '확인을 누르면 회원 탈퇴가 완료되고 데이터는 복구할 수 없습니다.',
+      onConfirm: handleConfirmDelete,
     });
   };
+
+  const handleConfirmDelete = async () => {
+    if (!token) {
+      openModal({
+        title: '회원탈퇴 실패',
+        message: DELETE_ACCOUNT_ERROR_MESSAGES[401],
+      });
+      return;
+    }
+    await request(password, token);
+  };
+
+  useEffect(() => {
+    if (status === null) {
+      return;
+    }
+    if (status === 200) {
+      navigate('/delete-account/complete', {
+        viewTransition: true,
+        state: { forward: true },
+      });
+      return;
+    }
+
+    openModal({
+      title: '회원탈퇴 실패',
+      message:
+        DELETE_ACCOUNT_ERROR_MESSAGES[status] ??
+        '회원탈퇴 중 오류가 발생했습니다.',
+    });
+  }, [navigate, openModal, status]);
 
   return (
     <div className={classes.container}>
@@ -83,30 +119,7 @@ export default function DeleteAccountPage() {
           탈퇴 진행하기
         </Button>
       </main>
-      <Modal.Root
-        isOpen={isConfirmModalOpen}
-        onCancel={() => {
-          setIsConfirmModalOpen(false);
-        }}
-      >
-        <Modal.Title>정말로 탈퇴하겠습니까?</Modal.Title>
-        <p className={classes.modalMessage}>
-          확인을 누르면 회원 탈퇴가 완료되고 데이터는 복구할 수 없습니다.
-        </p>
-        <Modal.ButtonGroup>
-          <Modal.Button
-            variant="gray"
-            onClick={() => {
-              setIsConfirmModalOpen(false);
-            }}
-          >
-            취소
-          </Modal.Button>
-          <Modal.Button variant="red" onClick={handleConfirmDelete}>
-            확인
-          </Modal.Button>
-        </Modal.ButtonGroup>
-      </Modal.Root>
+      {modalElement}
     </div>
   );
 }
