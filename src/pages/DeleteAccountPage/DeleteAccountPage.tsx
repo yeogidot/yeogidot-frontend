@@ -38,6 +38,7 @@ export default function DeleteAccountPage() {
       message:
         '확인을 누르면 회원 탈퇴가 완료되고 데이터는 복구할 수 없습니다.',
       onConfirm: handleConfirmDelete,
+      confirmVariant: 'red',
     });
   };
 
