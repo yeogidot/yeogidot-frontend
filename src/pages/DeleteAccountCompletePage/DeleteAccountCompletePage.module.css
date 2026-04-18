@@ -1,0 +1,35 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 38px;
+}
+
+.content {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+}
+
+.title {
+  margin: 0px;
+}
+
+.description {
+  margin: 0px;
+  color: #666666;
+}
+
+.loginButton {
+  margin-top: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  background-color: #0d9eff;
+  color: #ffffff;
+  font-size: 16px;
+  padding: 14px 16px;
+}
