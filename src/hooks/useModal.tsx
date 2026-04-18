@@ -6,6 +6,8 @@ type OpenModalOptions = {
   message: string;
   confirmText?: string;
   cancelText?: string;
+  confirmVariant?: 'blue' | 'gray' | 'red';
+  cancelVariant?: 'blue' | 'gray' | 'red';
   onConfirm?: () => void;
   onCancel?: () => void;
 };
@@ -20,6 +22,8 @@ type ModalState = {
   message: string;
   confirmText: string;
   cancelText: string;
+  confirmVariant?: 'blue' | 'gray' | 'red';
+  cancelVariant?: 'blue' | 'gray' | 'red';
   onConfirm?: () => void;
   onCancel?: () => void;
 };
@@ -44,6 +48,8 @@ export default function useModal(initialOptions?: InitialModalOptions) {
       cancelText: initialOptions.cancelText ?? '취소',
       onConfirm: initialOptions.onConfirm,
       onCancel: initialOptions.onCancel,
+      confirmVariant: initialOptions.confirmVariant ?? 'blue',
+      cancelVariant: initialOptions.cancelVariant ?? 'gray',
     };
   });
 
@@ -60,6 +66,8 @@ export default function useModal(initialOptions?: InitialModalOptions) {
       cancelText: options.cancelText ?? '취소',
       onConfirm: options.onConfirm,
       onCancel: options.onCancel,
+      cancelVariant: options.cancelVariant ?? 'gray',
+      confirmVariant: options.confirmVariant ?? 'blue',
     });
   }, []);
 
@@ -78,10 +86,10 @@ export default function useModal(initialOptions?: InitialModalOptions) {
       <Modal.Title>{state.title}</Modal.Title>
       <p>{state.message}</p>
       <Modal.ButtonGroup>
-        <Modal.Button variant="gray" onClick={handleCancel}>
+        <Modal.Button variant={state.cancelVariant} onClick={handleCancel}>
           {state.cancelText}
         </Modal.Button>
-        <Modal.Button variant="blue" onClick={handleConfirm}>
+        <Modal.Button variant={state.confirmVariant} onClick={handleConfirm}>
           {state.confirmText}
         </Modal.Button>
       </Modal.ButtonGroup>
