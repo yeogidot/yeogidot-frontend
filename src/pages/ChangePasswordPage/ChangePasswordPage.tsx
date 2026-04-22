@@ -89,7 +89,7 @@ export default function ChangePasswordPage() {
         <h1 className={classes.headerText}>비밀번호 변경</h1>
       </header>
 
-      <form onSubmit={handleSubmit(onSubmit)} className={classes.signUpForm}>
+      <form onSubmit={handleSubmit(onSubmit)} className={classes.changePasswordForm}>
         {/* 현재 비밀번호 */}
         <div className={classes.passwordForm}>
           <h3>현재 비밀번호</h3>
@@ -135,7 +135,7 @@ export default function ChangePasswordPage() {
           )}
         </div>
 
-        <Button type="submit" className={classes.signUpButton}>
+        <Button type="submit" className={classes.submitButton}>
           변경
         </Button>
       </form>
