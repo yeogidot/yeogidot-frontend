@@ -23,6 +23,7 @@ import MapPage from './pages/MapPage/MapPage';
 import ErrorRoute from './pages/ErrorPage/ErrorRoute';
 import DeleteAccountPage from './pages/DeleteAccountPage/DeleteAccountPage';
 import DeleteAccountCompletePage from './pages/DeleteAccountCompletePage/DeleteAccountCompletePage';
+import ChangePasswordPage from './pages/ChangePasswordPage/ChangePasswordPage';
 
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import { Transition } from './pages/Transition/Transition';
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
           {
             path: '/my-travel',
             Component: MyTravelPage,
+          },
+          {
+            path: '/change-password',
+            Component: ChangePasswordPage,
           },
           {
             path: '/delete-account',
