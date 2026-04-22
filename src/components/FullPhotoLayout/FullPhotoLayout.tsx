@@ -26,20 +26,19 @@ export default function FullPhotoLayout({
   const scrollToScailedCenter = (
     center: { x: number; y: number } | null,
     container: HTMLDivElement | null,
-    scailingRatio: number,
+    ratio: number,
     viewportHeight: number
   ) => {
     if (center === null || container === null) {
       return;
     }
     const { x, y } = center;
-    const scailedX = x * scailingRatio;
-    const scailedY = y * scailingRatio;
-    container.scrollTo(scailedX - x, scailedY - (viewportHeight - y));
+    const scaledX = x * ratio;
+    const scaledY = y * ratio;
+    container.scrollTo(scaledX - x, scaledY - (viewportHeight - y));
   };
 
   const handlePointerDown = (event: React.PointerEvent<HTMLImageElement>) => {
-    console.log(event);
     setPointerStatus(({ eventCache, previousDiff }) => {
       return {
         eventCache: eventCache.length < 2 ? [...eventCache, event] : eventCache,
@@ -89,7 +88,6 @@ export default function FullPhotoLayout({
     });
   };
   const handlePointerCancel = (event: React.PointerEvent<HTMLImageElement>) => {
-    console.log(event);
     setPointerStatus(({ eventCache, previousDiff }) => {
       return {
         eventCache: eventCache.filter(
