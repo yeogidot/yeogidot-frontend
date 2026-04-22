@@ -64,6 +64,7 @@ export default function ChangePasswordPage() {
           title: '인증 만료',
           message: '인증이 만료되었습니다. 다시 로그인해주세요.',
           onConfirm: () => navigate('/login'),
+          onCancel: () => navigate('/login'),
         });
       } else {
         const errorMsg = error.message || '알 수 없는 에러';
