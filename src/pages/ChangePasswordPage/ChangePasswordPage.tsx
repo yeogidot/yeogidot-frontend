@@ -51,6 +51,7 @@ export default function ChangePasswordPage() {
         title: '비밀번호 변경 완료',
         message: '비밀번호가 성공적으로 변경되었습니다!',
         onConfirm: () => navigate(-1),
+        onCancel: () => navigate(-1),
       });
     } catch (error: any) {
       console.error('비밀번호 변경 에러:', error);
