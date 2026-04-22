@@ -59,7 +59,7 @@ export default function ChangePasswordPage() {
       const status = error.status;
 
       if (status === 400) {
-        setError('password', { message: '현재 비밀번호가 일치하지 않습니다.' });
+        setError('password', { message: '비밀번호가 일치하지 않거나 새 비밀번호와 같습니다.' });
       } else if (status === 401) {
         openModal({
           title: '인증 만료',
