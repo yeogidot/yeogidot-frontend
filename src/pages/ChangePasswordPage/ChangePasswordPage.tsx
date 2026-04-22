@@ -135,7 +135,7 @@ export default function ChangePasswordPage() {
           )}
         </div>
 
-        <Button type="submit" className={classes.signUpButton}>
+        <Button type="submit" className={classes.submitButton}>
           변경
         </Button>
       </form>
