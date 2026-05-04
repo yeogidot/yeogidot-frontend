@@ -1,12 +1,15 @@
-import { useRef, useState, type ReactElement } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import type { DatedPhotoData } from 'src/types/photo.type';
 import classes from './FullPhotoLayout.module.css';
 import { getCenter, getDiff, detectZoom } from '@utils/zoom';
 interface Props {
   photo: DatedPhotoData;
-  children?: ReactElement[] | ReactElement;
+  children?: ReactNode;
   imageWidthDefaultPercent?: number;
 }
+
+const MAX_WIDTH_PERCENT = 300;
+const MIN_WIDTH_PERCENT = 100;
 
 export default function FullPhotoLayout({
   photo,
@@ -55,10 +58,12 @@ export default function FullPhotoLayout({
       const center = getCenter(nextEventCache);
       if (
         detectZoom(previousDiff, nowDiff) === 'ZOOM IN' &&
-        imageWidthPercent < 300
+        imageWidthPercent < MAX_WIDTH_PERCENT
       ) {
         setImageWidthPercent(widthPercent =>
-          widthPercent < 300 ? widthPercent * 1.01 : 300
+          widthPercent * 1.01 < MAX_WIDTH_PERCENT
+            ? widthPercent * 1.01
+            : widthPercent
         );
         scrollToScailedCenter(
           center,
@@ -69,10 +74,12 @@ export default function FullPhotoLayout({
       }
       if (
         detectZoom(previousDiff, nowDiff) === 'ZOOM OUT' &&
-        imageWidthPercent > 100
+        imageWidthPercent > MIN_WIDTH_PERCENT
       ) {
         setImageWidthPercent(widthPercent =>
-          widthPercent > 100 ? widthPercent * 0.99 : 100
+          widthPercent * 0.99 > MIN_WIDTH_PERCENT
+            ? widthPercent * 0.99
+            : widthPercent
         );
         scrollToScailedCenter(
           center,
