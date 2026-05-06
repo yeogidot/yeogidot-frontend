@@ -35,3 +35,18 @@ export const getCenter = (eventCache: React.PointerEvent[]) => {
     y: (a.clientY + b.clientY) / 2,
   };
 };
+
+export const scrollToScailedCenter = (
+  center: { x: number; y: number } | null,
+  container: HTMLDivElement | null,
+  ratio: number,
+  viewportHeight: number
+) => {
+  if (center === null || container === null) {
+    return;
+  }
+  const { x, y } = center;
+  const scaledX = x * ratio;
+  const scaledY = y * ratio;
+  container.scrollTo(scaledX - x, scaledY - (viewportHeight - y));
+};

@@ -1,7 +1,12 @@
 import { useRef, useState, type ReactNode } from 'react';
 import type { DatedPhotoData } from 'src/types/photo.type';
 import classes from './FullPhotoLayout.module.css';
-import { getCenter, getDiff, detectZoom } from '@utils/zoom';
+import {
+  getCenter,
+  getDiff,
+  detectZoom,
+  scrollToScailedCenter,
+} from '@utils/zoom';
 interface Props {
   photo: DatedPhotoData;
   children?: ReactNode;
@@ -25,21 +30,6 @@ export default function FullPhotoLayout({
   const [imageWidthPercent, setImageWidthPercent] = useState(
     imageWidthDefaultPercent
   );
-
-  const scrollToScailedCenter = (
-    center: { x: number; y: number } | null,
-    container: HTMLDivElement | null,
-    ratio: number,
-    viewportHeight: number
-  ) => {
-    if (center === null || container === null) {
-      return;
-    }
-    const { x, y } = center;
-    const scaledX = x * ratio;
-    const scaledY = y * ratio;
-    container.scrollTo(scaledX - x, scaledY - (viewportHeight - y));
-  };
 
   const handlePointerDown = (event: React.PointerEvent<HTMLImageElement>) => {
     setPointerStatus(({ eventCache, previousDiff }) => {
