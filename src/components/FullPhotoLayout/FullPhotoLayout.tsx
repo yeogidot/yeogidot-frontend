@@ -5,7 +5,7 @@ import {
   getCenter,
   getDiff,
   detectZoom,
-  scrollToScailedCenter,
+  scrollToScaledCenter,
 } from '@utils/zoom';
 interface Props {
   photo: DatedPhotoData;
@@ -67,7 +67,7 @@ export default function FullPhotoLayout({
       setImageWidthPercent(nextWidth);
       imageWidthPercentRef.current = nextWidth;
       const scale = nextWidth / prevWidth;
-      scrollToScailedCenter(center, containerRef.current, scale);
+      scrollToScaledCenter(center, containerRef.current, scale);
 
       return {
         eventCache: nextEventCache,

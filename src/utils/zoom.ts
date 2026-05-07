@@ -36,7 +36,7 @@ export const getCenter = (eventCache: React.PointerEvent[]) => {
   };
 };
 
-export const scrollToScailedCenter = (
+export const scrollToScaledCenter = (
   center: { x: number; y: number } | null,
   container: HTMLDivElement | null,
   scale: number
