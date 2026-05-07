@@ -27,6 +27,7 @@ export default function FullPhotoLayout({
   }>({ eventCache: [], previousDiff: null });
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const imageWidthPercentRef = useRef(imageWidthDefaultPercent);
   const [imageWidthPercent, setImageWidthPercent] = useState(
     imageWidthDefaultPercent
   );
@@ -46,38 +47,28 @@ export default function FullPhotoLayout({
       );
       const nowDiff = getDiff(nextEventCache);
       const center = getCenter(nextEventCache);
+
+      const prevWidth = imageWidthPercentRef.current;
+      let nextWidth = prevWidth;
+
       if (
         detectZoom(previousDiff, nowDiff) === 'ZOOM IN' &&
         imageWidthPercent < MAX_WIDTH_PERCENT
       ) {
-        setImageWidthPercent(widthPercent =>
-          widthPercent * 1.01 < MAX_WIDTH_PERCENT
-            ? widthPercent * 1.01
-            : widthPercent
-        );
-        scrollToScailedCenter(
-          center,
-          containerRef.current,
-          imageWidthPercent * 0.01,
-          window.innerHeight
-        );
+        nextWidth = Math.min(prevWidth * 1.01, MAX_WIDTH_PERCENT);
       }
       if (
         detectZoom(previousDiff, nowDiff) === 'ZOOM OUT' &&
         imageWidthPercent > MIN_WIDTH_PERCENT
       ) {
-        setImageWidthPercent(widthPercent =>
-          widthPercent * 0.99 > MIN_WIDTH_PERCENT
-            ? widthPercent * 0.99
-            : widthPercent
-        );
-        scrollToScailedCenter(
-          center,
-          containerRef.current,
-          imageWidthPercent * 0.01,
-          window.innerHeight
-        );
+        nextWidth = Math.max(prevWidth * 0.99, MIN_WIDTH_PERCENT);
       }
+
+      setImageWidthPercent(nextWidth);
+      imageWidthPercentRef.current = nextWidth;
+      const scale = nextWidth / prevWidth;
+      scrollToScailedCenter(center, containerRef.current, scale);
+
       return {
         eventCache: nextEventCache,
         previousDiff: nowDiff ? nowDiff : previousDiff,
