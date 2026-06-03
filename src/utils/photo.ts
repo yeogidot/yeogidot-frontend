@@ -35,7 +35,8 @@ export async function photoFileToWebp(photoFile: File) {
           photoFile.name.replace(/(\.[^/.]+)?$/, '.webp')
         );
         resolve(webpFile);
-      } catch {
+      } catch (error) {
+        console.error('WebP 변환 중 오류 발생:', error);
         reject(new Error('이미지 변환 실패'));
       } finally {
         URL.revokeObjectURL(imageURL);
