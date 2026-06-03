@@ -32,7 +32,8 @@ export async function photoFileToWebp(photoFile: File) {
         const webpArrayBuffer = await encode(photoImageData);
         const webpFile = new File(
           [webpArrayBuffer],
-          photoFile.name.replace(/(\.[^/.]+)?$/, '.webp')
+          photoFile.name.replace(/(\.[^/.]+)?$/, '.webp'),
+          { type: 'image/webp' }
         );
         resolve(webpFile);
       } catch {
