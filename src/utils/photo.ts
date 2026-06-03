@@ -1,3 +1,5 @@
+import { encode } from '@jsquash/webp';
+
 export async function photoFileToWebp(photoFile: File) {
   return new Promise<File>((resolve, reject) => {
     const imageURL = URL.createObjectURL(photoFile);
@@ -8,7 +10,7 @@ export async function photoFileToWebp(photoFile: File) {
       );
       URL.revokeObjectURL(imageURL);
     };
-    image.onload = () => {
+    image.onload = async () => {
       const canvas = document.createElement('canvas');
       canvas.width = image.width;
       canvas.height = image.height;
@@ -19,21 +21,25 @@ export async function photoFileToWebp(photoFile: File) {
         );
         return;
       }
-      context?.drawImage(image, 0, 0);
-      canvas.toBlob(
-        blob => {
-          if (blob) {
-            resolve(
-              new File([blob], photoFile.name.replace(/(\.[^/.]+)?$/, '.webp'))
-            );
-          } else {
-            reject(new Error('이미지 변환 실패'));
-          }
-        },
-        'image/webp',
-        0.7
-      );
-      URL.revokeObjectURL(imageURL);
+      context.drawImage(image, 0, 0);
+      try {
+        const photoImageData = context.getImageData(
+          0,
+          0,
+          image.width,
+          image.height
+        );
+        const webpArrayBuffer = await encode(photoImageData);
+        const webpFile = new File(
+          [webpArrayBuffer],
+          photoFile.name.replace(/(\.[^/.]+)?$/, '.webp')
+        );
+        resolve(webpFile);
+      } catch {
+        reject(new Error('이미지 변환 실패'));
+      } finally {
+        URL.revokeObjectURL(imageURL);
+      }
     };
     image.src = imageURL;
   });
