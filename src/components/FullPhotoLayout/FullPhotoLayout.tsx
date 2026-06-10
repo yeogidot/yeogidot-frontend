@@ -1,12 +1,20 @@
-import { useRef, useState, type ReactElement } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import type { DatedPhotoData } from 'src/types/photo.type';
 import classes from './FullPhotoLayout.module.css';
-import { getCenter, getDiff, detectZoom } from '@utils/zoom';
+import {
+  getCenter,
+  getDiff,
+  detectZoom,
+  scrollToScaledCenter,
+} from '@utils/zoom';
 interface Props {
   photo: DatedPhotoData;
-  children?: ReactElement[] | ReactElement;
+  children?: ReactNode;
   imageWidthDefaultPercent?: number;
 }
+
+const MAX_WIDTH_PERCENT = 300;
+const MIN_WIDTH_PERCENT = 100;
 
 export default function FullPhotoLayout({
   photo,
@@ -19,27 +27,12 @@ export default function FullPhotoLayout({
   }>({ eventCache: [], previousDiff: null });
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const imageWidthPercentRef = useRef(imageWidthDefaultPercent);
   const [imageWidthPercent, setImageWidthPercent] = useState(
     imageWidthDefaultPercent
   );
 
-  const scrollToScailedCenter = (
-    center: { x: number; y: number } | null,
-    container: HTMLDivElement | null,
-    scailingRatio: number,
-    viewportHeight: number
-  ) => {
-    if (center === null || container === null) {
-      return;
-    }
-    const { x, y } = center;
-    const scailedX = x * scailingRatio;
-    const scailedY = y * scailingRatio;
-    container.scrollTo(scailedX - x, scailedY - (viewportHeight - y));
-  };
-
   const handlePointerDown = (event: React.PointerEvent<HTMLImageElement>) => {
-    console.log(event);
     setPointerStatus(({ eventCache, previousDiff }) => {
       return {
         eventCache: eventCache.length < 2 ? [...eventCache, event] : eventCache,
@@ -54,34 +47,28 @@ export default function FullPhotoLayout({
       );
       const nowDiff = getDiff(nextEventCache);
       const center = getCenter(nextEventCache);
+
+      const prevWidth = imageWidthPercentRef.current;
+      let nextWidth = prevWidth;
+
       if (
         detectZoom(previousDiff, nowDiff) === 'ZOOM IN' &&
-        imageWidthPercent < 300
+        imageWidthPercent < MAX_WIDTH_PERCENT
       ) {
-        setImageWidthPercent(widthPercent =>
-          widthPercent < 300 ? widthPercent * 1.01 : 300
-        );
-        scrollToScailedCenter(
-          center,
-          containerRef.current,
-          imageWidthPercent * 0.01,
-          window.innerHeight
-        );
+        nextWidth = Math.min(prevWidth * 1.01, MAX_WIDTH_PERCENT);
       }
       if (
         detectZoom(previousDiff, nowDiff) === 'ZOOM OUT' &&
-        imageWidthPercent > 100
+        imageWidthPercent > MIN_WIDTH_PERCENT
       ) {
-        setImageWidthPercent(widthPercent =>
-          widthPercent > 100 ? widthPercent * 0.99 : 100
-        );
-        scrollToScailedCenter(
-          center,
-          containerRef.current,
-          imageWidthPercent * 0.01,
-          window.innerHeight
-        );
+        nextWidth = Math.max(prevWidth * 0.99, MIN_WIDTH_PERCENT);
       }
+
+      setImageWidthPercent(nextWidth);
+      imageWidthPercentRef.current = nextWidth;
+      const scale = nextWidth / prevWidth;
+      scrollToScaledCenter(center, containerRef.current, scale);
+
       return {
         eventCache: nextEventCache,
         previousDiff: nowDiff ? nowDiff : previousDiff,
@@ -89,7 +76,6 @@ export default function FullPhotoLayout({
     });
   };
   const handlePointerCancel = (event: React.PointerEvent<HTMLImageElement>) => {
-    console.log(event);
     setPointerStatus(({ eventCache, previousDiff }) => {
       return {
         eventCache: eventCache.filter(

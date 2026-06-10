@@ -35,3 +35,22 @@ export const getCenter = (eventCache: React.PointerEvent[]) => {
     y: (a.clientY + b.clientY) / 2,
   };
 };
+
+export const scrollToScaledCenter = (
+  center: { x: number; y: number } | null,
+  container: HTMLDivElement | null,
+  scale: number
+) => {
+  if (center === null || container === null || scale === 1) {
+    return;
+  }
+
+  const { x, y } = center;
+
+  const contentX = container.scrollLeft + x;
+  const contentY = container.scrollTop + y;
+
+  const newScrollLeft = contentX * scale - x;
+  const newScrollTop = contentY * scale - y;
+  container.scrollTo(newScrollLeft, newScrollTop);
+};
