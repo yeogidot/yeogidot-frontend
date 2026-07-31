@@ -13,6 +13,9 @@ export default function DatetimeModal({
 }: Props) {
   const timezoneOffset = new Date().getTimezoneOffset() * 60000;
   const [date, setDate] = useState(currentDate);
+  const nowDate = new Date(Date.now() - timezoneOffset)
+    .toISOString()
+    .slice(0, 16);
   const handleDatetimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDate(event.currentTarget.value);
   };
@@ -38,13 +41,7 @@ export default function DatetimeModal({
             className={classes.datetimePicker}
             id="datetime-picker"
             type="datetime-local"
-            defaultValue={
-              currentDate
-                ? currentDate.slice(0, 16)
-                : new Date(Date.now() - timezoneOffset)
-                    .toISOString()
-                    .slice(0, 16)
-            }
+            defaultValue={currentDate ? currentDate.slice(0, 16) : nowDate}
             onChange={handleDatetimeChange}
           />
         </div>
@@ -62,8 +59,9 @@ export default function DatetimeModal({
             className={classes.confirmButton}
             onClick={() => {
               if (onConfirm) {
-                onConfirm(date ?? undefined)
-              }}}
+                onConfirm(date ?? nowDate);
+              }
+            }}
           >
             완료
           </button>

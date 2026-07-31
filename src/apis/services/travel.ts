@@ -57,9 +57,7 @@ export const travelService = {
       photo => photo.id === travel.thumbnailPhotoId
     );
     const uploadedRepresentativePhoto = uploadedData.data.uploadedPhotos.find(
-      photo =>
-        photo.takenAt === localRepresentativePhoto?.date &&
-        photo.originalName === localRepresentativePhoto?.file.name
+      photo => photo.originalName === localRepresentativePhoto?.file.name
     );
 
     if (uploadedRepresentativePhoto === undefined) {
