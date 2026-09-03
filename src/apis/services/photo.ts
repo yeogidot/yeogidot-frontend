@@ -4,7 +4,7 @@ import type {
   PhotoMarkerData,
   PhotoMetadata,
   UploadedFullPhoto,
-} from '../../types/photo.type';
+} from '../../domains/travel/types/photo.type';
 import { photoFileToWebp } from '@utils/photo';
 export const photoService = {
   uploadPhoto: async (
@@ -36,10 +36,7 @@ export const photoService = {
     return http.get<FullPhoto>(`/api/photos/${id}`, token);
   },
   getPhotosForMap: (token: string) => {
-    return http.get<PhotoMarkerData[]>(
-      `/api/photos/map-markers`,
-      token
-    );
+    return http.get<PhotoMarkerData[]>(`/api/photos/map-markers`, token);
   },
   updatePhotoTakenTime: (id: number, newTakenTime: string, token: string) => {
     return http.put(
