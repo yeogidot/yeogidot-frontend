@@ -1,4 +1,4 @@
-import type { DayTravel } from '../types/dayTravel';
+import type { DayTravel } from '../domains/travel/types/dayTravel';
 import { samplePhotos } from './samplePhotos';
 
 // 날짜를 YYYY-MM-DD 형식으로 변환하는 함수
@@ -10,7 +10,9 @@ const formatDate = (date: Date): string => {
 const calculateTravelPeriod = (photos: typeof samplePhotos): string => {
   if (photos.length === 0) return '';
 
-  const sortedPhotos = [...photos].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+  const sortedPhotos = [...photos].sort(
+    (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
+  );
   const startDate = sortedPhotos[0].timestamp;
   const endDate = sortedPhotos[sortedPhotos.length - 1].timestamp;
 

@@ -4,10 +4,10 @@ import type {
   SharedTravelUrl,
   TravelDay,
   TravelInfo,
-} from 'src/types/travel.type';
+} from 'src/domains/travel/types/travel.type';
 import { http } from '../http';
 import { photoService } from './photo';
-import type { FullPhotoData } from 'src/types/photo.type';
+import type { FullPhotoData } from 'src/domains/travel/types/photo.type';
 
 export const travelService = {
   getTravel: (id: number, token: string) => {
