@@ -1,4 +1,4 @@
-import type { DatedPhotoData } from 'src/types/photo.type';
+import type { DatedPhotoData } from 'src/domains/travel/types/photo.type';
 
 export const convertISOToKorean = (ISOString: string) => {
   const koreanDate = new Date(ISOString);

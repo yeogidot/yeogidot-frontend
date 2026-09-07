@@ -4,7 +4,7 @@ import type {
   LoginInput,
   Token,
   ChangePasswordInput,
-} from 'src/types/auth.type';
+} from 'src/domains/auth/types/auth.type';
 
 export const authService = {
   signUp: (input: SignUpInput) => {
