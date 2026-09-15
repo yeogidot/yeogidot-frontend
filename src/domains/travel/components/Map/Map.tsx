@@ -1,34 +1,19 @@
-import { type ReactNode, useEffect } from 'react';
-// 1. ZoomControl을 import에 추가합니다.
-import { MapContainer, TileLayer, ZoomControl, useMap } from 'react-leaflet';
-import type { LatLngExpression } from 'leaflet';
+import { type ReactNode } from 'react';
+import { Container as MapDiv, NaverMap } from 'react-naver-maps';
 import classes from './Map.module.css';
+
+type LatLng = { lat: number; lng: number };
 
 type MapProps = {
   className?: string;
-  position?: LatLngExpression;
+  position?: LatLng;
   zoom?: number;
   scrollWheelZoom?: boolean;
   children?: ReactNode;
 };
 
-const DEFAULT_CENTER: LatLngExpression = [35.1796, 129.0756];
+const DEFAULT_CENTER: LatLng = { lat: 35.1796, lng: 129.0756 };
 const DEFAULT_ZOOM = 15;
-
-// Component to handle map view changes dynamically
-function ChangeView({
-  center,
-  zoom,
-}: {
-  center: LatLngExpression;
-  zoom: number;
-}) {
-  const map = useMap();
-  useEffect(() => {
-    map.setView(center, zoom);
-  }, [center, zoom, map]);
-  return null;
-}
 
 export default function Map({
   className,
@@ -42,24 +27,15 @@ export default function Map({
     : classes.map;
 
   return (
-    <MapContainer
-      className={mapClassName}
-      center={position}
-      zoom={zoom}
-      scrollWheelZoom={scrollWheelZoom}
-      zoomControl={false} // 2. 기본 줌 컨트롤을 끕니다.
-    >
-      <ChangeView center={position} zoom={zoom} />
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-
-      {/* 3. ZoomControl 컴포넌트를 추가하고 위치를 지정합니다. */}
-      {/* position 옵션: 'topright', 'bottomright', 'bottomleft', 'topleft' */}
-      <ZoomControl position="topright" />
-
-      {children}
-    </MapContainer>
+    <MapDiv className={mapClassName}>
+      <NaverMap
+        center={position}
+        zoom={zoom}
+        scrollWheel={scrollWheelZoom}
+        zoomControl={false}
+      >
+        {children}
+      </NaverMap>
+    </MapDiv>
   );
 }

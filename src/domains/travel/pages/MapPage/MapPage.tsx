@@ -9,12 +9,12 @@ import type { PhotoMarkerData } from '../../types/photo.type';
 import classes from './MapPage.module.css';
 
 // Default center (Seoul or user's default)
-const DEFAULT_CENTER: [number, number] = [37.5665, 126.978];
+const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 };
 
 export default function MapPage() {
   const navigate = useNavigate();
   const [photos, setPhotos] = useState<PhotoMarkerData[]>([]);
-  const [mapCenter, setMapCenter] = useState<[number, number]>(DEFAULT_CENTER);
+  const [mapCenter, setMapCenter] = useState(DEFAULT_CENTER);
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -36,7 +36,10 @@ export default function MapPage() {
             validPhotos[0].latitude != null &&
             validPhotos[0].longitude != null
           ) {
-            setMapCenter([validPhotos[0].latitude, validPhotos[0].longitude]);
+            setMapCenter({
+              lat: validPhotos[0].latitude,
+              lng: validPhotos[0].longitude,
+            });
           }
         }
       } catch (error) {
@@ -99,7 +102,7 @@ export default function MapPage() {
           photo.latitude && photo.longitude ? (
             <PhotoMarker
               key={photo.photoId}
-              position={[photo.latitude, photo.longitude]}
+              position={{ lat: photo.latitude, lng: photo.longitude }}
               photoUrl={photo.thumbnailUrl}
               onClick={() => photo.photoId && handleMarkerClick(photo.photoId)}
             />

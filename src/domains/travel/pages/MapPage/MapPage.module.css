@@ -11,9 +11,6 @@
     z-index: 0;
 }
 
-.map :global(.leaflet-top .leaflet-control-zoom) {
-    margin-top: 59px;
-}
 
 .backButton {
     position: absolute;

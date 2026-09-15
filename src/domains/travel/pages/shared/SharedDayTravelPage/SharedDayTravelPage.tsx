@@ -68,10 +68,11 @@ export default function SharedDayTravelPage() {
         position={
           latestPhoto?.latitude !== undefined &&
           latestPhoto?.longitude !== undefined
-            ? [
-                (latestPhoto.latitude as number) - MAP_CENTER_LATITUDE_OFFSET,
-                latestPhoto.longitude as number,
-              ]
+            ? {
+                lat:
+                  (latestPhoto.latitude as number) - MAP_CENTER_LATITUDE_OFFSET,
+                lng: latestPhoto.longitude as number,
+              }
             : undefined
         }
       >
@@ -79,7 +80,7 @@ export default function SharedDayTravelPage() {
           <PhotoMarker
             key={idx}
             photoUrl={p.url!}
-            position={[p.latitude!, p.longitude!]}
+            position={{ lat: p.latitude!, lng: p.longitude! }}
             onClick={() => p.photoId && handlePhotoClick(p.photoId)}
           />
         ))}
