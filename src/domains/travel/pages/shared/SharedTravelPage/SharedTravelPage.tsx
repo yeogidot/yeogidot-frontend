@@ -71,10 +71,10 @@ export default function SharedTravelPage() {
       <BackgroundMap
         position={
           mapCenter
-            ? [
-                (mapCenter.lat as number) - MAP_CENTER_LATITUDE_OFFSET,
-                mapCenter.lng as number,
-              ]
+            ? {
+                lat: (mapCenter.lat as number) - MAP_CENTER_LATITUDE_OFFSET,
+                lng: mapCenter.lng as number,
+              }
             : undefined
         }
       >
@@ -83,7 +83,7 @@ export default function SharedTravelPage() {
           return (
             <PhotoMarker
               key={`${currentPhotoId}-${index}`}
-              position={[photo.latitude!, photo.longitude!]}
+              position={{ lat: photo.latitude!, lng: photo.longitude! }}
               photoUrl={photo.url!}
               onClick={() => currentPhotoId && handlePhotoClick(currentPhotoId)}
             />

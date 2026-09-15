@@ -1,8 +1,13 @@
 import { Routes } from './Routes';
 import './App.css';
-import 'leaflet/dist/leaflet.css';
+import { NavermapsProvider } from 'react-naver-maps';
+
 function App() {
-  return <Routes />;
+  return (
+    <NavermapsProvider ncpKeyId={import.meta.env.VITE_NAVER_MAPS_CLIENT_ID}>
+      <Routes />
+    </NavermapsProvider>
+  );
 }
 
 export default App;
