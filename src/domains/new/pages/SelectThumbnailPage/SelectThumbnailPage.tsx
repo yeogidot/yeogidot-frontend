@@ -13,6 +13,7 @@ export default function SelectThumbnailPage() {
   const { travel } = useTravel();
   const { openModal, modalElement } = useModal();
   const { loading, data, error, request } = useApi(travelService.createTravel);
+  const navigate = useNavigate();
   const handleClickButton = () => {
     if (!token) {
       openModal({
@@ -71,7 +72,6 @@ export default function SelectThumbnailPage() {
       isThumbnail: travel.thumbnailPhotoId === photo.id,
     };
   });
-  const navigate = useNavigate();
   return (
     <div className={classes.container}>
       <header className={classes.header}>
