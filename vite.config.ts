@@ -5,7 +5,12 @@ import svgr from 'vite-plugin-svgr';
 import { cloudflare } from '@cloudflare/vite-plugin';
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tsconfigPaths(), svgr(), cloudflare()],
+  plugins: [
+    react(),
+    tsconfigPaths(),
+    svgr(),
+    ...(process.env.STORYBOOK ? [] : [cloudflare()]),
+  ],
   optimizeDeps: {
     exclude: ['@jsquash/webp'],
   },
