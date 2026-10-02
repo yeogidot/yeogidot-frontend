@@ -29,5 +29,5 @@ export const WithWarning: Story = {
 
 export const Thumbnail: Story = {
   name: '대표 사진',
-  args: { photo: { ...storyPhoto, isThumbnail: true, warning: false } },
+  args: { photo: { ...storyPhoto, isThumbnail: true } },
 };

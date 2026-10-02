@@ -16,7 +16,4 @@ const toDatedPhoto = (
 
 export const storyPhotos: DatedPhotoData[] = samplePhotos.map(toDatedPhoto);
 
-export const storyPhoto: DatedPhotoData = {
-  ...storyPhotos[0],
-  isThumbnail: true,
-};
+export const storyPhoto: DatedPhotoData = storyPhotos[0];
