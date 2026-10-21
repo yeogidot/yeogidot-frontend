@@ -1,5 +1,6 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import MyTravelPage from './domains/travelList/pages/MyTravelPage/MyTravelPage';
+import { myTravelLoader } from './domains/travelList/pages/MyTravelPage/myTravelLoader';
 import TravelPage from './domains/travel/pages/TravelPage/TravelPage';
 import DayTravelPage from './domains/travel/pages/DayTravelPage/DayTravelPage';
 import NewTravelHome from './domains/new/pages/NewTravelHome/NewTravelHome';
@@ -54,6 +55,7 @@ const router = createBrowserRouter([
           {
             path: '/my-travel',
             Component: MyTravelPage,
+            loader: myTravelLoader,
           },
           {
             path: '/change-password',

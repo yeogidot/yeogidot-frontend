@@ -18,6 +18,8 @@
 .container {
   width: 100%;
 }
-.loadingText {
+.errorText {
   text-align: center;
+  color: #666;
+  font-size: 14px;
 }
