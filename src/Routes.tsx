@@ -1,9 +1,6 @@
-import {
-  RouterProvider,
-  createBrowserRouter,
-  Navigate,
-} from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import MyTravelPage from './domains/travelList/pages/MyTravelPage/MyTravelPage';
+import { myTravelLoader } from './domains/travelList/pages/MyTravelPage/myTravelLoader';
 import TravelPage from './domains/travel/pages/TravelPage/TravelPage';
 import DayTravelPage from './domains/travel/pages/DayTravelPage/DayTravelPage';
 import NewTravelHome from './domains/new/pages/NewTravelHome/NewTravelHome';
@@ -26,6 +23,7 @@ import DeleteAccountCompletePage from './domains/auth/pages/DeleteAccountComplet
 import ChangePasswordPage from './domains/auth/pages/ChangePasswordPage/ChangePasswordPage';
 
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import EntryRedirect from './components/EntryRedirect/EntryRedirect';
 import { Transition } from './components/Transition/Transition';
 import SettingPage from './domains/auth/pages/SettingPage/SettingPage';
 
@@ -34,6 +32,10 @@ const router = createBrowserRouter([
     path: '/',
     Component: Transition,
     children: [
+      {
+        index: true,
+        element: <EntryRedirect />,
+      },
       {
         path: '/signup',
         Component: SignUpPage,
@@ -51,12 +53,9 @@ const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           {
-            index: true,
-            element: <Navigate to="/my-travel" replace={true} />,
-          },
-          {
             path: '/my-travel',
             Component: MyTravelPage,
+            loader: myTravelLoader,
           },
           {
             path: '/change-password',
@@ -171,7 +170,7 @@ const router = createBrowserRouter([
       },
       {
         path: '*',
-        element: <Navigate to="/my-travel" replace={true} />,
+        element: <EntryRedirect />,
       },
     ],
   },
