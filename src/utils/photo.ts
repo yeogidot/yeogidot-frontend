@@ -1,7 +1,7 @@
-import { encode } from '@jsquash/webp';
 import {
   encodePhotosWithWebpWorkers,
   getRecommendedWebpWorkerCount,
+  warmupWebpWorkers,
 } from './webpEncodePool';
 
 export class WebpEncodingNotSupportedError extends Error {
@@ -9,53 +9,6 @@ export class WebpEncodingNotSupportedError extends Error {
     super('이 기기는 WebP 이미지를 인코딩(변환)할 수 없습니다.');
     this.name = 'WebpEncodingNotSupportedError';
   }
-}
-
-export async function photoFileToWebp(photoFile: File) {
-  return new Promise<File>((resolve, reject) => {
-    const imageURL = URL.createObjectURL(photoFile);
-    const image = new Image();
-    image.onerror = () => {
-      reject(
-        new Error('이미지 변환에 사용될 이미지를 불러오기 실패하였습니다.')
-      );
-      URL.revokeObjectURL(imageURL);
-    };
-    image.onload = async () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = image.width;
-      canvas.height = image.height;
-      const context = canvas.getContext('2d');
-      if (!context) {
-        reject(
-          new Error('이미지 변환에 필요한 Canvas Context를 찾을 수 없습니다.')
-        );
-        return;
-      }
-      context.drawImage(image, 0, 0);
-      try {
-        const photoImageData = context.getImageData(
-          0,
-          0,
-          image.width,
-          image.height
-        );
-        const webpArrayBuffer = await encode(photoImageData);
-        const webpFile = new File(
-          [webpArrayBuffer],
-          photoFile.name.replace(/(\.[^/.]+)?$/, '.webp'),
-          { type: 'image/webp' }
-        );
-        resolve(webpFile);
-      } catch (error) {
-        console.error('WebP 변환 중 오류 발생:', error);
-        reject(new Error('이미지 변환 실패'));
-      } finally {
-        URL.revokeObjectURL(imageURL);
-      }
-    };
-    image.src = imageURL;
-  });
 }
 
 /**
@@ -135,6 +88,31 @@ export function isNativeWebpEncodingSupported(): Promise<boolean> {
     });
   }
   return nativeWebpSupportProbe;
+}
+
+let photoEncoderPreparation: Promise<void> | null = null;
+
+/**
+ * 사진 업로드 전에 인코더를 미리 준비한다 (여행 추가/수정 페이지 진입 시 호출).
+ *
+ * 네이티브 WebP 인코딩이 지원되면(Android 등) 아무것도 로드하지 않고,
+ * 미지원 기기(Safari/iOS)에서만 워커 풀을 워밍업해 첫 업로드 지연을 줄인다.
+ * 여러 번 호출해도 1회만 실행되며, 실패해도 업로드 시점에 다시 처리된다.
+ */
+export function preparePhotoEncoder(): Promise<void> {
+  if (!photoEncoderPreparation) {
+    photoEncoderPreparation = (async () => {
+      try {
+        const isNativeSupported = await isNativeWebpEncodingSupported();
+        if (!isNativeSupported) {
+          await warmupWebpWorkers(getRecommendedWebpWorkerCount());
+        }
+      } catch (error) {
+        console.warn('사진 인코더 준비 실패:', error);
+      }
+    })();
+  }
+  return photoEncoderPreparation;
 }
 
 /**
