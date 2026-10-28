@@ -92,6 +92,12 @@ export function isNativeWebpEncodingSupported(): Promise<boolean> {
 
 let photoEncoderPreparation: Promise<void> | null = null;
 
+/** 테스트에서 모듈 레벨 캐시(탐지 결과, 준비 Promise)를 초기화한다. */
+export function resetPhotoEncoderStateForTest() {
+  nativeWebpSupportProbe = null;
+  photoEncoderPreparation = null;
+}
+
 /**
  * 사진 업로드 전에 인코더를 미리 준비한다 (여행 추가/수정 페이지 진입 시 호출).
  *
@@ -116,7 +122,7 @@ export function preparePhotoEncoder(): Promise<void> {
 }
 
 /**
- * 업로드 플로우용 변환 진입점 (2단 사다리).
+ * 업로드 플로우용 변환 진입점 (네이티브 → 워커 순으로 폴백).
  *
  * 1. 네이티브 canvas.toBlob — Chromium 계열(Android 등)에서 사용
  * 2. Worker + jsquash (WASM) × 코어수 기반 병렬 — Safari/iOS 등

@@ -6,6 +6,9 @@ import { devices } from '@playwright/test';
 
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
+  optimizeDeps: {
+    exclude: ['@jsquash/webp'],
+  },
   test: {
     browser: {
       enabled: true,
