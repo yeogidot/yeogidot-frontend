@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import {
   disposeWebpWorkers,
   encodePhotosWithWebpWorkers,
@@ -87,6 +87,37 @@ describe('encodePhotosWithWebpWorkers', () => {
 
     expect(result.convertedFile).toBeNull();
     expect(result.error).toEqual(expect.any(String));
+  });
+
+  it('워커가 로드에 실패하면 대기 중인 작업을 모두 error로 끝낸다', async () => {
+    const RealWorker = globalThis.Worker;
+    class BrokenWorker extends EventTarget {
+      onerror: ((event: ErrorEvent) => void) | null = null;
+      onmessage: ((event: MessageEvent) => void) | null = null;
+      postMessage() {
+        queueMicrotask(() => {
+          this.onerror?.(new ErrorEvent('error', { message: 'load failed' }));
+        });
+      }
+      terminate() {}
+    }
+    vi.stubGlobal('Worker', BrokenWorker);
+
+    try {
+      const results = await encodePhotosWithWebpWorkers(
+        [await makeJpeg('x1.jpg'), await makeJpeg('x2.jpg')],
+        75,
+        1
+      );
+
+      expect(results).toHaveLength(2);
+      results.forEach(result => {
+        expect(result.convertedFile).toBeNull();
+        expect(result.error).toBe('load failed');
+      });
+    } finally {
+      vi.stubGlobal('Worker', RealWorker);
+    }
   });
 
   it('결과 webp는 다시 디코딩할 수 있다', async () => {

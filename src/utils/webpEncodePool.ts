@@ -63,11 +63,31 @@ const pendingWebpJobs = new Map<
 >();
 const webpTaskQueue: ((worker: Worker) => void)[] = [];
 
+function failAllWebpJobs(error: string) {
+  const jobs = [...pendingWebpJobs];
+  pendingWebpJobs.clear();
+  webpTaskQueue.length = 0;
+  for (const [jobId, resolve] of jobs) {
+    resolve({ jobId, ok: false, error, durationMs: 0 });
+  }
+}
+
+function resetWebpWorkers(error: string) {
+  webpWorkerEntries.forEach(entry => {
+    entry.worker.terminate();
+  });
+  webpWorkerEntries = [];
+  failAllWebpJobs(error);
+}
+
 function createWebpWorker() {
   const worker = new Worker(
     new URL('./webpEncode.worker.ts', import.meta.url),
     { type: 'module' }
   );
+  worker.onerror = event => {
+    resetWebpWorkers(event.message || '워커 실행 중 오류가 발생했습니다.');
+  };
   worker.onmessage = (event: MessageEvent<WebpEncodeWorkerResponse>) => {
     const response = event.data;
     const pending = pendingWebpJobs.get(response.jobId);
