@@ -5,7 +5,7 @@ import type {
   PhotoMetadata,
   UploadedFullPhoto,
 } from '../../domains/travel/types/photo.type';
-import { photoFileToWebp } from '@utils/photo';
+import { photoFileToWebpSmart } from '@utils/photo';
 export const photoService = {
   uploadPhoto: async (
     photoFileArray: File[],
@@ -14,7 +14,7 @@ export const photoService = {
   ) => {
     const formData = new FormData();
     const webpFiles = await Promise.all<File>(
-      photoFileArray.map(async file => photoFileToWebp(file))
+      photoFileArray.map(async file => photoFileToWebpSmart(file))
     );
 
     webpFiles.forEach(file => {

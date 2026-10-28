@@ -14,7 +14,7 @@ import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
 import { useTravel } from 'src/domains/travel/hooks/travel';
 import { useEffect, useState } from 'react';
 import { dateCompare } from '@utils/date';
-import { base64ToFile } from '@utils/photo';
+import { base64ToFile, preparePhotoEncoder } from '@utils/photo';
 
 const checkFileExtension = (file: File, extensions: string[]) => {
   const fileExtension = file.name.split('.').pop()?.toLowerCase();
@@ -116,6 +116,10 @@ export default function NewTravelHome() {
       };
     });
   };
+
+  useEffect(() => {
+    void preparePhotoEncoder();
+  }, []);
 
   useEffect(() => {
     if (!isReactNativeWebView()) {
