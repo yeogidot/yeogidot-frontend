@@ -11,6 +11,9 @@ export default defineConfig({
     svgr(),
     ...(process.env.STORYBOOK ? [] : [cloudflare()]),
   ],
+  worker: {
+    format: 'es',
+  },
   optimizeDeps: {
     exclude: ['@jsquash/webp'],
   },
