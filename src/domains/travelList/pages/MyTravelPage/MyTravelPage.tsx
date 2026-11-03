@@ -2,22 +2,24 @@ import classes from './MyTravelPage.module.css';
 import NavigationBar from '@components/NavigationBar/NavigationBar';
 import TravelList from '../../components/TravelList/TravelList';
 import { Link, useLoaderData } from 'react-router-dom';
+import SettingsIcon from '@assets/icons/settings.svg?react';
 import type { MyTravelLoaderData } from './myTravelLoader';
 
 export default function MyTravelPage() {
   const { travels, error } = useLoaderData<MyTravelLoaderData>();
 
   return (
-    <>
+    <div className={classes.page}>
       <header className={classes.header}>
         <h1 className={classes.headerText}>내 여행 목록</h1>
         <Link
           to="/setting"
           state={{ forward: true }}
           viewTransition
-          className={classes.menuLink}
+          className={classes.settingsLink}
+          aria-label="설정"
         >
-          개인 설정
+          <SettingsIcon className={classes.settingsIcon} aria-hidden="true" />
         </Link>
       </header>
       {error ? (
@@ -30,6 +32,6 @@ export default function MyTravelPage() {
         <TravelList travels={travels} />
       )}
       <NavigationBar nowTab="my-travel" />
-    </>
+    </div>
   );
 }
