@@ -32,8 +32,15 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const MissingThumbnail: Story = {
-  name: '대표 이미지 없음',
+export const NoPhoto: Story = {
+  name: '사진 미등록',
+  args: {
+    travel: { ...storyTravel, representativeImageUrl: '' },
+  },
+};
+
+export const LoadError: Story = {
+  name: '사진 로드 실패',
   args: {
     travel: { ...storyTravel, representativeImageUrl: '/missing.jpg' },
   },

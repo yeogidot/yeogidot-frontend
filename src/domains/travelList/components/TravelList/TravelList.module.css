@@ -1,4 +1,5 @@
 .noTravelWrapper {
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -14,10 +15,8 @@
 }
 .container {
   min-height: 50vh;
-  padding-bottom: 100px;
+  padding: 16px 16px 100px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5vh;
+  gap: 16px;
 }
