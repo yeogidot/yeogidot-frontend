@@ -3,42 +3,6 @@
   padding-top: 56px;
   background-color: #f8f9ff;
 }
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  max-width: 440px;
-  margin-inline: auto;
-  height: 56px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-inline: 16px;
-  background-color: #f8f9ff;
-  box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.04);
-}
-.headerText {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 22px;
-  color: #182230;
-}
-.settingsLink {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 44px;
-  height: 44px;
-  color: #596579;
-}
-.settingsIcon {
-  width: 27.6px;
-  height: 27.6px;
-}
 .container {
   width: 100%;
 }
