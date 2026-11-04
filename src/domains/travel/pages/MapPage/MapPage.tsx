@@ -10,8 +10,8 @@ import { photoService } from 'src/apis/services/photo';
 import type { PhotoMarkerData } from '../../types/photo.type';
 import classes from './MapPage.module.css';
 
-// Default center (Seoul or user's default)
-const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 };
+// Default center (Busan) used when there are no photos with location
+const DEFAULT_CENTER = { lat: 35.1796, lng: 129.0756 };
 
 type SelectedPhotoInfo = {
   takenAt: string | null;
@@ -22,6 +22,7 @@ export default function MapPage() {
   const navigate = useNavigate();
   const [photos, setPhotos] = useState<PhotoMarkerData[]>([]);
   const [mapCenter, setMapCenter] = useState(DEFAULT_CENTER);
+  const [isPhotosLoaded, setIsPhotosLoaded] = useState(false);
   const [selectedPhotoId, setSelectedPhotoId] = useState<number | null>(null);
   const [selectedPhotoInfo, setSelectedPhotoInfo] =
     useState<SelectedPhotoInfo | null>(null);
@@ -56,6 +57,8 @@ export default function MapPage() {
         }
       } catch (error) {
         console.error('Failed to fetch photos for map:', error);
+      } finally {
+        setIsPhotosLoaded(true);
       }
     };
 
@@ -134,22 +137,26 @@ export default function MapPage() {
       <AppBar title="지도" />
 
       <div className={classes.mapArea}>
-        <BackgroundMap position={mapCenter}>
-          {photos.map(photo =>
-            photo.latitude && photo.longitude ? (
-              <CustomOverlay
-                key={photo.photoId}
-                position={{ lat: photo.latitude, lng: photo.longitude }}
-              >
-                <MapPhotoMarker
-                  photoUrl={photo.thumbnailUrl}
-                  selected={photo.photoId === selectedPhotoId}
-                  onClick={() => handleSelectPhoto(photo.photoId)}
-                />
-              </CustomOverlay>
-            ) : null
-          )}
-        </BackgroundMap>
+        {isPhotosLoaded ? (
+          <BackgroundMap position={mapCenter}>
+            {photos.map(photo =>
+              photo.latitude && photo.longitude ? (
+                <CustomOverlay
+                  key={photo.photoId}
+                  position={{ lat: photo.latitude, lng: photo.longitude }}
+                >
+                  <MapPhotoMarker
+                    photoUrl={photo.thumbnailUrl}
+                    selected={photo.photoId === selectedPhotoId}
+                    onClick={() => handleSelectPhoto(photo.photoId)}
+                  />
+                </CustomOverlay>
+              ) : null
+            )}
+          </BackgroundMap>
+        ) : (
+          <div className={classes.loading}>지도를 불러오는 중...</div>
+        )}
       </div>
 
       {selectedPhoto && (
