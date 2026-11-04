@@ -1,6 +1,7 @@
 import CalendarIcon from '@assets/icons/calendar-month.svg?react';
 import LocationIcon from '@assets/icons/location-on.svg?react';
 import { formatDateDot } from '@utils/date';
+import { formatCardRegion } from '@utils/region';
 import classes from './SelectedPhotoCard.module.css';
 
 interface SelectedPhotoCardProps {
@@ -29,7 +30,9 @@ export default function SelectedPhotoCard({
           </div>
           <div className={classes.row}>
             <LocationIcon className={classes.icon} aria-hidden="true" />
-            <span className={classes.regionText}>{region || '-'}</span>
+            <span className={classes.regionText}>
+              {(region && formatCardRegion(region)) || '-'}
+            </span>
           </div>
         </div>
       </div>
