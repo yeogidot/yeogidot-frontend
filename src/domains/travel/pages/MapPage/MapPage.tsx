@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CustomOverlay } from 'react-naver-maps';
-import BackgroundMap from '../../components/Map/Map';
+import BackgroundMap, { type MapBounds } from '../../components/Map/Map';
 import MapPhotoMarker from '../../components/Map/MapPhotoMarker';
 import SelectedPhotoCard from '../../components/Map/SelectedPhotoCard';
 import AppBar from '@components/AppBar/AppBar';
@@ -13,7 +13,7 @@ import classes from './MapPage.module.css';
 // Default center (Busan) used when there are no photos with location
 const DEFAULT_CENTER = { lat: 35.1796, lng: 129.0756 };
 
-type SelectedPhotoInfo = {
+type PhotoInfo = {
   takenAt: string | null;
   region: string | null;
 };
@@ -21,13 +21,18 @@ type SelectedPhotoInfo = {
 export default function MapPage() {
   const navigate = useNavigate();
   const [photos, setPhotos] = useState<PhotoMarkerData[]>([]);
+  const [photoInfos, setPhotoInfos] = useState<
+    Partial<Record<number, PhotoInfo>>
+  >({});
   const [mapCenter, setMapCenter] = useState(DEFAULT_CENTER);
   const [isPhotosLoaded, setIsPhotosLoaded] = useState(false);
+  const [mapBounds, setMapBounds] = useState<MapBounds | null>(null);
   const [selectedPhotoId, setSelectedPhotoId] = useState<number | null>(null);
-  const [selectedPhotoInfo, setSelectedPhotoInfo] =
-    useState<SelectedPhotoInfo | null>(null);
+  const requestedPhotoIds = useRef(new Set<number>());
 
   const selectedPhoto = photos.find(photo => photo.photoId === selectedPhotoId);
+  const selectedPhotoInfo =
+    selectedPhotoId === null ? undefined : photoInfos[selectedPhotoId];
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -66,37 +71,38 @@ export default function MapPage() {
   }, []);
 
   useEffect(() => {
-    if (selectedPhotoId === null) return;
+    if (!mapBounds) return;
 
-    let ignore = false;
+    const token = localStorage.getItem('accessToken') || '';
+    const visiblePhotos = photos.filter(
+      photo =>
+        photo.latitude != null &&
+        photo.longitude != null &&
+        photo.latitude >= mapBounds.south &&
+        photo.latitude <= mapBounds.north &&
+        photo.longitude >= mapBounds.west &&
+        photo.longitude <= mapBounds.east
+    );
 
-    const fetchSelectedPhotoInfo = async () => {
+    visiblePhotos.forEach(async photo => {
+      if (requestedPhotoIds.current.has(photo.photoId)) return;
+      requestedPhotoIds.current.add(photo.photoId);
+
       try {
-        const token = localStorage.getItem('accessToken') || '';
-        const response = await photoService.getPhoto(selectedPhotoId, token);
-
-        if (!ignore && response.data) {
-          setSelectedPhotoInfo({
-            takenAt: response.data.takenAt ?? null,
-            region: response.data.region ?? null,
-          });
+        const photoRes = await photoService.getPhoto(photo.photoId, token);
+        if (photoRes.data) {
+          const info: PhotoInfo = {
+            takenAt: photoRes.data.takenAt ?? null,
+            region: photoRes.data.region ?? null,
+          };
+          setPhotoInfos(prev => ({ ...prev, [photo.photoId]: info }));
         }
       } catch (error) {
-        console.error('Failed to fetch selected photo info:', error);
+        requestedPhotoIds.current.delete(photo.photoId);
+        console.error('Failed to fetch photo info:', error);
       }
-    };
-
-    fetchSelectedPhotoInfo();
-
-    return () => {
-      ignore = true;
-    };
-  }, [selectedPhotoId]);
-
-  const handleSelectPhoto = (photoId: number) => {
-    setSelectedPhotoId(photoId);
-    setSelectedPhotoInfo(null);
-  };
+    });
+  }, [photos, mapBounds]);
 
   const handleViewPhoto = async (photoId: number) => {
     try {
@@ -138,7 +144,7 @@ export default function MapPage() {
 
       <div className={classes.mapArea}>
         {isPhotosLoaded ? (
-          <BackgroundMap position={mapCenter}>
+          <BackgroundMap position={mapCenter} onBoundsChanged={setMapBounds}>
             {photos.map(photo =>
               photo.latitude && photo.longitude ? (
                 <CustomOverlay
@@ -148,7 +154,7 @@ export default function MapPage() {
                   <MapPhotoMarker
                     photoUrl={photo.thumbnailUrl}
                     selected={photo.photoId === selectedPhotoId}
-                    onClick={() => handleSelectPhoto(photo.photoId)}
+                    onClick={() => setSelectedPhotoId(photo.photoId)}
                   />
                 </CustomOverlay>
               ) : null
