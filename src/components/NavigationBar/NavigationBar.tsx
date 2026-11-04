@@ -1,8 +1,6 @@
 import classes from './NavigationBar.module.css';
-import DeactivatedMapIcon from '@assets/icons/map-deactivated.svg?react';
-import ActivatedMapIcon from '@assets/icons/map-activated.svg?react';
-import ActivatedMyTravelIcon from '@assets/icons/my-travel-activated.svg?react';
-import DeactivatedMyTravelIcon from '@assets/icons/my-travel-deactivated.svg?react';
+import MapIcon from '@assets/icons/map.svg?react';
+import PhotoLibraryIcon from '@assets/icons/photo-library.svg?react';
 import AddIcon from '@assets/icons/add.svg?react';
 import { Link } from 'react-router-dom';
 
@@ -19,32 +17,33 @@ export default function NavigationBar({ nowTab }: Props) {
           nowTab === 'map' ? classes.tabActivated : classes.tabDeactivated
         }
       >
-        {nowTab === 'map' ? <ActivatedMapIcon /> : <DeactivatedMapIcon />}
-        <br />
-        <span>지도</span>
+        <MapIcon className={classes.mapIcon} aria-hidden="true" />
+        <span className={classes.tabLabel}>지도</span>
       </Link>
-      <Link
-        to={'/new-travel'}
-        className={classes.newTravelButton}
-        aria-label="새 여행추가"
-        state={{ forward: true }}
-        viewTransition
-      >
-        <AddIcon />
-      </Link>
+      <div className={classes.newTravelWrapper}>
+        <Link
+          to={'/new-travel'}
+          className={classes.newTravelLink}
+          aria-label="새 여행추가"
+          state={{ forward: true }}
+          viewTransition
+        >
+          <span className={classes.newTravelButton}>
+            <AddIcon className={classes.addIcon} aria-hidden="true" />
+          </span>
+        </Link>
+      </div>
       <Link
         to="/my-travel"
         className={
           nowTab === 'my-travel' ? classes.tabActivated : classes.tabDeactivated
         }
       >
-        {nowTab === 'my-travel' ? (
-          <ActivatedMyTravelIcon />
-        ) : (
-          <DeactivatedMyTravelIcon />
-        )}
-        <br />
-        <span>내 여행 목록</span>
+        <PhotoLibraryIcon
+          className={classes.photoLibraryIcon}
+          aria-hidden="true"
+        />
+        <span className={classes.tabLabel}>내 여행 목록</span>
       </Link>
     </nav>
   );

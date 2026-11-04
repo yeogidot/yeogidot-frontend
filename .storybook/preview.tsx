@@ -21,6 +21,7 @@ const withMobileLayout: Decorator = Story => (
         maxWidth: 393,
         minHeight: '100dvh',
         backgroundColor: 'white',
+        transform: 'translateZ(0)',
       }}
     >
       <Story />

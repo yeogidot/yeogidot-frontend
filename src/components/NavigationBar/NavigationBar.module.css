@@ -1,46 +1,77 @@
 .container {
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: fixed;
   bottom: 0;
-  padding-top: 9px;
-  padding-bottom: 22px;
-  column-gap: 5%;
-  width: 100%;
-}
-
-@media (min-width: 440px) {
-  .container {
-    width: 440px;
-  }
-}
-
-.newTravelButton {
+  left: 0;
+  right: 0;
+  max-width: 440px;
+  margin-inline: auto;
+  box-sizing: border-box;
+  height: calc(64px + env(safe-area-inset-bottom));
+  padding-inline: 40px;
+  padding-bottom: env(safe-area-inset-bottom);
   display: flex;
-  background-color: #0099ff;
-  width: 53px;
-  height: 50px;
-  border-radius: 5px;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
+  background-color: #f8f9ff;
+  box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.05);
+}
+.tabLabel {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  white-space: nowrap;
+}
+.tabActivated,
+.tabDeactivated {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 2px;
+  padding-inline: 15px;
+  min-width: 56px;
+  text-decoration: none;
 }
 .tabActivated {
-  text-align: center;
-  text-decoration: none;
-  color: #0099ff;
-  font-size: 15px;
-  font-weight: bold;
-  width: 30%;
+  color: #2563eb;
 }
-
 .tabDeactivated {
-  text-align: center;
-  text-decoration: none;
-  color: #8ad0ff;
+  color: #434655;
+}
+.mapIcon {
+  width: 27px;
+  height: 32px;
+}
+.photoLibraryIcon {
+  width: 30px;
+  height: 36px;
+}
+.newTravelWrapper {
+  display: flex;
+  justify-content: center;
   align-items: center;
-  font-size: 15px;
-  font-weight: bold;
-  width: 30%;
+  width: 64px;
+  height: 48px;
+}
+.newTravelLink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+.newTravelButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  background-color: #2563eb;
+  color: #ffffff;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+.addIcon {
+  width: 25px;
+  height: 25px;
 }

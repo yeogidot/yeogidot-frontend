@@ -1,43 +1,94 @@
 .itemContainer {
-  border-radius: 5px;
-  height: 188px;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid rgba(115, 118, 134, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   overflow: hidden;
-  width: 311px;
-  position: relative;
 }
-.thumbnail {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-  filter: brightness(65%) blur(1px);
-}
-.thumbnailLink {
-  display: block;
-  height: 100%;
-  width: 100%;
-}
-.infoContainer {
+.photoLink {
   display: block;
   text-decoration: none;
-  padding-inline: 20px;
-  position: absolute;
-  bottom: 22px;
-  color: #d9f0ff;
 }
-
+.thumbnail {
+  display: block;
+  object-fit: cover;
+  width: 100%;
+  height: 200px;
+}
+.errorPhoto {
+  height: 200px;
+  background-color: #e6eeff;
+}
+.emptyPhoto {
+  height: 200px;
+  background-color: #dfe9fc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 8px;
+}
+.emptyIcon {
+  width: 40.5px;
+  height: 40.5px;
+  color: #c3c6d7;
+}
+.emptyText {
+  font-size: 16px;
+  color: #434655;
+  opacity: 0.8;
+}
+.infoRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px;
+}
+.infoLink {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+.title {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 500;
+  color: #182230;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.meta {
+  display: flex;
+  align-items: center;
+  column-gap: 4px;
+  font-size: 16px;
+  color: #434655;
+  white-space: nowrap;
+}
+.metaIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #737686;
+}
+.separator {
+  color: #c3c6d7;
+  margin-inline: 4px;
+}
 .editButton {
-  border-radius: 35px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 32px;
-  height: 32px;
-  background-color: #d9f0ff;
-  position: absolute;
-  right: 14px;
-  top: 16px;
-}
-.title {
-  font-weight: bold;
-  font-size: 20px;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  margin: -10px -5px 0 0;
+  border-radius: 8px;
+  color: #737686;
 }
