@@ -5,16 +5,30 @@
     overflow: hidden;
 }
 
-.map {
-    width: 100%;
-    height: 100%;
-    z-index: 0;
+.mapArea {
+    position: absolute;
+    top: 56px;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
 
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: #e6eeff;
+    font-size: 16px;
+    color: #434655;
+}
 
-.backButton {
+.selectedCard {
     position: absolute;
-    top: 59px;
-    left: 8px;
+    left: 0;
+    right: 0;
+    bottom: calc(80px + env(safe-area-inset-bottom));
     z-index: 10;
+    padding-inline: 16px;
 }

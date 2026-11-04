@@ -1,20 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BackgroundMap from '../../components/Map/Map';
-import PhotoMarker from '../../components/Map/PhotoMarker';
+import { CustomOverlay } from 'react-naver-maps';
+import BackgroundMap, { type MapBounds } from '../../components/Map/Map';
+import MapPhotoMarker from '../../components/Map/MapPhotoMarker';
+import SelectedPhotoCard from '../../components/Map/SelectedPhotoCard';
+import AppBar from '@components/AppBar/AppBar';
 import NavigationBar from '@components/NavigationBar/NavigationBar';
-import BackButton from '@components/Buttons/BackButton/GrayBackButton/GrayBackButton';
 import { photoService } from 'src/apis/services/photo';
 import type { PhotoMarkerData } from '../../types/photo.type';
 import classes from './MapPage.module.css';
 
-// Default center (Seoul or user's default)
-const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 };
+// Default center (Busan) used when there are no photos with location
+const DEFAULT_CENTER = { lat: 35.1796, lng: 129.0756 };
+
+type PhotoInfo = {
+  takenAt: string | null;
+  region: string | null;
+};
 
 export default function MapPage() {
   const navigate = useNavigate();
   const [photos, setPhotos] = useState<PhotoMarkerData[]>([]);
+  const [photoInfos, setPhotoInfos] = useState<
+    Partial<Record<number, PhotoInfo>>
+  >({});
   const [mapCenter, setMapCenter] = useState(DEFAULT_CENTER);
+  const [isPhotosLoaded, setIsPhotosLoaded] = useState(false);
+  const [mapBounds, setMapBounds] = useState<MapBounds | null>(null);
+  const [selectedPhotoId, setSelectedPhotoId] = useState<number | null>(null);
+  const requestedPhotoIds = useRef(new Set<number>());
+
+  const selectedPhoto = photos.find(photo => photo.photoId === selectedPhotoId);
+  const selectedPhotoInfo =
+    selectedPhotoId === null ? undefined : photoInfos[selectedPhotoId];
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -44,20 +62,49 @@ export default function MapPage() {
         }
       } catch (error) {
         console.error('Failed to fetch photos for map:', error);
+      } finally {
+        setIsPhotosLoaded(true);
       }
     };
 
     fetchPhotos();
   }, []);
 
-  const handleBackClick = () => {
-    navigate('/my-travel', {
-      viewTransition: true,
-      state: { forward: true },
-    });
-  };
+  useEffect(() => {
+    if (!mapBounds) return;
 
-  const handleMarkerClick = async (photoId: number) => {
+    const token = localStorage.getItem('accessToken') || '';
+    const visiblePhotos = photos.filter(
+      photo =>
+        photo.latitude != null &&
+        photo.longitude != null &&
+        photo.latitude >= mapBounds.south &&
+        photo.latitude <= mapBounds.north &&
+        photo.longitude >= mapBounds.west &&
+        photo.longitude <= mapBounds.east
+    );
+
+    visiblePhotos.forEach(async photo => {
+      if (requestedPhotoIds.current.has(photo.photoId)) return;
+      requestedPhotoIds.current.add(photo.photoId);
+
+      try {
+        const photoRes = await photoService.getPhoto(photo.photoId, token);
+        if (photoRes.data) {
+          const info: PhotoInfo = {
+            takenAt: photoRes.data.takenAt ?? null,
+            region: photoRes.data.region ?? null,
+          };
+          setPhotoInfos(prev => ({ ...prev, [photo.photoId]: info }));
+        }
+      } catch (error) {
+        requestedPhotoIds.current.delete(photo.photoId);
+        console.error('Failed to fetch photo info:', error);
+      }
+    });
+  }, [photos, mapBounds]);
+
+  const handleViewPhoto = async (photoId: number) => {
     try {
       const token = localStorage.getItem('accessToken') || '';
 
@@ -93,22 +140,41 @@ export default function MapPage() {
 
   return (
     <div className={classes.container}>
-      <div className={classes.backButton}>
-        <BackButton onClick={handleBackClick} />
+      <AppBar title="지도" />
+
+      <div className={classes.mapArea}>
+        {isPhotosLoaded ? (
+          <BackgroundMap position={mapCenter} onBoundsChanged={setMapBounds}>
+            {photos.map(photo =>
+              photo.latitude && photo.longitude ? (
+                <CustomOverlay
+                  key={photo.photoId}
+                  position={{ lat: photo.latitude, lng: photo.longitude }}
+                >
+                  <MapPhotoMarker
+                    photoUrl={photo.thumbnailUrl}
+                    selected={photo.photoId === selectedPhotoId}
+                    onClick={() => setSelectedPhotoId(photo.photoId)}
+                  />
+                </CustomOverlay>
+              ) : null
+            )}
+          </BackgroundMap>
+        ) : (
+          <div className={classes.loading}>지도를 불러오는 중...</div>
+        )}
       </div>
 
-      <BackgroundMap className={classes.map} position={mapCenter}>
-        {photos.map(photo =>
-          photo.latitude && photo.longitude ? (
-            <PhotoMarker
-              key={photo.photoId}
-              position={{ lat: photo.latitude, lng: photo.longitude }}
-              photoUrl={photo.thumbnailUrl}
-              onClick={() => photo.photoId && handleMarkerClick(photo.photoId)}
-            />
-          ) : null
-        )}
-      </BackgroundMap>
+      {selectedPhoto && (
+        <div className={classes.selectedCard}>
+          <SelectedPhotoCard
+            thumbnailUrl={selectedPhoto.thumbnailUrl}
+            takenAt={selectedPhotoInfo?.takenAt ?? null}
+            region={selectedPhotoInfo?.region ?? null}
+            onViewPhoto={() => handleViewPhoto(selectedPhoto.photoId)}
+          />
+        </div>
+      )}
 
       <NavigationBar nowTab="map" />
     </div>

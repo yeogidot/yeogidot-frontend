@@ -4,11 +4,19 @@ import classes from './Map.module.css';
 
 type LatLng = { lat: number; lng: number };
 
+export type MapBounds = {
+  south: number;
+  west: number;
+  north: number;
+  east: number;
+};
+
 type MapProps = {
   className?: string;
   position?: LatLng;
   zoom?: number;
   scrollWheelZoom?: boolean;
+  onBoundsChanged?: (bounds: MapBounds) => void;
   children?: ReactNode;
 };
 
@@ -20,6 +28,7 @@ export default function Map({
   position = DEFAULT_CENTER,
   zoom = DEFAULT_ZOOM,
   scrollWheelZoom = false,
+  onBoundsChanged,
   children,
 }: MapProps) {
   const mapClassName = className
@@ -33,6 +42,16 @@ export default function Map({
         zoom={zoom}
         scrollWheel={scrollWheelZoom}
         zoomControl={false}
+        onBoundsChanged={bounds => {
+          const sw = bounds.getSW();
+          const ne = bounds.getNE();
+          onBoundsChanged?.({
+            south: sw.lat(),
+            west: sw.lng(),
+            north: ne.lat(),
+            east: ne.lng(),
+          });
+        }}
       >
         {children}
       </NaverMap>
