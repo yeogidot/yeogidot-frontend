@@ -10,6 +10,14 @@ export const convertISOToKorean = (ISOString: string) => {
   return `${year}-${month}-${date} ${hours}시 ${minutes}분`;
 };
 
+export const formatDateDot = (ISOString: string) => {
+  const koreanDate = new Date(ISOString);
+  const year = koreanDate.getFullYear();
+  const month = (koreanDate.getMonth() + 1).toString().padStart(2, '0');
+  const date = koreanDate.getDate().toString().padStart(2, '0');
+  return `${year}.${month}.${date}`;
+};
+
 export const dateCompare = (a: DatedPhotoData, b: DatedPhotoData) => {
   return new Date(a.date ?? 0).getTime() - new Date(b.date ?? 0).getTime();
 };
