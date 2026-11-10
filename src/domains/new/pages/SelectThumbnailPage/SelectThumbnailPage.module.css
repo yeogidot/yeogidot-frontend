@@ -1,54 +1,68 @@
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
-  row-gap: 16px;
+  min-height: 100dvh;
+  background-color: #f8f9ff;
 }
 
-.photoHeader {
-  padding-inline: 40px;
-}
-.photoGrid {
-  height: 50vh;
-}
 .header {
-  padding-top: 83px;
-  padding-inline: 38px;
-}
-
-.headerText {
-  margin-bottom: 0px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 56px;
+  padding-inline: 8px;
+  background-color: rgba(248, 249, 255, 85%);
+  backdrop-filter: blur(24px);
+  box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 4%);
 }
 
 .backButton {
-  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
   padding: 0px;
   border-style: none;
+  border-radius: 10px;
   background-color: transparent;
+  cursor: pointer;
 }
 
-.button {
-  transform: translateX(-50%);
-  left: 50%;
-  bottom: 7%;
-  position: absolute;
+.headerText {
+  margin: 0px;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.45px;
+  color: #121c2a;
 }
 
-.button:disabled {
+.nextButtonContainer {
+  /* sticky 사용: #root(440px 레터박스) 안에 머무르도록.
+     콘텐츠가 짧으면 margin-top:auto로 하단에 붙고, 길면 스크롤 중 하단에 고정된다. */
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  margin-top: auto;
+  padding: 16px;
+  background-color: rgba(248, 249, 255, 90%);
+  backdrop-filter: blur(12px);
+}
+
+.nextButton {
+  width: 100%;
+  height: 50px;
+  border-radius: 12px;
+  background-color: #2563eb;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.nextButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.uploadDescription {
-  color: #787777;
-  margin: 0px;
-}
-
-.loadingMessage {
-  text-align: center;
-  word-break: keep-all;
-  width: 75%;
-  min-height: 24px;
-  margin: 0 auto;
-  color: #5a5a5a;
-  font-size: 14px;
 }

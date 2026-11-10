@@ -1,16 +1,19 @@
 import classes from './SelectThumbnailPage.module.css';
 import { Navigate, useNavigate } from 'react-router-dom';
 import BlackBackIcon from '@assets/icons/back-black.svg';
-import DatePhotoGrid from 'src/domains/travel/components/DatePhotoGrid/DatePhotoGrid';
+import ThumbnailPhotoGrid from './ThumbnailPhotoGrid';
 import Button from '@components/Buttons/Button/Button';
 import { useTravel } from 'src/domains/travel/hooks/travel';
 import { useApi } from '@hooks/api';
 import { travelService } from 'src/apis/services/travel';
 import { useEffect } from 'react';
 import useModal from '@hooks/useModal';
+import StepProgress from 'src/domains/new/components/StepProgress/StepProgress';
+import type { DatedPhotoData } from 'src/domains/travel/types/photo.type';
+
 export default function SelectThumbnailPage() {
   const token = localStorage.getItem('accessToken');
-  const { travel } = useTravel();
+  const { travel, setTravel } = useTravel();
   const { openModal, modalElement } = useModal();
   const { loading, data, error, request } = useApi(travelService.createTravel);
   const navigate = useNavigate();
@@ -29,6 +32,12 @@ export default function SelectThumbnailPage() {
       return;
     }
     request(travel, token);
+  };
+
+  const handleThumbnailChange = (photo: DatedPhotoData) => {
+    setTravel(currentTravel => {
+      return { ...currentTravel, thumbnailPhotoId: photo.id };
+    });
   };
 
   useEffect(() => {
@@ -65,13 +74,6 @@ export default function SelectThumbnailPage() {
   if (!isValidTravelForThumbnail) {
     return <Navigate to="/my-travel" />;
   }
-  const thumbnailCheckedPhotos = travel.photos.map(photo => {
-    return {
-      ...photo,
-      warning: false,
-      isThumbnail: travel.thumbnailPhotoId === photo.id,
-    };
-  });
   return (
     <div className={classes.container}>
       <header className={classes.header}>
@@ -83,24 +85,28 @@ export default function SelectThumbnailPage() {
         >
           <img src={BlackBackIcon} alt="뒤로가기 버튼 이미지" />
         </button>
-        <h1 className={classes.headerText}>대표 사진 선택</h1>
-        <p className={classes.uploadDescription}>
-          내 여행목록 리스트에 보여지는 사진입니다.
-        </p>
+        <h1 className={classes.headerText}>여행 추가</h1>
       </header>
-      <h3 className={classes.photoHeader}>여행 사진</h3>
-      <DatePhotoGrid
-        className={classes.photoGrid}
-        photos={thumbnailCheckedPhotos}
+      <StepProgress
+        current={2}
+        total={2}
+        description="여행 목록에 표시할 대표 사진을 선택해 주세요."
       />
-      <Button
-        className={classes.button}
-        onClick={handleClickButton}
-        disabled={loading}
-        aria-busy={loading}
-      >
-        {loading ? '여행 추가 중...' : '여행 추가'}
-      </Button>
+      <ThumbnailPhotoGrid
+        photos={travel.photos}
+        thumbnailPhotoId={travel.thumbnailPhotoId}
+        onThumbnailChange={handleThumbnailChange}
+      />
+      <div className={classes.nextButtonContainer}>
+        <Button
+          className={classes.nextButton}
+          onClick={handleClickButton}
+          disabled={loading}
+          aria-busy={loading}
+        >
+          {loading ? '여행 추가 중...' : '여행 추가'}
+        </Button>
+      </div>
       {modalElement}
     </div>
   );
