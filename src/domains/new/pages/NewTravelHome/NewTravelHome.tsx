@@ -17,6 +17,7 @@ import { useTravel } from 'src/domains/travel/hooks/travel';
 import { useEffect, useState } from 'react';
 import { dateCompare } from '@utils/date';
 import { base64ToFile, preparePhotoEncoder } from '@utils/photo';
+import StepProgress from 'src/domains/new/components/StepProgress/StepProgress';
 
 const checkFileExtension = (file: File, extensions: string[]) => {
   const fileExtension = file.name.split('.').pop()?.toLowerCase();
@@ -230,21 +231,7 @@ export default function NewTravelHome() {
         </button>
         <h1 className={classes.headerText}>여행 추가</h1>
       </header>
-      <section
-        className={classes.progressSection}
-        aria-label="1단계 / 총 2단계"
-      >
-        <span className={classes.stepPill}>1 / 2 단계</span>
-        <div
-          className={classes.stepTrack}
-          role="progressbar"
-          aria-valuemin={1}
-          aria-valuemax={2}
-          aria-valuenow={1}
-        >
-          <div className={classes.stepFill} />
-        </div>
-      </section>
+      <StepProgress current={1} total={2} />
       <section className={classes.inputSection}>
         <h3 className={classes.inputHeader}>여행 이름</h3>
         <div className={classes.textInputWrapper}>

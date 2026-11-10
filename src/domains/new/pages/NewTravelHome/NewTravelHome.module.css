@@ -40,38 +40,6 @@
   color: #121c2a;
 }
 
-.progressSection {
-  display: flex;
-  flex-direction: column;
-  row-gap: 4px;
-  padding: 16px 16px 8px;
-}
-
-.stepPill {
-  align-self: flex-start;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  color: #2563eb;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 24px;
-}
-
-.stepTrack {
-  width: 100%;
-  height: 6px;
-  border-radius: 9999px;
-  background-color: #dfe9fc;
-  overflow: hidden;
-}
-
-.stepFill {
-  width: 50%;
-  height: 100%;
-  border-radius: 9999px;
-  background-color: #2563eb;
-}
-
 .inputSection {
   display: flex;
   flex-direction: column;
