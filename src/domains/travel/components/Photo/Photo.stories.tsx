@@ -1,5 +1,6 @@
 import { MemoryRouter } from 'react-router-dom';
 import type { Decorator, Meta, StoryObj } from '@storybook/react';
+import { fn } from 'storybook/test';
 
 import { storyPhoto } from '../storyFixtures';
 import Photo from './Photo';
@@ -30,4 +31,9 @@ export const WithWarning: Story = {
 export const Thumbnail: Story = {
   name: '대표 사진',
   args: { photo: { ...storyPhoto, isThumbnail: true } },
+};
+
+export const WithDelete: Story = {
+  name: '삭제 버튼',
+  args: { photo: storyPhoto, onDelete: fn() },
 };
