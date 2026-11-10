@@ -1,0 +1,56 @@
+.tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  padding: 0px;
+  border-style: none;
+  border-radius: 12px;
+  background-color: #dfe9fc;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 시안: 선택된 타일 인셋 링. 자식 콘텐츠 위에 그려져야 하므로 별도 오버레이로 지정 */
+.selectedOverlay {
+  position: absolute;
+  inset: 0px;
+  border-radius: inherit;
+  box-shadow: inset 0px 0px 0px 3px #2563eb;
+  pointer-events: none;
+}
+
+.checkBadge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  background-color: #2563eb;
+  box-shadow:
+    0px 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0px 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.thumbnailLabel {
+  position: absolute;
+  left: 10px;
+  bottom: 8px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: #ebf1ff;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  background-color: rgba(39, 49, 64, 80%);
+}
