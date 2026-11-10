@@ -1,21 +1,167 @@
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
-  row-gap: 8px;
+  min-height: 100dvh;
+  background-color: #f8f9ff;
 }
-.uploadDescription {
-  text-align: center;
-  color: #787777;
-  font-size: 12px;
-  margin: 0px;
-}
+
 .header {
-  padding-top: 83px;
-  padding-inline: 38px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 56px;
+  padding-inline: 8px;
+  background-color: rgba(248, 249, 255, 85%);
+  backdrop-filter: blur(24px);
+}
+
+.backButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0px;
+  border-style: none;
+  border-radius: 10px;
+  background-color: transparent;
+  cursor: pointer;
 }
 
 .headerText {
-  margin-bottom: 0px;
+  margin: 0px;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.45px;
+  color: #121c2a;
+}
+
+.progressSection {
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+  padding: 16px 16px 8px;
+}
+
+.stepPill {
+  align-self: flex-start;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  color: #2563eb;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.stepTrack {
+  width: 100%;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #dfe9fc;
+  overflow: hidden;
+}
+
+.stepFill {
+  width: 50%;
+  height: 100%;
+  border-radius: 9999px;
+  background-color: #2563eb;
+}
+
+.inputSection {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  padding-inline: 16px;
+}
+
+.inputSection + .inputSection {
+  margin-top: 24px;
+}
+
+.inputHeader {
+  margin: 0px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #121c2a;
+}
+
+.textInputWrapper {
+  position: relative;
+}
+
+.textInput {
+  box-sizing: border-box;
+  width: 100%;
+  height: 48px;
+  border-radius: 10px;
+  border: 1px solid rgba(195, 198, 215, 60%);
+  font-size: 16px;
+  color: #121c2a;
+  background-color: #ffffff;
+  padding-inline: 17px;
+}
+
+.textInput:focus {
+  outline-color: #2563eb;
+  outline-offset: 0px;
+}
+
+.textInputError {
+  border-color: red;
+}
+
+.textInputError:focus {
+  outline-color: red;
+}
+
+.clearButton {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  background-color: #d9e3f6; /* 시안: 입력 내용 지우기 버튼 원형 배경 */
+  cursor: pointer;
+}
+
+.clearButton img {
+  width: 14px;
+  height: 14px;
+}
+
+.photoHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.photoCountBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background-color: #e6eeff;
+  color: #2563eb;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.photoCountIcon {
+  width: 18px;
 }
 
 .titleErrorHelperText {
@@ -23,62 +169,34 @@
   font-size: 14px;
   margin: 0px 0px;
 }
+
 .photoErrorHelperText {
   color: red;
   font-size: 14px;
   margin: 0px 0px;
-  text-align: center;
 }
 
 .invisible {
   visibility: hidden;
 }
 
-.backButton {
-  border-radius: 10px;
-  padding: 0px;
-  border-style: none;
-  background-color: transparent;
-}
-.textInput {
-  margin: 0 auto;
-  width: 90%;
-  height: 44px;
-  border-radius: 5px;
-  border-style: none;
-  font-size: 20px;
-  border-width: 1px;
-  background-color: #f5f5f5;
-  padding-inline: 5%;
-}
-.textInputError {
-  border-style: solid;
-  border-color: red;
+.nextButtonContainer {
+  /* fixed 대신 sticky 사용: #root(440px 레터박스) 안에 머무르도록.
+     콘텐츠가 짧으면 margin-top:auto로 하단에 붙고, 길면 스크롤 중 하단에 고정된다. */
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  margin-top: auto;
+  padding: 16px;
+  background-color: rgba(248, 249, 255, 90%);
+  backdrop-filter: blur(12px);
 }
 
-.textInputError:focus {
-  outline-color: red;
-}
-.inputHeader {
-  margin: 0px;
-}
-
-.textInput:focus {
-  outline-color: #0d9eff;
-  outline-offset: 0px;
-}
-.inputSection {
-  display: flex;
-  flex-direction: column;
-  padding-inline: 40px;
-  row-gap: 8px;
-}
-.button {
-  transform: translateX(-50%);
-  left: 50%;
-  bottom: 7%;
-  position: absolute;
-}
-.photoSelectButton {
-  margin: 0 auto;
+.nextButton {
+  width: 100%;
+  height: 50px;
+  border-radius: 12px;
+  background-color: #2563eb;
+  font-size: 18px;
+  font-weight: 600;
 }
