@@ -1,21 +1,30 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { CustomOverlay } from 'react-naver-maps';
 import classes from './TravelPage.module.css';
-import EditButton from '@components/Buttons/EditButton/EditButton.tsx';
-import ShareButton from '@components/Buttons/ShareButton/ShareButton.tsx';
-import DeleteButton from '@components/Buttons/DeleteButton/DeleteButton.tsx';
-import BackButton from '@components/Buttons/BackButton/GrayBackButton/GrayBackButton.tsx';
-import BackgroundMap from '../../components/Map/Map.tsx';
-import DeleteConfirmModal from '@components/Modal/DeleteConfirmModal.tsx';
-import ShareModal from '@components/Modal/ShareModal.tsx';
-import PhotoMarker from '../../components/Map/PhotoMarker.tsx';
+import AppBar from '@components/AppBar/AppBar';
+import BackgroundMap, { type MapBounds } from '../../components/Map/Map';
+import MiniMapMarker from '../../components/Map/MiniMapMarker';
+import DeleteConfirmModal from '@components/Modal/DeleteConfirmModal';
+import ShareModal from '@components/Modal/ShareModal';
+import ErrorPage from '@components/ErrorPage/ErrorPage';
+import EditIcon from '@assets/icons/edit-outline.svg?react';
+import ShareIcon from '@assets/icons/share-outline.svg?react';
+import MoreVertIcon from '@assets/icons/more-vert.svg?react';
+import ChevronRightIcon from '@assets/icons/chevron-right.svg?react';
 import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
-import ErrorPage from '@components/ErrorPage/ErrorPage.tsx';
+import { formatDateDot } from '@utils/date';
+import { formatCardRegion } from '@utils/region';
 
-// import type { FullTravel } from 'src/types/travel.type'; // inferred from service
+const MINI_MAP_ZOOM = 13;
 
-const MAP_CENTER_LATITUDE_OFFSET = 0.007;
+interface DayMapMarker {
+  dayNumber: number;
+  position: { lat: number; lng: number };
+  photoUrl: string;
+  label: string;
+}
 
 export default function TravelPage() {
   const navigate = useNavigate();
@@ -43,32 +52,78 @@ export default function TravelPage() {
     if (travelId && token) {
       fetchTravel(Number(travelId), token);
     }
-  }, [travelId]);
+  }, [travelId, fetchTravel]);
 
-  if (travelLoading) return <div>Loading...</div>;
+  // 일차별로 좌표가 있는 첫 사진을 미니 지도 마커로 사용
+  const dayMarkers = useMemo<DayMapMarker[]>(() => {
+    if (!travel) return [];
+    return travel.days
+      .map(day => {
+        const locatedPhoto = (day.photos || []).find(
+          photo =>
+            photo.url &&
+            typeof photo.latitude === 'number' &&
+            typeof photo.longitude === 'number'
+        );
+        if (!locatedPhoto) return null;
+        return {
+          dayNumber: day.dayNumber,
+          position: {
+            lat: locatedPhoto.latitude as number,
+            lng: locatedPhoto.longitude as number,
+          },
+          photoUrl: locatedPhoto.url as string,
+          label: day.dayRegion
+            ? formatCardRegion(day.dayRegion)
+            : `${day.dayNumber}일차`,
+        };
+      })
+      .filter((marker): marker is DayMapMarker => marker !== null);
+  }, [travel]);
+
+  const mapCenter = useMemo(() => {
+    if (dayMarkers.length === 0) return undefined;
+    const latSum = dayMarkers.reduce(
+      (sum, marker) => sum + marker.position.lat,
+      0
+    );
+    const lngSum = dayMarkers.reduce(
+      (sum, marker) => sum + marker.position.lng,
+      0
+    );
+    return {
+      lat: latSum / dayMarkers.length,
+      lng: lngSum / dayMarkers.length,
+    };
+  }, [dayMarkers]);
+
+  // 마커가 2개 이상이면 전체를 담도록 지도를 확대/축소
+  const mapBounds = useMemo<MapBounds | undefined>(() => {
+    if (dayMarkers.length < 2) return undefined;
+    const latitudes = dayMarkers.map(marker => marker.position.lat);
+    const longitudes = dayMarkers.map(marker => marker.position.lng);
+    return {
+      south: Math.min(...latitudes),
+      north: Math.max(...latitudes),
+      west: Math.min(...longitudes),
+      east: Math.max(...longitudes),
+    };
+  }, [dayMarkers]);
+
+  if (travelLoading)
+    return (
+      <div className={classes.page}>
+        <p className={classes.stateText}>불러오는 중...</p>
+      </div>
+    );
   if (travelError)
     return <ErrorPage status={travelStatus} message={travelError} />;
-  if (!travel) return <div>여행 데이터를 찾을 수 없습니다.</div>;
-
-  const allPhotos = travel.days.flatMap(day =>
-    (day.photos || []).filter(
-      p =>
-        p.url &&
-        p.latitude !== null &&
-        p.longitude !== null &&
-        p.latitude !== undefined &&
-        p.longitude !== undefined
-    )
-  );
-
-  const mapCenter =
-    allPhotos.length > 0 &&
-    allPhotos[0].latitude !== null &&
-    allPhotos[0].longitude !== null &&
-    allPhotos[0].latitude !== undefined &&
-    allPhotos[0].longitude !== undefined
-      ? { lat: allPhotos[0].latitude, lng: allPhotos[0].longitude }
-      : undefined;
+  if (!travel)
+    return (
+      <div className={classes.page}>
+        <p className={classes.stateText}>여행 데이터를 찾을 수 없습니다.</p>
+      </div>
+    );
 
   const handleDeleteClick = () => setShowDeleteModal(true);
   const handleCloseModal = () => setShowDeleteModal(false);
@@ -83,6 +138,16 @@ export default function TravelPage() {
       }); // Go back to list after delete
     }
     setShowDeleteModal(false);
+  };
+
+  const handleEditClick = () => {
+    navigate('/edit-travel', {
+      viewTransition: true,
+      state: {
+        travel: { travelId: Number(travelId) },
+        forward: true,
+      },
+    });
   };
 
   const handleShareClick = async () => {
@@ -102,102 +167,158 @@ export default function TravelPage() {
     });
   };
 
-  const handlePhotoClick = (photoId: string | number) => {
-    navigate(`/travel/${travelId}/photos/${photoId}/travel-photo-comment`, {
-      viewTransition: true,
-      state: {
-        forward: true,
-      },
-    });
-  };
-
   const handleBackClick = () => navigate(-1);
 
   return (
-    <div className={classes.container}>
-      <BackgroundMap
-        position={
-          mapCenter
-            ? {
-                lat: (mapCenter.lat as number) - MAP_CENTER_LATITUDE_OFFSET,
-                lng: mapCenter.lng as number,
-              }
-            : undefined
+    <div className={classes.page}>
+      <AppBar
+        title="여행 상세"
+        onBack={handleBackClick}
+        rightAction={
+          <div className={classes.headerActions}>
+            <button
+              type="button"
+              className={classes.iconButton}
+              onClick={handleEditClick}
+              aria-label="여행 수정"
+            >
+              <EditIcon className={classes.editIcon} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className={classes.iconButton}
+              onClick={handleShareClick}
+              aria-label="여행 공유"
+            >
+              <ShareIcon className={classes.shareIcon} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className={classes.iconButton}
+              onClick={handleDeleteClick}
+              aria-label="여행 삭제"
+            >
+              <MoreVertIcon className={classes.moreIcon} aria-hidden="true" />
+            </button>
+          </div>
         }
-      >
-        {allPhotos.map((photo, index) => {
-          const currentPhotoId = photo.photoId ?? (photo as any).id;
-          return (
-            <PhotoMarker
-              key={`${currentPhotoId}-${index}`}
-              position={{ lat: photo.latitude!, lng: photo.longitude! }}
-              photoUrl={photo.url!}
-              onClick={() => currentPhotoId && handlePhotoClick(currentPhotoId)}
-            />
-          );
-        })}
-      </BackgroundMap>
+      />
 
-      <div className={classes.backButton}>
-        <BackButton onClick={handleBackClick} />
-      </div>
-      <div className={classes.panel}>
-        <div className={classes.headerRow}>
-          <div className={classes.header}>
-            {travel.title.length > 10
-              ? travel.title.slice(0, 10) + '...'
-              : travel.title}
-          </div>
-
-          <div className={classes.buttonGroup}>
-            <EditButton
-              onClick={() =>
-                navigate('/edit-travel', {
-                  viewTransition: true,
-                  state: {
-                    travel: { travelId: Number(travelId) },
-                    forward: true,
-                  },
-                })
-              }
-            />
-            <ShareButton onClick={handleShareClick} />
-            <DeleteButton onClick={handleDeleteClick} />
-          </div>
-        </div>
-
-        <div className={classes.travelInformation}>
-          <div>{travel.trvRegion}</div>
-          <div>
-            {travel.startDate} ~ {travel.endDate}
-          </div>
-          {/* City isn't explicitly in FullTravel root, might need to derive from days or it's missing in type */}
-        </div>
-
-        {travel.days.map(day => (
-          <div
-            key={day.dayId}
-            className={classes.dayTravelRow}
-            onClick={() => handleDayClick(day.dayNumber)}
-            style={{ cursor: 'pointer' }}
-          >
-            <h3>{day.dayNumber}일차</h3>
-            <div className={classes.dayTravelLocation}>{day.dayRegion}</div>
-            <div className={classes.dayTravelPhoto}>
-              {day.photos.map((photo, index) => {
-                const currentPhotoId = photo.photoId;
-                return (
-                  <img
-                    key={`${currentPhotoId}-${index}`}
-                    src={photo.url}
-                    alt={`여행 사진 ${index + 1}`}
+      <main className={classes.content}>
+        <section className={classes.miniMap} aria-label="여행지 지도">
+          {dayMarkers.length > 0 ? (
+            <BackgroundMap
+              position={mapCenter}
+              bounds={mapBounds}
+              zoom={MINI_MAP_ZOOM}
+              draggable={false}
+            >
+              {dayMarkers.map(marker => (
+                <CustomOverlay
+                  key={marker.dayNumber}
+                  position={marker.position}
+                >
+                  <MiniMapMarker
+                    photoUrl={marker.photoUrl}
+                    label={marker.label}
+                    onClick={() => handleDayClick(marker.dayNumber)}
                   />
-                );
-              })}
+                </CustomOverlay>
+              ))}
+            </BackgroundMap>
+          ) : (
+            <div className={classes.miniMapEmpty}>
+              지도에 표시할 사진이 없습니다
             </div>
+          )}
+        </section>
+
+        <section className={classes.tripMeta}>
+          <h2 className={classes.title}>{travel.title}</h2>
+          <div className={classes.metaRow}>
+            <span>
+              {formatDateDot(travel.startDate)} ~{' '}
+              {formatDateDot(travel.endDate)}
+            </span>
+            {travel.trvRegion && (
+              <>
+                <span className={classes.metaDot} aria-hidden="true" />
+                <span>{formatCardRegion(travel.trvRegion)}</span>
+              </>
+            )}
           </div>
-        ))}
-      </div>
+        </section>
+
+        <div className={classes.dayList}>
+          {travel.days.map((day, dayIndex) => {
+            const photos = (day.photos || []).filter(photo => photo.url);
+            return (
+              <div key={day.dayId} className={classes.daySection}>
+                {dayIndex > 0 && <div className={classes.separator} />}
+                <Link
+                  to={`./${day.dayNumber}`}
+                  className={classes.dayLink}
+                  state={{ forward: true }}
+                  viewTransition
+                >
+                  <div className={classes.dayInfo}>
+                    <span className={classes.dayNumber}>
+                      {day.dayNumber}일차
+                    </span>
+                    <span className={classes.dayDate}>
+                      {formatDateDot(day.date)}
+                    </span>
+                    {day.dayRegion && (
+                      <span className={classes.dayRegion}>
+                        {formatCardRegion(day.dayRegion)}
+                      </span>
+                    )}
+                  </div>
+                  <span className={classes.chevron}>
+                    <ChevronRightIcon
+                      className={classes.chevronIcon}
+                      aria-hidden="true"
+                    />
+                  </span>
+                </Link>
+
+                {photos.length > 0 && (
+                  <div className={classes.photoStrip}>
+                    {photos.map((photo, photoIndex) => {
+                      const image = (
+                        <img
+                          src={photo.url}
+                          alt={`${day.dayNumber}일차 사진 ${photoIndex + 1}`}
+                          loading="lazy"
+                          draggable={false}
+                        />
+                      );
+                      return photo.photoId ? (
+                        <Link
+                          key={`${photo.photoId}-${photoIndex}`}
+                          to={`/travel/${travelId}/photos/${photo.photoId}/travel-photo-comment`}
+                          className={classes.photoCard}
+                          state={{ forward: true }}
+                          viewTransition
+                        >
+                          {image}
+                        </Link>
+                      ) : (
+                        <div
+                          key={`photo-${photoIndex}`}
+                          className={classes.photoCard}
+                        >
+                          {image}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </main>
 
       {showDeleteModal && (
         <DeleteConfirmModal
