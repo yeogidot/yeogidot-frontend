@@ -10,7 +10,7 @@ import ShareModal from '@components/Modal/ShareModal';
 import ErrorPage from '@components/ErrorPage/ErrorPage';
 import EditIcon from '@assets/icons/edit-outline.svg?react';
 import ShareIcon from '@assets/icons/share-outline.svg?react';
-import MoreVertIcon from '@assets/icons/more-vert.svg?react';
+import TrashIcon from '@assets/icons/trash-outline.svg?react';
 import ChevronRightIcon from '@assets/icons/chevron-right.svg?react';
 import { travelService } from 'src/apis/services/travel';
 import { useApi } from 'src/hooks/api';
@@ -198,7 +198,7 @@ export default function TravelPage() {
               onClick={handleDeleteClick}
               aria-label="여행 삭제"
             >
-              <MoreVertIcon className={classes.moreIcon} aria-hidden="true" />
+              <TrashIcon className={classes.trashIcon} aria-hidden="true" />
             </button>
           </div>
         }
