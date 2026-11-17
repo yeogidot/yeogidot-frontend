@@ -21,7 +21,6 @@ export default function MiniMapMarker({
       >
         <img src={photoUrl} className={classes.image} alt="" />
       </button>
-      <span className={classes.label}>{label}</span>
     </div>
   );
 }
