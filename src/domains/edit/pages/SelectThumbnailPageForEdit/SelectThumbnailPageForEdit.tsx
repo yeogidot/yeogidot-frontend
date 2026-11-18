@@ -6,6 +6,7 @@ import Button from '@components/Buttons/Button/Button';
 import { useEditTravel } from 'src/domains/travel/hooks/travel';
 import { useApi } from '@hooks/api';
 import useModal from '@hooks/useModal';
+import { snackbarManager } from '@components/Snackbar/manager';
 import { travelService } from 'src/apis/services/travel';
 import { useEffect } from 'react';
 export default function SelectThumbnailPageForEdit() {
@@ -51,19 +52,10 @@ export default function SelectThumbnailPageForEdit() {
         }
       });
 
-      openModal({
-        title: '여행 수정 성공',
-        message: `성공적으로 여행을 수정했습니다.${'\n'}여행페이지로 이동합니다.`,
-        onCancel: () =>
-          navigate(`/travel/${state.travel.travelId}`, {
-            viewTransition: true,
-            state: { forward: true },
-          }),
-        onConfirm: () =>
-          navigate(`/travel/${state.travel.travelId}`, {
-            viewTransition: true,
-            state: { forward: true },
-          }),
+      snackbarManager.add({ description: '여행이 수정되었습니다.' });
+      navigate(`/travel/${state.travel.travelId}`, {
+        viewTransition: true,
+        state: { forward: true },
       });
     }
   }, [loading, error, data, navigate, openModal, state.travelId]);
