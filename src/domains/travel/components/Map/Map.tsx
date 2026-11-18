@@ -14,7 +14,10 @@ export type MapBounds = {
 type MapProps = {
   className?: string;
   position?: LatLng;
+  /** 지정되면 center/zoom 대신 이 영역에 지도를 맞춘다. */
+  bounds?: MapBounds;
   zoom?: number;
+  draggable?: boolean;
   scrollWheelZoom?: boolean;
   onBoundsChanged?: (bounds: MapBounds) => void;
   children?: ReactNode;
@@ -26,7 +29,9 @@ const DEFAULT_ZOOM = 15;
 export default function Map({
   className,
   position = DEFAULT_CENTER,
+  bounds,
   zoom = DEFAULT_ZOOM,
+  draggable = true,
   scrollWheelZoom = false,
   onBoundsChanged,
   children,
@@ -39,7 +44,9 @@ export default function Map({
     <MapDiv className={mapClassName}>
       <NaverMap
         center={position}
+        bounds={bounds}
         zoom={zoom}
+        draggable={draggable}
         scrollWheel={scrollWheelZoom}
         zoomControl={false}
         onBoundsChanged={bounds => {
