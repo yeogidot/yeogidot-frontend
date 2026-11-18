@@ -39,10 +39,7 @@ export default function SelectThumbnailPageForEdit() {
       return;
     }
     if (error) {
-      openModal({
-        title: '에러',
-        message: error,
-      });
+      snackbarManager.add({ description: error });
       return;
     }
     if (data) {
