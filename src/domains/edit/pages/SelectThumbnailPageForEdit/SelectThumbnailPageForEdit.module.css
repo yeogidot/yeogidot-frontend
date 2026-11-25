@@ -1,48 +1,66 @@
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
-  row-gap: 16px;
+  min-height: 100dvh;
+  background-color: #f8f9ff;
 }
 
-.photoHeader {
-  padding-inline: 40px;
-}
-.photoGrid {
-  height: 50vh;
-}
 .header {
-  padding-top: 83px;
-  padding-inline: 38px;
-}
-
-.headerText {
-  margin-bottom: 0px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 56px;
+  padding-inline: 8px;
+  background-color: rgba(248, 249, 255, 85%);
+  backdrop-filter: blur(24px);
+  box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 4%);
 }
 
 .backButton {
-  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
   padding: 0px;
   border-style: none;
+  border-radius: 10px;
   background-color: transparent;
+  cursor: pointer;
 }
 
-.button {
-  transform: translateX(-50%);
-  left: 50%;
-  bottom: 7%;
-  position: absolute;
-}
-
-.uploadDescription {
-  color: #787777;
+.headerText {
   margin: 0px;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.45px;
+  color: #121c2a;
 }
-.loadingMessage {
-  text-align: center;
-  word-break: keep-all;
-  width: 75%;
-  min-height: 24px;
-  margin: 0 auto;
-  color: #5a5a5a;
-  font-size: 14px;
+
+.nextButtonContainer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  margin-top: auto;
+  padding: 16px;
+  background-color: rgba(248, 249, 255, 90%);
+  backdrop-filter: blur(12px);
+}
+
+.nextButton {
+  width: 100%;
+  height: 50px;
+  border-radius: 12px;
+  background-color: #2563eb;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.nextButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
