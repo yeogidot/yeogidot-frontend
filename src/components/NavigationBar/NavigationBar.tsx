@@ -9,8 +9,14 @@ interface Props {
 }
 
 export default function NavigationBar({ nowTab }: Props) {
+  const isAndroid =
+    typeof navigator !== 'undefined' && /android/i.test(navigator.userAgent);
+
   return (
-    <nav className={classes.container}>
+    <nav
+      className={classes.container}
+      data-platform={isAndroid ? 'android' : undefined}
+    >
       <Link
         to="/map"
         className={
