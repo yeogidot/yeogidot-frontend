@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import Snackbar from './Snackbar';
@@ -8,7 +7,7 @@ const meta = {
   title: 'Components/Snackbar',
   component: Snackbar,
   decorators: [
-    (Story): ReactNode => (
+    Story => (
       <>
         <Story />
         <Snackbar />
