@@ -1,20 +1,23 @@
 import BlackBackIcon from '@assets/icons/back-black.svg';
-import FileSelectButton from '@components/Buttons/FileSelectButton/FileSelectButton';
-import WebViewImageSelectButton from '@components/Buttons/WebViewImageSelectButton/WebViewImageSelectButton';
+import XGrayIcon from '@assets/icons/x-gray.svg';
+import PhotoLibraryIcon from '@assets/icons/photo-library.svg?react';
 import Button from '@components/Buttons/Button/Button';
 import type {
+  DatedPhotoData,
   FullPhotoData,
   WebViewSelectImagesResultMessage,
 } from 'src/domains/travel/types/photo.type';
 import { isReactNativeWebView } from '@utils/webview';
 import classes from './EditTravelHome.module.css';
-import DatePhotoGrid from 'src/domains/travel/components/DatePhotoGrid/DatePhotoGrid';
+import PhotoGrid from 'src/domains/travel/components/PhotoGrid/PhotoGrid';
+import AddPhotoTile from 'src/domains/travel/components/AddPhotoTile/AddPhotoTile';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getCreatedDateTime, getGPSCoordinates } from 'src/utils/exif';
 import { useEditTravel } from 'src/domains/travel/hooks/travel';
-import { dateCompare } from '@utils/date';
 import { useEffect, useState } from 'react';
+import { dateCompare } from '@utils/date';
 import { base64ToFile, preparePhotoEncoder } from '@utils/photo';
+import StepProgress from 'src/domains/new/components/StepProgress/StepProgress';
 
 const checkFileExtension = (file: File, extensions: string[]) => {
   const fileExtension = file.name.split('.').pop()?.toLowerCase();
@@ -49,6 +52,9 @@ export default function EditTravelHome() {
       setTitleErrorText('');
     }
     setTravelTitle(e.target.value);
+  };
+  const handleTravelTitleInputChangeClear = () => {
+    setTravelTitle('');
   };
   const handleClickNextButton = () => {
     if (travel.title === '') {
@@ -94,9 +100,11 @@ export default function EditTravelHome() {
 
     const addedPhotos = await Promise.all(
       fileArray.map(async file => {
+        const fileUrl = URL.createObjectURL(file);
+        const blobId = new URL(fileUrl.slice(5)).pathname.slice(1);
         return {
-          id: Date.now(),
-          url: URL.createObjectURL(file),
+          id: blobId,
+          url: fileUrl,
           date: await getCreatedDateTime(file),
           GPSCoordinates: await getGPSCoordinates(file),
           link: 'photo',
@@ -111,6 +119,17 @@ export default function EditTravelHome() {
       return {
         ...currentTravel,
         photos: [...currentTravel.photos, ...warnedPhotos],
+      };
+    });
+  };
+
+  const handlePhotoDelete = (photo: DatedPhotoData) => {
+    setTravel(currentTravel => {
+      return {
+        ...currentTravel,
+        photos: currentTravel.photos.filter(
+          currentPhoto => currentPhoto.id !== photo.id
+        ),
       };
     });
   };
@@ -217,17 +236,29 @@ export default function EditTravelHome() {
         <p className={classes.loadingText}>여행 정보를 불러오는 중입니다...</p>
       ) : (
         <>
+          <StepProgress current={1} total={2} />
           <section className={classes.inputSection}>
             <h3 className={classes.inputHeader}>여행 이름</h3>
-            <input
-              className={`${classes.textInput} ${titleErrorText !== '' ? classes.textInputError : ''}`}
-              onChange={handleTravelTitleInputChange}
-              value={travel ? travel.title : ''}
-              type="text"
-              id="travel-name"
-              autoComplete="off"
-            />
-
+            <div className={classes.textInputWrapper}>
+              <input
+                className={`${classes.textInput} ${titleErrorText !== '' ? classes.textInputError : ''}`}
+                onChange={handleTravelTitleInputChange}
+                value={travel ? travel.title : ''}
+                type="text"
+                id="travel-name"
+                autoComplete="off"
+              />
+              {travel && travel.title !== '' && (
+                <button
+                  type="button"
+                  className={classes.clearButton}
+                  aria-label="입력 내용 지우기"
+                  onClick={handleTravelTitleInputChangeClear}
+                >
+                  <img src={XGrayIcon} alt="" />
+                </button>
+              )}
+            </div>
             <p
               className={`${classes.titleErrorHelperText} ${titleErrorText === '' ? classes.invisible : ''}`}
             >
@@ -235,37 +266,40 @@ export default function EditTravelHome() {
             </p>
           </section>
           <section className={classes.inputSection}>
-            <h3 className={classes.inputHeader}>여행 사진</h3>
-            {isReactNativeWebView() ? (
-              <WebViewImageSelectButton className={classes.photoSelectButton}>
-                사진 업로드
-              </WebViewImageSelectButton>
-            ) : (
-              <FileSelectButton
-                className={classes.photoSelectButton}
-                onChange={handleFileChange}
-              >
-                사진 업로드
-              </FileSelectButton>
-            )}
-          </section>
-          <div>
-            <p className={classes.uploadDescription}>
-              사진 위치 정보가 없으면 위치가 표시 되지 않습니다.
-              <br />
-              (카카오톡 사진 전송시, 원본 사진 요망)
-            </p>
+            <div className={classes.photoHeaderRow}>
+              <h3 className={classes.inputHeader}>여행 사진</h3>
+              <span className={classes.photoCountBadge}>
+                <PhotoLibraryIcon
+                  className={classes.photoCountIcon}
+                  aria-hidden="true"
+                />
+                사진 {travel?.photos.length ?? 0}장
+              </span>
+            </div>
             <p
               className={`${classes.photoErrorHelperText} ${photoErrorText === '' ? classes.invisible : ''}`}
             >
               {photoErrorText === '' ? '오류 없음' : photoErrorText}
             </p>
+            <PhotoGrid
+              photos={
+                travel?.photos.map(photo => ({ ...photo, warning: false })) ??
+                []
+              }
+              uploadTile={
+                <AddPhotoTile accept="image/jpeg" onChange={handleFileChange} />
+              }
+              onPhotoDelete={handlePhotoDelete}
+            />
+          </section>
+          <div className={classes.nextButtonContainer}>
+            <Button
+              className={classes.nextButton}
+              onClick={handleClickNextButton}
+            >
+              다음
+            </Button>
           </div>
-
-          <DatePhotoGrid photos={travel ? travel.photos : []} />
-          <Button className={classes.button} onClick={handleClickNextButton}>
-            다음
-          </Button>
         </>
       )}
     </div>

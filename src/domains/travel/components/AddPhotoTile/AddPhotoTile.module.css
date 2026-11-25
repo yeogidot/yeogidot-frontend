@@ -1,0 +1,62 @@
+.tileButton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  box-sizing: border-box;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  background-color: #eff3ff;
+  border-style: dashed;
+  border-width: 1px;
+  border-color: #c3c6d7;
+  border-radius: 12px;
+  color: #434655;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 18px;
+  cursor: pointer;
+}
+
+/* WebViewImageSelectButton이 공용 Button 스타일(bg #0d9eff, 130x52 등)을
+   강제하기 때문에 요소 선택자로 구체성을 높여 타일 스타일이 우선 적용되도록 한다. */
+button.tileButton {
+  width: 100%;
+  height: auto;
+  min-width: unset;
+  padding-inline: 0;
+  background-color: #eff3ff;
+  border-style: dashed;
+  border-color: #c3c6d7;
+  border-radius: 12px;
+  color: #434655;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.iconCircle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background-color: #d9e3f6;
+}
+
+.icon {
+  width: 23px;
+  height: 23px;
+  color: #2563eb;
+}
+
+.tileLabel {
+  display: block;
+}
+
+.fileInput {
+  display: none;
+}

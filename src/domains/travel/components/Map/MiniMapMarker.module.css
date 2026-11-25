@@ -1,0 +1,32 @@
+/* 지도 좌표점에 원형 사진이 가운데 오도록 고정 */
+.marker {
+  position: relative;
+  display: inline-flex;
+  transform: translate(-50%, -50%);
+}
+
+.bubble {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 36px;
+  height: 36px;
+  padding: 2px;
+  border: 2px solid #ffffff;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  object-fit: cover;
+  background-color: #dfe9fc;
+}
