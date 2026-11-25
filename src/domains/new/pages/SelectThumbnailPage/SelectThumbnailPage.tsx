@@ -8,6 +8,7 @@ import { useApi } from '@hooks/api';
 import { travelService } from 'src/apis/services/travel';
 import { useEffect } from 'react';
 import useModal from '@hooks/useModal';
+import { snackbarManager } from '@components/Snackbar/manager';
 import StepProgress from 'src/domains/new/components/StepProgress/StepProgress';
 import type { DatedPhotoData } from 'src/domains/travel/types/photo.type';
 
@@ -45,27 +46,15 @@ export default function SelectThumbnailPage() {
       return;
     }
     if (error) {
-      openModal({
-        title: '에러',
-        message: error,
-      });
+      snackbarManager.add({ description: error });
       return;
     }
     if (data) {
       travel.photos.forEach(({ url }) => URL.revokeObjectURL(url));
-      openModal({
-        title: '여행 생성 성공',
-        message: `성공적으로 여행을 생성했습니다.${'\n'}여행페이지로 이동합니다.`,
-        onCancel: () =>
-          navigate(`/travel/${data}`, {
-            viewTransition: true,
-            state: { forward: true },
-          }),
-        onConfirm: () =>
-          navigate(`/travel/${data}`, {
-            viewTransition: true,
-            state: { forward: true },
-          }),
+      snackbarManager.add({ description: '여행이 생성되었습니다.' });
+      navigate(`/travel/${data}`, {
+        viewTransition: true,
+        state: { forward: true },
       });
     }
   }, [error, loading, data]);

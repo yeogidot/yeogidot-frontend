@@ -6,6 +6,7 @@ import MapPhotoMarker from '../../components/Map/MapPhotoMarker';
 import SelectedPhotoCard from '../../components/Map/SelectedPhotoCard';
 import AppBar from '@components/AppBar/AppBar';
 import NavigationBar from '@components/NavigationBar/NavigationBar';
+import { snackbarManager } from '@components/Snackbar/manager';
 import { photoService } from 'src/apis/services/photo';
 import type { PhotoMarkerData } from '../../types/photo.type';
 import classes from './MapPage.module.css';
@@ -131,10 +132,14 @@ export default function MapPage() {
         }
       }
 
-      alert('이 사진이 포함된 여행을 찾을 수 없습니다.');
+      snackbarManager.add({
+        description: '이 사진이 포함된 여행을 찾을 수 없습니다.',
+      });
     } catch (e) {
       console.error(e);
-      alert('여행 정보를 불러오는 중 오류가 발생했습니다.');
+      snackbarManager.add({
+        description: '여행 정보를 불러오는 중 오류가 발생했습니다.',
+      });
     }
   };
 

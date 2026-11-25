@@ -1,0 +1,170 @@
+/* MUI Snackbar(https://mui.com/material-ui/react-snackbar/) 스타일을
+   Base UI Toast 프리미티브 위에 재현한 스타일시트.
+   - 스택 위치/스와이프 계산은 Base UI가 제공하는 CSS 변수를 사용한다.
+     --toast-index: 앞쪽(최근) 토스트일수록 0
+     --toast-offset-y: 펼쳐졌을 때의 세로 오프셋(px)
+     --toast-frontmost-height / --toast-height: 접힌 상태 높이 클램프용
+     --toast-swipe-movement-x/y: 스와이프 이동량 */
+
+.viewport {
+  position: fixed;
+  top: auto;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  max-width: 408px; /* 440px 앱 프레임 - 좌우 여백 32px */
+  margin-inline: auto;
+  z-index: 1100;
+  outline: none;
+}
+
+.toast {
+  --gap: 8px;
+  --peek: 8px;
+  --scale: calc(max(0, 1 - (var(--toast-index) * 0.1)));
+  --shrink: calc(1 - var(--scale));
+  --height: var(--toast-frontmost-height, var(--toast-height));
+  --offset-y: calc(
+    var(--toast-offset-y) * -1 + (var(--toast-index) * var(--gap) * -1) +
+      var(--toast-swipe-movement-y)
+  );
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  box-sizing: border-box;
+  z-index: calc(1000 - var(--toast-index));
+  height: var(--height);
+  border-radius: 4px; /* MUI SnackbarContent */
+  background-color: #323232;
+  color: #fff;
+  box-shadow:
+    0 3px 5px -1px rgba(0, 0, 0, 0.2),
+    0 6px 10px 0 rgba(0, 0, 0, 0.14),
+    0 1px 18px 0 rgba(0, 0, 0, 0.2); /* MUI elevation 6 */
+  transform-origin: bottom center;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: default;
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.5s,
+    height 0.15s;
+  transform: translateX(var(--toast-swipe-movement-x))
+    translateY(
+      calc(
+        var(--toast-swipe-movement-y) - (var(--toast-index) * var(--peek)) -
+          (var(--shrink) * var(--height))
+      )
+    )
+    scale(var(--scale));
+}
+
+/* 아래 토스트 사이의 hover 끊김을 잇는 브리지 (공식 예제와 동일) */
+.toast::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: calc(var(--gap) + 1px);
+}
+
+.toast:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -1px;
+}
+
+/* viewport가 hover/focus 되면 스택이 펼쳐진다 */
+.toast[data-expanded] {
+  height: var(--toast-height);
+  transform: translateX(var(--toast-swipe-movement-x)) translateY(var(--offset-y));
+}
+
+/* 등장: 아래에서 위로 슬라이드 인 */
+.toast[data-starting-style],
+.toast[data-ending-style] {
+  transform: translateY(150%);
+}
+
+/* limit 초과 토스트는 화면에 나타나지 않는다. */
+.toast[data-limited] {
+  opacity: 0;
+}
+
+.toast[data-ending-style] {
+  opacity: 0;
+}
+
+.toast[data-ending-style][data-swipe-direction='up'] {
+  transform: translateY(calc(var(--toast-swipe-movement-y) - 150%));
+}
+
+.toast[data-ending-style][data-swipe-direction='down'] {
+  transform: translateY(calc(var(--toast-swipe-movement-y) + 150%));
+}
+
+.toast[data-ending-style][data-swipe-direction='left'] {
+  transform: translateX(calc(var(--toast-swipe-movement-x) - 150%)) translateY(var(--offset-y));
+}
+
+.toast[data-ending-style][data-swipe-direction='right'] {
+  transform: translateX(calc(var(--toast-swipe-movement-x) + 150%)) translateY(var(--offset-y));
+}
+
+.content {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: 6px 16px; /* MUI SnackbarContent */
+  border-radius: inherit;
+  overflow: hidden;
+  transition: opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.content[data-behind] {
+  opacity: 0;
+}
+
+.content[data-expanded] {
+  opacity: 1;
+}
+
+.message {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 8px 0; /* MUI SnackbarContent message */
+  font-size: 0.875rem;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  color: #fff;
+}
+
+.action {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  min-height: 36px;
+  margin-left: 8px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  background-color: transparent;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02857em;
+  line-height: 1.25rem;
+  color: #f48fb1; /* MUI light-theme secondary */
+  cursor: pointer;
+}
+
+.action:hover {
+  background-color: rgba(244, 143, 177, 0.08);
+}
+
+.action:focus-visible {
+  outline: 2px solid #f48fb1;
+  outline-offset: -1px;
+}
